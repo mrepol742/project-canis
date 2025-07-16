@@ -1,0 +1,5 @@
+node_modules
+dist
+.wwebjs_auth
+*.log
+*.env
