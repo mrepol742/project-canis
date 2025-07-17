@@ -22,15 +22,31 @@ const client = new Client({
 });
 startServer(Number(port));
 
-// Load commands dynamically
 const commands: Record<string, (msg: Message) => void> = {};
 const commandsPath = path.join(__dirname, "commands");
-fs.readdirSync(commandsPath).forEach((file) => {
+
+// Initial load
+const loadCommand = (file: string) => {
   if (/\.js$|\.ts$/.test(file)) {
-    const commandModule = require(path.join(commandsPath, file));
+    const filePath = path.join(commandsPath, file);
+    delete require.cache[require.resolve(filePath)];
+    const commandModule = require(filePath);
     if (commandModule.command && typeof commandModule.default === "function") {
       commands[commandModule.command] = commandModule.default;
       log.info("Loader", `Loaded command: ${commandModule.command}`);
+    }
+  }
+}
+
+fs.readdirSync(commandsPath).forEach(loadCommand);
+
+// Watch for changes
+fs.watch(commandsPath, (eventType, filename) => {
+  if (filename && /\.js$|\.ts$/.test(filename)) {
+    try {
+      loadCommand(filename);
+    } catch (err) {
+      log.error("Loader", `Failed to reload command: ${filename}`, err);
     }
   }
 });
@@ -76,3 +92,5 @@ const messageEvent = (msg: Message) => {
   if (debug) log.info("Message", msg.body.slice(0, 255));
   handler(msg);
 };
+
+export { commands }
