@@ -49,7 +49,7 @@ export default async function (msg: Message) {
     const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
     await msg.reply(`DuckDuckGo search results for "${query}":\n${searchUrl}`);
   } catch (error) {
-    log.error("GoCommand", "Error fetching DuckDuckGo results:", error);
+    log.error("Command", "Error fetching DuckDuckGo results:", error);
     await msg.reply("Failed to search DuckDuckGo.");
   }
 }
