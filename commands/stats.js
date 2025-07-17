@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const os_1 = __importDefault(require("os"));
+const package_json_1 = require("../../package.json");
 exports.command = "stats";
-exports.role = "admin";
+exports.role = "user";
 async function default_1(msg) {
     const stats = {
         platform: os_1.default.platform(),
@@ -26,6 +27,7 @@ async function default_1(msg) {
       - Free Memory: ${(stats.freeMemory / 1024 ** 3).toFixed(2)} GB
       - Uptime: ${(stats.uptime / 3600).toFixed(2)} hours
       - Node.js Version: ${process.version}
+      - ${package_json_1.name}: ${package_json_1.version}
     `;
     await msg.reply(statsMessage);
 }
