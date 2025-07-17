@@ -45,12 +45,12 @@ const axios_1 = __importDefault(require("axios"));
 exports.command = "say";
 exports.role = "user";
 async function default_1(msg) {
-    const query = msg.body.replace(/^say\s+/i, "").trim();
-    if (!query) {
+    const query = msg.body.replace(/^say\b\s*/i, "").trim();
+    if (query.length === 0) {
         await msg.reply("Please provide something to say.");
         return;
     }
-    const url = GoogleTTS.getAudioUrl(query, {
+    const url = GoogleTTS.getAudioUrl(query.substring(0, 150), {
         lang: "en",
         slow: false,
         host: "https://translate.google.com",

@@ -9,16 +9,21 @@ const whatsapp_web_js_1 = require("whatsapp-web.js");
 const axios_1 = __importDefault(require("axios"));
 const npmlog_1 = __importDefault(require("npmlog"));
 const promises_1 = __importDefault(require("fs/promises"));
-exports.command = "poli";
+exports.command = "pooh";
 exports.role = "user";
 async function default_1(msg) {
-    const query = msg.body.replace(/^poli\b\s*/i, "").trim();
-    if (query.length === 0) {
-        await msg.reply("Please provide a prompt.");
+    const args = msg.body
+        .replace(/^pooh\b\s*/i, "")
+        .trim()
+        .split("|")
+        .map((s) => s.trim());
+    if (args.length < 2 || !args[0] || !args[1]) {
+        await msg.reply("Please provide two texts separated by '|'. Example: pooh text1 | text2");
         return;
     }
+    const [text1, text2] = args;
     await axios_1.default
-        .get(`https://image.pollinations.ai/prompt/${encodeURIComponent(query)}`, {
+        .get(`https://api.popcat.xyz/pooh?text1=${encodeURIComponent(text1)}&text2=${encodeURIComponent(text2)}`, {
         responseType: "arraybuffer",
     })
         .then(async (response) => {
@@ -31,7 +36,7 @@ async function default_1(msg) {
         await promises_1.default.unlink(tempPath);
     })
         .catch(async (error) => {
-        npmlog_1.default.error("poli", `Error fetching image: ${error.message}`);
+        npmlog_1.default.error("pooh", `Error fetching image: ${error.message}`);
         await msg.reply("Error fetching image. Please try again later.");
     });
 }

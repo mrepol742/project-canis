@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const index_1 = require("../index");
-exports.command = "cmd";
+exports.command = "ls";
 exports.role = "user";
 async function default_1(msg) {
     const userCommands = Object.values(index_1.commands)

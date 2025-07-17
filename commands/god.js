@@ -9,16 +9,16 @@ const whatsapp_web_js_1 = require("whatsapp-web.js");
 const axios_1 = __importDefault(require("axios"));
 const npmlog_1 = __importDefault(require("npmlog"));
 const promises_1 = __importDefault(require("fs/promises"));
-exports.command = "poli";
+exports.command = "god";
 exports.role = "user";
 async function default_1(msg) {
-    const query = msg.body.replace(/^poli\b\s*/i, "").trim();
+    const query = msg.body.replace(/^god\b\s*/i, "").trim();
     if (query.length === 0) {
-        await msg.reply("Please provide a prompt.");
+        await msg.reply("Please provide a text.");
         return;
     }
     await axios_1.default
-        .get(`https://image.pollinations.ai/prompt/${encodeURIComponent(query)}`, {
+        .get(`https://api.popcat.xyz/unforgivable?text=${encodeURIComponent(query)}`, {
         responseType: "arraybuffer",
     })
         .then(async (response) => {
@@ -31,7 +31,7 @@ async function default_1(msg) {
         await promises_1.default.unlink(tempPath);
     })
         .catch(async (error) => {
-        npmlog_1.default.error("poli", `Error fetching image: ${error.message}`);
+        npmlog_1.default.error("god", `Error fetching image: ${error.message}`);
         await msg.reply("Error fetching image. Please try again later.");
     });
 }

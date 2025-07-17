@@ -10,8 +10,8 @@ const util_1 = __importDefault(require("util"));
 exports.command = "shell";
 exports.role = "admin";
 async function default_1(msg) {
-    const query = msg.body.replace(/^shell\s+/i, "").trim();
-    if (!query) {
+    const query = msg.body.replace(/^shell\b\s*/i, "").trim();
+    if (query.length === 0) {
         await msg.reply("Please provide a command.");
         return;
     }

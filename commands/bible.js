@@ -6,12 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
+const npmlog_1 = __importDefault(require("npmlog"));
 exports.command = "bible";
 exports.role = "user";
 async function default_1(msg) {
-    const query = msg.body.replace(/^bible\s+/i, "").trim();
-    if (!["--random", "--today", "--verse"].includes(query)) {
-        await msg.reply("Invalid argument. Please use one of the following:\n- bible --random\n- bible --today\n- bible --verse job 4L9");
+    const query = msg.body.replace(/^bible\b\s*/i, "").trim();
+    if (!/^--(random|today|verse(\s+\w+\s*\d+:\d+)?)$/i.test(query)) {
+        await msg.reply("Invalid argument. Please use one of the following:\n\n- bible --random\n- bible --today\n- bible --verse Job 4:9");
         return;
     }
     let parameter;
@@ -24,7 +25,8 @@ async function default_1(msg) {
     else {
         parameter = query.replace("--verse ", "").trim();
     }
-    const response = await axios_1.default.get(`https://labs.bible.org/api/`, {
+    await axios_1.default
+        .get(`https://labs.bible.org/api/`, {
         params: {
             passage: parameter,
             type: "json",
@@ -32,13 +34,24 @@ async function default_1(msg) {
         headers: {
             "User-Agent": "Mozilla/5.0",
         },
-    });
-    const data = response.data;
-    if (!Array.isArray(data) || data.length === 0) {
-        await msg.reply("No verse found for your query.");
+    })
+        .then(async (response) => {
+        const data = response.data;
+        if (!Array.isArray(data) || data.length === 0) {
+            await msg.reply("No verse found for your query.");
+            return;
+        }
+        const v = data[0];
+        const verses = `
+*${v.bookname} ${v.chapter}:${v.verse}*
+
+${v.text.trim()}
+`;
+        await msg.reply(verses);
+    })
+        .catch(async (error) => {
+        npmlog_1.default.error("bible", `Error fetching data: ${error.message}`);
+        await msg.reply(`Error fetching data. Please try again later.`);
         return;
-    }
-    const v = data[0];
-    const verses = `${v.bookname} ${v.chapter}:${v.verse} - ${v.text.trim()}`;
-    await msg.reply(verses);
+    });
 }

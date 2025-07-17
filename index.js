@@ -12,6 +12,7 @@ const qrcode_terminal_1 = __importDefault(require("qrcode-terminal"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const server_1 = require("./server");
+const rateLimiter_1 = __importDefault(require("./components/rateLimiter"));
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
@@ -25,6 +26,28 @@ const client = new whatsapp_web_js_1.Client({
     authStrategy: new whatsapp_web_js_1.LocalAuth(),
 });
 exports.client = client;
+process.on("SIGHUP", function () {
+    process.exit(0);
+});
+process.on("SIGTERM", function () {
+    process.exit(0);
+});
+process.on("SIGINT", function () {
+    process.kill(process.pid);
+    process.exit(0);
+});
+process.on("uncaughtException", (err, origin) => {
+    npmlog_1.default.error("Uncaught Exception", `Exception: ${err.message}\nOrigin: ${origin}`);
+});
+process.on("unhandledRejection", (reason, promise) => {
+    npmlog_1.default.error("Unhandled Rejection", `Reason: ${reason}\nPromise: ${promise}`);
+});
+process.on("beforeExit", (code) => {
+    npmlog_1.default.info("Before Exit", `Process is about to exit with code: ${code}`);
+});
+process.on("exit", (code) => {
+    console.log("");
+});
 (0, server_1.startServer)(Number(port));
 const commands = {};
 exports.commands = commands;
@@ -75,26 +98,48 @@ client.on("auth_failure", (msg) => {
 client.initialize();
 const messageEvent = (msg) => {
     const prefix = !msg.body.startsWith(commandPrefix);
+    const senderId = msg.from.split("@")[0];
+    /*
+     * Prefix
+     */
     if (!commandPrefixLess && prefix)
         return;
     if (msg.fromMe && prefix)
-        return; // Ignore messages sent by the bot itself without prefix
+        return;
+    /*
+     * Check if the message starts with the command prefix.
+     */
     const keyWithPrefix = msg.body.split(" ")[0];
     const key = keyWithPrefix.startsWith(commandPrefix)
         ? keyWithPrefix.slice(commandPrefix.length)
         : keyWithPrefix;
-    const handler = commands[key];
+    const handler = commands[key.toLocaleLowerCase()];
     if (!handler)
         return;
-    const senderId = msg.from.split("@")[0];
-    npmlog_1.default.info("Command", `Received command: ${key} from ${senderId}`);
-    // Block access to commands based on roles
+    /*
+     * Rate limit commands to prevent abuse.
+     */
+    if (senderId !== superAdmin) {
+        const rate = (0, rateLimiter_1.default)(msg.from);
+        if (rate === null)
+            return;
+        if (!rate) {
+            msg.reply("You are sending commands too fast. Please wait a minute.");
+            return;
+        }
+    }
+    /*
+     * Role base restrictions.
+     */
     if (handler.role === "admin" && !msg.fromMe && senderId !== superAdmin) {
         return;
     }
     if (debug)
         npmlog_1.default.info("Message", msg.body.slice(0, 255));
-    msg.body = msg.body.slice(commandPrefix.length).trim();
+    msg.body = commandPrefixLess ? msg.body : msg.body.slice(commandPrefix.length).trim();
+    /*
+     * Execute the command handler.
+     */
     try {
         handler.exec(msg);
     }

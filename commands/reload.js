@@ -31,5 +31,5 @@ async function default_1(msg) {
             }
         }
     });
-    await msg.reply(`Reloaded ${count} commands successfully.`);
+    await msg.reply(`Reloaded ${count} commands.`);
 }

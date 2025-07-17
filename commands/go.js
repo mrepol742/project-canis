@@ -6,15 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
+const npmlog_1 = __importDefault(require("npmlog"));
 exports.command = "go";
 exports.role = "user";
 async function default_1(msg) {
-    const query = msg.body.replace(/^go\s+/i, "").trim();
-    if (!query) {
+    const query = msg.body.replace(/^go\b\s*/i, "").trim();
+    if (query.length === 0) {
         await msg.reply("Please provide a search query.");
         return;
     }
-    const response = await axios_1.default.get("https://api.duckduckgo.com/", {
+    await axios_1.default
+        .get("https://api.duckduckgo.com/", {
         params: {
             q: query,
             format: "json",
@@ -25,21 +27,28 @@ async function default_1(msg) {
         headers: {
             "User-Agent": "Mozilla/5.0",
         },
-    });
-    const data = response.data;
-    if (data.AbstractText) {
-        await msg.reply(`${data.AbstractText}\n\n${data.AbstractURL}`);
-        return;
-    }
-    // If no abstract, try to get the first related topic
-    if (Array.isArray(data.RelatedTopics) && data.RelatedTopics.length > 0) {
-        const firstTopic = data.RelatedTopics.find((t) => typeof t.Text === "string" && t.FirstURL) || data.RelatedTopics[0];
-        if (firstTopic && firstTopic.Text && firstTopic.FirstURL) {
-            await msg.reply(`${firstTopic.Text}\n${firstTopic.FirstURL}`);
+    })
+        .then(async (response) => {
+        const data = response.data;
+        if (data.AbstractText) {
+            await msg.reply(`${data.AbstractText}\n\n${data.AbstractURL}`);
             return;
         }
-    }
-    // Fallback
-    const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-    await msg.reply(`DuckDuckGo search results for "${query}":\n${searchUrl}`);
+        // If no abstract, try to get the first related topic
+        if (Array.isArray(data.RelatedTopics) && data.RelatedTopics.length > 0) {
+            const firstTopic = data.RelatedTopics.find((t) => typeof t.Text === "string" && t.FirstURL) || data.RelatedTopics[0];
+            if (firstTopic && firstTopic.Text && firstTopic.FirstURL) {
+                await msg.reply(`${firstTopic.Text}\n${firstTopic.FirstURL}`);
+                return;
+            }
+        }
+        // Fallback
+        const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+        await msg.reply(`Why dont you duckduck it yourself? Heres the link: \n${searchUrl}`);
+    })
+        .catch(async (error) => {
+        npmlog_1.default.error("go", `Error fetching data: ${error.message}`);
+        await msg.reply(`Error fetching data for "${query}". Please try again later.`);
+        return;
+    });
 }

@@ -1,0 +1,34 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = rateLimiter;
+const rateLimitMap = new Map();
+const LIMIT = 10;
+const WINDOW_MS = 60 * 1000; // 1 minute
+/**
+ * Returns:
+ *   true  - allowed
+ *   false - rate limited, but not yet notified (should notify)
+ *   null  - rate limited, already notified (do not notify again)
+ */
+function rateLimiter(number) {
+    const now = Date.now();
+    const entry = rateLimitMap.get(number) || { timestamps: [], notified: false };
+    // Remove timestamps older than 1 minute
+    entry.timestamps = entry.timestamps.filter((ts) => now - ts < WINDOW_MS);
+    if (entry.timestamps.length >= LIMIT) {
+        if (entry.notified) {
+            rateLimitMap.set(number, entry);
+            return null;
+        }
+        else {
+            entry.notified = true;
+            rateLimitMap.set(number, entry);
+            return false; // Notified for the first time
+        }
+    }
+    // Allowed, reset notified flag
+    entry.timestamps.push(now);
+    entry.notified = false;
+    rateLimitMap.set(number, entry);
+    return true;
+}
