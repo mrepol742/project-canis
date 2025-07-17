@@ -23,6 +23,7 @@
     "email": "mrepol742@gmail.com"
   },
   "dependencies": {
+    "@prisma/client": "^6.12.0",
     "axios": "^1.10.0",
     "dotenv": "^17.2.0",
     "google-tts-api": "^2.0.2",
@@ -34,6 +35,7 @@
     "@types/dotenv": "^6.1.1",
     "@types/node": "^24.0.14",
     "@types/npmlog": "^7.0.0",
+    "prisma": "^6.12.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
