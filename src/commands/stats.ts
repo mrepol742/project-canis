@@ -1,9 +1,10 @@
 import { Message } from "whatsapp-web.js";
 import log from "npmlog";
 import os from "os";
+import { name, version } from "../../package.json";
 
 export const command = "stats";
-export const role = "admin";
+export const role = "user";
 
 export default async function (msg: Message) {
   const stats = {
@@ -24,6 +25,7 @@ export default async function (msg: Message) {
       - Free Memory: ${(stats.freeMemory / 1024 ** 3).toFixed(2)} GB
       - Uptime: ${(stats.uptime / 3600).toFixed(2)} hours
       - Node.js Version: ${process.version}
+      - ${name}: ${version}
     `;
 
   await msg.reply(statsMessage);

@@ -3,7 +3,7 @@ import log from "npmlog";
 import * as GoogleTTS from "google-tts-api";
 import fs from "fs";
 import axios from "axios";
-import { client } from "../index";
+import { client } from "../components/client";
 
 export const command = "say";
 export const role = "user";

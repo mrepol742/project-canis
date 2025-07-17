@@ -2,7 +2,7 @@ import { Message, MessageMedia } from "whatsapp-web.js";
 import axios from "axios";
 import log from "npmlog";
 import fs from "fs/promises";
-import { client } from "../index";
+import { client } from "../components/client";
 
 export const command = "hwaifu";
 export const role = "admin";

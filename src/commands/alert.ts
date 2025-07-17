@@ -2,7 +2,6 @@ import { Message, MessageMedia } from "whatsapp-web.js";
 import axios from "axios";
 import log from "npmlog";
 import fs from "fs/promises";
-import { client } from "../index";
 
 export const command = "alert";
 export const role = "user";
