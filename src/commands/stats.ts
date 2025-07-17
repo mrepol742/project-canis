@@ -3,6 +3,7 @@ import log from "npmlog";
 import os from "os";
 
 export const command = "stats";
+export const role = "admin";
 
 export default async function (msg: Message) {
   try {

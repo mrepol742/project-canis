@@ -6,6 +6,7 @@ import path from "path";
 import { commands } from "../index";
 
 export const command = "reload";
+export const role = "admin";
 
 export default async function (msg: Message) {
   try {
@@ -16,14 +17,22 @@ export default async function (msg: Message) {
         const filePath = path.join(commandsPath, file);
         delete require.cache[require.resolve(filePath)];
         const commandModule = require(filePath);
-        if (commandModule.command && typeof commandModule.default === "function") {
-          commands[commandModule.command] = commandModule.default;
+
+        if (
+          typeof commandModule.command === "string" &&
+          typeof commandModule.default === "function"
+        ) {
+          commands[commandModule.command] = {
+            command: commandModule.command,
+            role: commandModule.role || "user",
+            exec: commandModule.default,
+          };
           count++;
           log.info("Loader", `Reloaded command: ${commandModule.command}`);
         }
       }
     });
-    
+
     await msg.reply(`Reloaded ${count} commands successfully.`);
   } catch (error) {
     log.error("Command", "Error occured while processing the request:", error);

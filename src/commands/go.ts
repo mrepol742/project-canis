@@ -3,6 +3,7 @@ import axios from "axios";
 import log from "npmlog";
 
 export const command = "go";
+export const role = "user";
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^go\s+/i, "").trim();
