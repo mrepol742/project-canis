@@ -5,7 +5,7 @@ import fs from "fs/promises";
 import { client } from "../index";
 
 export const command = "hwaifu";
-export const role = "user";
+export const role = "admin";
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^hwaifu\b\s*/i, "").trim();

@@ -137,7 +137,7 @@ const messageEvent = (msg: Message) => {
   const key = keyWithPrefix.startsWith(commandPrefix)
     ? keyWithPrefix.slice(commandPrefix.length)
     : keyWithPrefix;
-  const handler = commands[key];
+  const handler = commands[key.toLocaleLowerCase()];
   if (!handler) return;
 
   /*
@@ -160,7 +160,7 @@ const messageEvent = (msg: Message) => {
   }
 
   if (debug) log.info("Message", msg.body.slice(0, 255));
-  msg.body = msg.body.slice(commandPrefix.length).trim();
+  msg.body = commandPrefixLess ? msg.body : msg.body.slice(commandPrefix.length).trim();
 
   /*
    * Execute the command handler.
