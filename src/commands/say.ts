@@ -15,7 +15,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  const url = GoogleTTS.getAudioUrl(query, {
+  const url = GoogleTTS.getAudioUrl(query.substring(0, 150), {
     lang: "en",
     slow: false,
     host: "https://translate.google.com",

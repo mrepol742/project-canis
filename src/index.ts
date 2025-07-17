@@ -9,6 +9,8 @@ import fs from "fs";
 import path from "path";
 import { startServer } from "./server";
 
+import rateLimiter from "./components/rateLimiter";
+
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
@@ -23,6 +25,39 @@ log.info("Bot", `Command prefix: ${commandPrefix}`);
 const client = new Client({
   authStrategy: new LocalAuth(),
 });
+
+process.on("SIGHUP", function () {
+  process.exit(0);
+});
+
+process.on("SIGTERM", function () {
+  process.exit(0);
+});
+
+process.on("SIGINT", function () {
+  process.kill(process.pid);
+  process.exit(0);
+});
+
+process.on("uncaughtException", (err, origin) => {
+  log.error(
+    "Uncaught Exception",
+    `Exception: ${err.message}\nOrigin: ${origin}`
+  );
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  log.error("Unhandled Rejection", `Reason: ${reason}\nPromise: ${promise}`);
+});
+
+process.on("beforeExit", (code) => {
+  log.info("Before Exit", `Process is about to exit with code: ${code}`);
+});
+
+process.on("exit", (code) => {
+  console.log("");
+});
+
 startServer(Number(port));
 
 const commands: Record<
@@ -87,9 +122,17 @@ client.initialize();
 
 const messageEvent = (msg: Message) => {
   const prefix = !msg.body.startsWith(commandPrefix);
-  if (!commandPrefixLess && prefix) return;
-  if (msg.fromMe && prefix) return; // Ignore messages sent by the bot itself without prefix
+  const senderId = msg.from.split("@")[0];
 
+  /*
+   * Prefix
+   */
+  if (!commandPrefixLess && prefix) return;
+  if (msg.fromMe && prefix) return;
+
+  /*
+   * Check if the message starts with the command prefix.
+   */
   const keyWithPrefix = msg.body.split(" ")[0];
   const key = keyWithPrefix.startsWith(commandPrefix)
     ? keyWithPrefix.slice(commandPrefix.length)
@@ -97,11 +140,21 @@ const messageEvent = (msg: Message) => {
   const handler = commands[key];
   if (!handler) return;
 
-  const senderId = msg.from.split("@")[0];
+  /*
+   * Rate limit commands to prevent abuse.
+   */
+  if (senderId !== superAdmin) {
+    const rate = rateLimiter(msg.from);
+    if (rate === null) return;
+    if (!rate) {
+      msg.reply("You are sending commands too fast. Please wait a minute.");
+      return;
+    }
+  }
 
-  log.info("Command", `Received command: ${key} from ${senderId}`);
-
-  // Block access to commands based on roles
+  /*
+   * Role base restrictions.
+   */
   if (handler.role === "admin" && !msg.fromMe && senderId !== superAdmin) {
     return;
   }
@@ -109,6 +162,9 @@ const messageEvent = (msg: Message) => {
   if (debug) log.info("Message", msg.body.slice(0, 255));
   msg.body = msg.body.slice(commandPrefix.length).trim();
 
+  /*
+   * Execute the command handler.
+   */
   try {
     handler.exec(msg);
   } catch (error) {
