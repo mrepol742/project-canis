@@ -32,6 +32,5 @@ export default async function (msg: Message) {
     .catch(async (error) => {
       log.error("poli", `Error fetching image: ${error.message}`);
       await msg.reply("Error fetching image. Please try again later.");
-      return;
     });
 }
