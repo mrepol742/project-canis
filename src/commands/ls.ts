@@ -2,7 +2,7 @@ import { Message } from "whatsapp-web.js";
 import log from "npmlog";
 import { commands } from "../index";
 
-export const command = "cmd";
+export const command = "ls";
 export const role = "user";
 
 export default async function (msg: Message) {
