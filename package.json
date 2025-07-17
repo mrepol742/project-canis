@@ -23,6 +23,7 @@
     "email": "mrepol742@gmail.com"
   },
   "dependencies": {
+    "axios": "^1.10.0",
     "dotenv": "^17.2.0",
     "npmlog": "^7.0.1",
     "qrcode-terminal": "^0.12.0",
