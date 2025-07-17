@@ -45,7 +45,7 @@ async function default_1(msg) {
         await msg.reply(`DuckDuckGo search results for "${query}":\n${searchUrl}`);
     }
     catch (error) {
-        npmlog_1.default.error("GoCommand", "Error fetching DuckDuckGo results:", error);
+        npmlog_1.default.error("Command", "Error fetching DuckDuckGo results:", error);
         await msg.reply("Failed to search DuckDuckGo.");
     }
 }
