@@ -1,15 +1,41 @@
 {
+  "name": "project-canis",
+  "version": "10.0.2",
+  "description": "Canis Major and the constellation Canis Minor, the “lesser dog,” are widely regarded as two hunting hounds that follow Orion, the great hunter of ancient Greek legends.",
+  "private": true,
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts"
   },
+  "author": {
+    "name": "Melvin Jones Repol",
+    "email": "mrepol742@gmail.com",
+    "url": "https://mrepol742.github.io"
+  },
+  "license": "SEE LICENSE IN https://github.com/mrepol742/project-canis/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrepol742/project-canis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mrepol742/project-canis/issues",
+    "email": "mrepol742@gmail.com"
+  },
   "dependencies": {
+    "dotenv": "^17.2.0",
+    "npmlog": "^7.0.1",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.31.0"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/node": "^24.0.14",
+    "@types/npmlog": "^7.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=24.x"
   }
 }
