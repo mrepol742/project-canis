@@ -10,8 +10,10 @@ import path from "path";
 import { startServer } from "./server";
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
+const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
 const debug = process.env.DEBUG === "true";
+const autoReload = process.env.AUTO_RELOAD === "true";
 const port = process.env.PORT || 3000;
 
 log.info("Bot", `Welcome to ${botName}!`);
@@ -36,20 +38,21 @@ const loadCommand = (file: string) => {
       log.info("Loader", `Loaded command: ${commandModule.command}`);
     }
   }
-}
+};
 
 fs.readdirSync(commandsPath).forEach(loadCommand);
 
 // Watch for changes
-fs.watch(commandsPath, (eventType, filename) => {
-  if (filename && /\.js$|\.ts$/.test(filename)) {
-    try {
-      loadCommand(filename);
-    } catch (err) {
-      log.error("Loader", `Failed to reload command: ${filename}`, err);
+if (autoReload)
+  fs.watch(commandsPath, (eventType, filename) => {
+    if (filename && /\.js$|\.ts$/.test(filename)) {
+      try {
+        loadCommand(filename);
+      } catch (err) {
+        log.error("Loader", `Failed to reload command: ${filename}`, err);
+      }
     }
-  }
-});
+  });
 
 client.on("qr", (qr) => {
   // Generate and scan this code with your phone
@@ -72,7 +75,7 @@ client.initialize();
 
 const messageEvent = (msg: Message) => {
   const prefix = !msg.body.startsWith(commandPrefix);
-  if (prefix) return;
+  if (!commandPrefixLess && prefix) return;
   if (msg.fromMe && prefix) return; // Ignore messages sent by the bot itself without prefix
 
   const keyWithPrefix = msg.body.split(" ")[0];
@@ -80,17 +83,12 @@ const messageEvent = (msg: Message) => {
     ? keyWithPrefix.slice(commandPrefix.length)
     : keyWithPrefix;
   const handler = commands[key];
-  
-  if (!handler && debug) {
-    log.warn("Command", `No handler found for command: ${key}`);
-    msg.reply(
-      `Unknown command: ${key}. Type ${commandPrefix}help for a list of commands.`
-    );
-    return;
-  }
- 
+
+  if (!handler) return;
+  msg.body = msg.body.slice(keyWithPrefix.length).trim();
+
   if (debug) log.info("Message", msg.body.slice(0, 255));
   handler(msg);
 };
 
-export { commands }
+export { commands };

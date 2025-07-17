@@ -28,7 +28,7 @@ export default async function (msg: Message) {
     const data = response.data;
 
     if (data.AbstractText) {
-      await msg.reply(`${data.AbstractText}\n${data.AbstractURL}`);
+      await msg.reply(`${data.AbstractText}\n\n${data.AbstractURL}`);
       return;
     }
 
@@ -49,7 +49,7 @@ export default async function (msg: Message) {
     const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
     await msg.reply(`DuckDuckGo search results for "${query}":\n${searchUrl}`);
   } catch (error) {
-    log.error("Command", "Error fetching DuckDuckGo results:", error);
+    log.error("Command", "Error fetching DuckDuckGo:", error);
     await msg.reply("Failed to search DuckDuckGo.");
   }
 }
