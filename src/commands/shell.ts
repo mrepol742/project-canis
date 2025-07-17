@@ -7,8 +7,8 @@ export const command = "shell";
 export const role = "admin";
 
 export default async function (msg: Message) {
-  const query = msg.body.replace(/^shell\s+/i, "").trim();
-  if (!query) {
+  const query = msg.body.replace(/^shell\b\s*/i, "").trim();
+  if (query.length === 0) {
     await msg.reply("Please provide a command.");
     return;
   }

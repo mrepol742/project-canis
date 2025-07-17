@@ -8,31 +8,46 @@ export const command = "github";
 export const role = "user";
 
 export default async function (msg: Message) {
-  const query = msg.body.replace(/^github\s+/i, "").trim();
-  if (!query) {
+  const query = msg.body.replace(/^github\b\s*/i, "").trim();
+  if (query.length === 0) {
     await msg.reply("Please provide a username.");
     return;
   }
 
-  const response = await axios.get(`https://api.github.com/users/${query}`);
-  const user = response.data;
-  const info = `
-*GitHub User Info:*
-- Name: ${user.name || user.login}
-- Bio: ${user.bio || "N/A"}
-- Location: ${user.location || "N/A"}
-- Public Repos: ${user.public_repos}
-- Followers: ${user.followers}
-- Following: ${user.following}
-- Public Gists: ${user.public_gists}
-- Public Repo: ${user.public_repos}
-- Twitter: ${
+  if (query.includes(" ")) {
+    await msg.reply("Please provide a single username without spaces.");
+    return;
+  }
+
+  await axios
+    .get(`https://api.github.com/users/${query}`)
+    .then(async (response) => {
+      const user = response.data;
+      const info = `
+  *${user.name || user.login}*
+  ${user.bio || ""}
+  
+  - Place: ${user.location || "N/A"}
+  - Repos: ${user.public_repos}
+  - Followers: ${user.followers}
+  - Following: ${user.following}
+  - Gists: ${user.public_gists}
+  - Repo: ${user.public_repos}
+  - X: ${
     user.twitter_username
       ? `https://twitter.com/${user.twitter_username}`
       : "N/A"
   }
-- Blog: ${user.blog || "N/A"}
-`;
+  - Link: ${user.blog || "N/A"}
+  `;
 
-  await msg.reply(info);
+      await msg.reply(info);
+    })
+    .catch(async (error) => {
+      log.error("github", `Error fetching data: ${error.message}`);
+      await msg.reply(
+        `Error fetching data for "${query}". Please try again later.`
+      );
+      return;
+    });
 }

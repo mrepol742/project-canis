@@ -11,9 +11,7 @@ export default async function (msg: Message) {
   const body = msg.body.trim();
   const match = body.match(/^run\s+(python|java|c|js|php)\s*\r?\n([\s\S]+)/i);
 
-  log.info("Command", `Received body: ${JSON.stringify(body)}`);
   if (!match) {
-    log.info("Command", "Invalid run command format");
     await msg.reply(
       "Please use the format:\n\nrun python\n<code>\n\nor\n\nrun java\n<code>"
     );

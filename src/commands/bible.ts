@@ -6,11 +6,11 @@ export const command = "bible";
 export const role = "user";
 
 export default async function (msg: Message) {
-  const query = msg.body.replace(/^bible\s+/i, "").trim();
+  const query = msg.body.replace(/^bible\b\s*/i, "").trim();
 
-  if (!["--random", "--today", "--verse"].includes(query)) {
+  if (!/^--(random|today|verse(\s+\w+\s*\d+:\d+)?)$/i.test(query)) {
     await msg.reply(
-      "Invalid argument. Please use one of the following:\n- bible --random\n- bible --today\n- bible --verse job 4L9"
+      "Invalid argument. Please use one of the following:\n\n- bible --random\n- bible --today\n- bible --verse Job 4:9"
     );
     return;
   }
@@ -24,24 +24,36 @@ export default async function (msg: Message) {
     parameter = query.replace("--verse ", "").trim();
   }
 
-  const response = await axios.get(`https://labs.bible.org/api/`, {
-    params: {
-      passage: parameter,
-      type: "json",
-    },
-    headers: {
-      "User-Agent": "Mozilla/5.0",
-    },
-  });
-  const data = response.data;
+  await axios
+    .get(`https://labs.bible.org/api/`, {
+      params: {
+        passage: parameter,
+        type: "json",
+      },
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+      },
+    })
+    .then(async (response) => {
+      const data = response.data;
 
-  if (!Array.isArray(data) || data.length === 0) {
-    await msg.reply("No verse found for your query.");
-    return;
-  }
+      if (!Array.isArray(data) || data.length === 0) {
+        await msg.reply("No verse found for your query.");
+        return;
+      }
 
-  const v = data[0];
-  const verses = `${v.bookname} ${v.chapter}:${v.verse} - ${v.text.trim()}`;
+      const v = data[0];
+      const verses = `
+*${v.bookname} ${v.chapter}:${v.verse}*
 
-  await msg.reply(verses);
+${v.text.trim()}
+`;
+
+      await msg.reply(verses);
+    })
+    .catch(async (error) => {
+      log.error("bible", `Error fetching data: ${error.message}`);
+      await msg.reply(`Error fetching data. Please try again later.`);
+      return;
+    });
 }

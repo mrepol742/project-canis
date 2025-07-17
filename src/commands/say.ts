@@ -9,8 +9,8 @@ export const command = "say";
 export const role = "user";
 
 export default async function (msg: Message) {
-  const query = msg.body.replace(/^say\s+/i, "").trim();
-  if (!query) {
+  const query = msg.body.replace(/^say\b\s*/i, "").trim();
+  if (query.length === 0) {
     await msg.reply("Please provide something to say.");
     return;
   }

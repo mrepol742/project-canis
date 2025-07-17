@@ -5,6 +5,5 @@ export const command = "ping";
 export const role = "user";
 
 export default function (msg: Message) {
-  log.info("Ping", "Ping command handler called");
   msg.reply("pong");
 }
