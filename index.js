@@ -13,8 +13,10 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const server_1 = require("./server");
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
+const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
 const debug = process.env.DEBUG === "true";
+const autoReload = process.env.AUTO_RELOAD === "true";
 const port = process.env.PORT || 3000;
 npmlog_1.default.info("Bot", `Welcome to ${botName}!`);
 npmlog_1.default.info("Bot", `Command prefix: ${commandPrefix}`);
@@ -39,16 +41,17 @@ const loadCommand = (file) => {
 };
 fs_1.default.readdirSync(commandsPath).forEach(loadCommand);
 // Watch for changes
-fs_1.default.watch(commandsPath, (eventType, filename) => {
-    if (filename && /\.js$|\.ts$/.test(filename)) {
-        try {
-            loadCommand(filename);
+if (autoReload)
+    fs_1.default.watch(commandsPath, (eventType, filename) => {
+        if (filename && /\.js$|\.ts$/.test(filename)) {
+            try {
+                loadCommand(filename);
+            }
+            catch (err) {
+                npmlog_1.default.error("Loader", `Failed to reload command: ${filename}`, err);
+            }
         }
-        catch (err) {
-            npmlog_1.default.error("Loader", `Failed to reload command: ${filename}`, err);
-        }
-    }
-});
+    });
 client.on("qr", (qr) => {
     // Generate and scan this code with your phone
     npmlog_1.default.info("QR Code", "Scan this QR code with your WhatsApp app:");
@@ -65,7 +68,7 @@ client.on("auth_failure", (msg) => {
 client.initialize();
 const messageEvent = (msg) => {
     const prefix = !msg.body.startsWith(commandPrefix);
-    if (prefix)
+    if (!commandPrefixLess && prefix)
         return;
     if (msg.fromMe && prefix)
         return; // Ignore messages sent by the bot itself without prefix
@@ -74,11 +77,9 @@ const messageEvent = (msg) => {
         ? keyWithPrefix.slice(commandPrefix.length)
         : keyWithPrefix;
     const handler = commands[key];
-    if (!handler && debug) {
-        npmlog_1.default.warn("Command", `No handler found for command: ${key}`);
-        msg.reply(`Unknown command: ${key}. Type ${commandPrefix}help for a list of commands.`);
+    if (!handler)
         return;
-    }
+    msg.body = msg.body.slice(keyWithPrefix.length).trim();
     if (debug)
         npmlog_1.default.info("Message", msg.body.slice(0, 255));
     handler(msg);

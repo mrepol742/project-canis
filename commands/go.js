@@ -29,7 +29,7 @@ async function default_1(msg) {
         });
         const data = response.data;
         if (data.AbstractText) {
-            await msg.reply(`${data.AbstractText}\n${data.AbstractURL}`);
+            await msg.reply(`${data.AbstractText}\n\n${data.AbstractURL}`);
             return;
         }
         // If no abstract, try to get the first related topic
@@ -45,7 +45,7 @@ async function default_1(msg) {
         await msg.reply(`DuckDuckGo search results for "${query}":\n${searchUrl}`);
     }
     catch (error) {
-        npmlog_1.default.error("Command", "Error fetching DuckDuckGo results:", error);
+        npmlog_1.default.error("Command", "Error fetching DuckDuckGo:", error);
         await msg.reply("Failed to search DuckDuckGo.");
     }
 }
