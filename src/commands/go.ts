@@ -11,46 +11,41 @@ export default async function (msg: Message) {
     await msg.reply("Please provide a search query.");
     return;
   }
-  
-  try {
-    const response = await axios.get("https://api.duckduckgo.com/", {
-      params: {
-        q: query,
-        format: "json",
-        pretty: 1,
-        no_redirect: 1,
-        no_html: 1,
-      },
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-      },
-    });
 
-    const data = response.data;
+  const response = await axios.get("https://api.duckduckgo.com/", {
+    params: {
+      q: query,
+      format: "json",
+      pretty: 1,
+      no_redirect: 1,
+      no_html: 1,
+    },
+    headers: {
+      "User-Agent": "Mozilla/5.0",
+    },
+  });
 
-    if (data.AbstractText) {
-      await msg.reply(`${data.AbstractText}\n\n${data.AbstractURL}`);
+  const data = response.data;
+
+  if (data.AbstractText) {
+    await msg.reply(`${data.AbstractText}\n\n${data.AbstractURL}`);
+    return;
+  }
+
+  // If no abstract, try to get the first related topic
+  if (Array.isArray(data.RelatedTopics) && data.RelatedTopics.length > 0) {
+    const firstTopic =
+      data.RelatedTopics.find(
+        (t: any) => typeof t.Text === "string" && t.FirstURL
+      ) || data.RelatedTopics[0];
+
+    if (firstTopic && firstTopic.Text && firstTopic.FirstURL) {
+      await msg.reply(`${firstTopic.Text}\n${firstTopic.FirstURL}`);
       return;
     }
-
-    // If no abstract, try to get the first related topic
-    if (Array.isArray(data.RelatedTopics) && data.RelatedTopics.length > 0) {
-      const firstTopic =
-        data.RelatedTopics.find(
-          (t: any) => typeof t.Text === "string" && t.FirstURL
-        ) || data.RelatedTopics[0];
-
-      if (firstTopic && firstTopic.Text && firstTopic.FirstURL) {
-        await msg.reply(`${firstTopic.Text}\n${firstTopic.FirstURL}`);
-        return;
-      }
-    }
-
-    // Fallback
-    const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-    await msg.reply(`DuckDuckGo search results for "${query}":\n${searchUrl}`);
-  } catch (error) {
-    log.error("Command", "Error fetching DuckDuckGo:", error);
-    await msg.reply("Failed to search DuckDuckGo.");
   }
+
+  // Fallback
+  const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+  await msg.reply(`DuckDuckGo search results for "${query}":\n${searchUrl}`);
 }

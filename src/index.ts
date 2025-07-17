@@ -108,7 +108,13 @@ const messageEvent = (msg: Message) => {
 
   if (debug) log.info("Message", msg.body.slice(0, 255));
   msg.body = msg.body.slice(commandPrefix.length).trim();
-  handler.exec(msg);
+
+  try {
+    handler.exec(msg);
+  } catch (error) {
+    log.error("Command", "Error occured while processing the request:", error);
+    msg.reply("An error occurred while processing your request.");
+  }
 };
 
 export { client, commands };

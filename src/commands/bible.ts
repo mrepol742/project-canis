@@ -24,29 +24,24 @@ export default async function (msg: Message) {
     parameter = query.replace("--verse ", "").trim();
   }
 
-  try {
-    const response = await axios.get(`https://labs.bible.org/api/`, {
-      params: {
-        passage: parameter,
-        type: "json",
-      },
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-      },
-    });
-    const data = response.data;
+  const response = await axios.get(`https://labs.bible.org/api/`, {
+    params: {
+      passage: parameter,
+      type: "json",
+    },
+    headers: {
+      "User-Agent": "Mozilla/5.0",
+    },
+  });
+  const data = response.data;
 
-    if (!Array.isArray(data) || data.length === 0) {
-      await msg.reply("No verse found for your query.");
-      return;
-    }
-
-    const v = data[0];
-    const verses = `${v.bookname} ${v.chapter}:${v.verse} - ${v.text.trim()}`;
-
-    await msg.reply(verses);
-  } catch (error) {
-    log.error("Command", "Error fetching bible:", error);
-    await msg.reply("Failed to fetch bible.");
+  if (!Array.isArray(data) || data.length === 0) {
+    await msg.reply("No verse found for your query.");
+    return;
   }
+
+  const v = data[0];
+  const verses = `${v.bookname} ${v.chapter}:${v.verse} - ${v.text.trim()}`;
+
+  await msg.reply(verses);
 }

@@ -12,18 +12,16 @@ export default async function (msg: Message) {
     return;
   }
 
-  try {
-    const response = await axios.get(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+  const response = await axios.get(
+    `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
+      query
+    )}`
+  );
 
-    const data = response.data;
-    const title = data.title || query;
-    const description = data.description ? `(${data.description})` : "";
-    const extract = data.extract || "No summary available.";
+  const data = response.data;
+  const title = data.title || query;
+  const description = data.description ? `(${data.description})` : "";
+  const extract = data.extract || "No summary available.";
 
-    await msg.reply(`${title} ${description}\n${extract}`);
-  } catch (error) {
-    log.error("Command", "Error fetching wikipedia:", error);
-    await msg.reply("Failed to fetch wikipedia.");
-  }
+  await msg.reply(`${title} ${description}\n${extract}`);
 }
