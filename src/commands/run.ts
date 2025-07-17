@@ -2,6 +2,7 @@ import { Message } from "whatsapp-web.js";
 import log from "npmlog";
 import { exec } from "child_process";
 import util from "util";
+import fs from "fs/promises";
 
 export const command = "run";
 export const role = "admin";
@@ -26,27 +27,29 @@ export default async function (msg: Message) {
     let command: string;
     let tempFile: string;
 
+    const tempDir = "./.temp";
+    await fs.mkdir(tempDir, { recursive: true });
+
     if (lang === "python") {
-      tempFile = `/tmp/run.py`;
+      tempFile = `${tempDir}/run.py`;
       command = `python3 "${tempFile}"`;
     } else if (lang === "java") {
-      tempFile = `/tmp/run.java`;
+      tempFile = `${tempDir}/run.java`;
       command = `javac "${tempFile}" && java -cp /tmp Code`;
     } else if (lang === "c") {
-      tempFile = `/tmp/run.c`;
+      tempFile = `${tempDir}/run.c`;
       command = `gcc "${tempFile}" -o /tmp/code && /tmp/code`;
     } else if (lang === "js") {
-      tempFile = `/tmp/code.js`;
+      tempFile = `${tempDir}/code.js`;
       command = `node "${tempFile}"`;
     } else if (lang === "php") {
-      tempFile = `/tmp/run.php`;
+      tempFile = `${tempDir}/run.php`;
       command = `php "${tempFile}"`;
     } else {
       await msg.reply("Unsupported language.");
       return;
     }
 
-    const fs = await import("fs/promises");
     await fs.writeFile(tempFile, code);
 
     const execPromise = util.promisify(exec);

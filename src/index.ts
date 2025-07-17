@@ -111,4 +111,4 @@ const messageEvent = (msg: Message) => {
   handler.exec(msg);
 };
 
-export { commands };
+export { client, commands };
