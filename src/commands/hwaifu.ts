@@ -4,22 +4,26 @@ import log from "npmlog";
 import fs from "fs/promises";
 import { client } from "../index";
 
-export const command = "waifu";
+export const command = "hwaifu";
 export const role = "user";
 
 export default async function (msg: Message) {
-  const query = msg.body.replace(/^waifu\b\s*/i, "").trim();
+  const query = msg.body.replace(/^hwaifu\b\s*/i, "").trim();
   if (query.length !== 0) {
-    if (!/^(neko|shinobu|megumin|bully|cuddle|cry|hug|awoo|kiss|lick|pat|smug|bonk|yeet|blush|smile|wave|highfive|handhold|nom|bite|glomp|slap|kill|kick|happy|wink|poke|dance|cringe)$/i.test(query)) {
+    if (
+      !/^(neko|trap|blowjob)$/i.test(
+        query
+      )
+    ) {
       await msg.reply(
-        "Invalid argument. Please use one of the following:\n\nneko, shinobu, megumin, bully, cuddle, cry, hug, awoo, kiss, lick, pat, smug, bonk, yeet, blush, smile, wave, highfive, handhold, nom, bite, glomp, slap, kill, kick, happy, wink, poke, dance, cringe"
+        "Invalid argument. Please use one of the following:\n\nneko, trap, blowjob"
       );
       return;
     }
   }
 
   await axios
-    .get(`https://api.waifu.pics/sfw/${query.length > 0 ? query : "waifu"}`)
+    .get(`https://api.waifu.pics/nsfw/${query.length > 0 ? query : "waifu"}`)
     .then(async (response) => {
       await axios
         .get(response.data.url, {
@@ -37,12 +41,12 @@ export default async function (msg: Message) {
           await fs.unlink(tempPath);
         })
         .catch(async (error) => {
-          log.error("waifu", `Error fetching image: ${error.message}`);
+          log.error("hwaifu", `Error fetching image: ${error.message}`);
           await msg.reply("Error fetching image. Please try again later.");
         });
     })
     .catch(async (error) => {
-      log.error("waifu", `Error fetching data: ${error.message}`);
+      log.error("hwaifu", `Error fetching data: ${error.message}`);
       await msg.reply(
         `Error fetching data for "${query}". Please try again later.`
       );

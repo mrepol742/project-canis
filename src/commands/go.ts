@@ -7,7 +7,6 @@ export const role = "user";
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^go\b\s*/i, "").trim();
-  log.info("go", `Received query: ${query}`);
   if (query.length === 0) {
     await msg.reply("Please provide a search query.");
     return;
