@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.commands = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const npmlog_1 = __importDefault(require("npmlog"));
@@ -21,15 +22,30 @@ const client = new whatsapp_web_js_1.Client({
     authStrategy: new whatsapp_web_js_1.LocalAuth(),
 });
 (0, server_1.startServer)(Number(port));
-// Load commands dynamically
 const commands = {};
+exports.commands = commands;
 const commandsPath = path_1.default.join(__dirname, "commands");
-fs_1.default.readdirSync(commandsPath).forEach((file) => {
+// Initial load
+const loadCommand = (file) => {
     if (/\.js$|\.ts$/.test(file)) {
-        const commandModule = require(path_1.default.join(commandsPath, file));
+        const filePath = path_1.default.join(commandsPath, file);
+        delete require.cache[require.resolve(filePath)];
+        const commandModule = require(filePath);
         if (commandModule.command && typeof commandModule.default === "function") {
             commands[commandModule.command] = commandModule.default;
             npmlog_1.default.info("Loader", `Loaded command: ${commandModule.command}`);
+        }
+    }
+};
+fs_1.default.readdirSync(commandsPath).forEach(loadCommand);
+// Watch for changes
+fs_1.default.watch(commandsPath, (eventType, filename) => {
+    if (filename && /\.js$|\.ts$/.test(filename)) {
+        try {
+            loadCommand(filename);
+        }
+        catch (err) {
+            npmlog_1.default.error("Loader", `Failed to reload command: ${filename}`, err);
         }
     }
 });
