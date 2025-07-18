@@ -77,7 +77,7 @@ function Font(text) {
         return char
             .split("")
             .map(function (char) {
-            return mathSansMap[char];
+            return mathSansMap[char] || char;
         })
             .join("");
     })

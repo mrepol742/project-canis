@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
-const npmlog_1 = __importDefault(require("npmlog"));
+const log_1 = __importDefault(require("../components/log"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const index_1 = require("../index");
@@ -35,7 +35,6 @@ async function default_1(msg) {
             await msg.reply(`Reloaded command "${query}".`);
         return;
     }
-    // Reload all commands
     let count = 0;
     const commandsPath = path_1.default.join(__dirname, "..", "commands");
     fs_1.default.readdirSync(commandsPath).forEach((file) => {
@@ -51,7 +50,7 @@ async function default_1(msg) {
                     exec: commandModule.default,
                 };
                 count++;
-                npmlog_1.default.info("Loader", `Reloaded command: ${commandModule.command}`);
+                log_1.default.info("Loader", `Reloaded command: ${commandModule.command}`);
             }
         }
     });

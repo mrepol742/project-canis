@@ -9,6 +9,7 @@ dotenv_1.default.config();
 const npmlog_1 = __importDefault(require("npmlog"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+require("./components/log");
 const loader_1 = __importDefault(require("./components/loader"));
 require("./components/process");
 require("./components/server");
@@ -22,7 +23,6 @@ npmlog_1.default.info("Bot", `Command prefix: ${commandPrefix}`);
 const commands = {};
 exports.commands = commands;
 fs_1.default.readdirSync(commandsPath).forEach((file) => (0, loader_1.default)(file));
-// Watch for changes
 if (autoReload)
     fs_1.default.watch(commandsPath, (eventType, filename) => {
         if (filename && /\.js$|\.ts$/.test(filename)) {

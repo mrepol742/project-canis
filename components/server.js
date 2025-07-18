@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
-const npmlog_1 = __importDefault(require("npmlog"));
+const log_1 = __importDefault(require("../components/log"));
 const port = process.env.PORT || 3000;
 http_1.default
     .createServer((req, res) => {
@@ -12,5 +12,5 @@ http_1.default
     res.end("Bot is running\n");
 })
     .listen(port, () => {
-    npmlog_1.default.info("Server", `HTTP server started on port ${port}`);
+    log_1.default.info("Server", `HTTP server started on port ${port}`);
 });

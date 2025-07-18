@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const npmlog_1 = __importDefault(require("npmlog"));
+const log_1 = __importDefault(require("../components/log"));
 exports.command = "wiki";
 exports.role = "user";
 async function default_1(msg) {
@@ -25,7 +25,7 @@ async function default_1(msg) {
         await msg.reply(`${title} ${description}\n${extract}`);
     })
         .catch(async (error) => {
-        npmlog_1.default.error("wiki", `Error fetching data: ${error.message}`);
+        log_1.default.error("wiki", `Error fetching data: ${error.message}`);
         await msg.reply(`Error fetching data for "${query}". Please try again later.`);
     });
 }

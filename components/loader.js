@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = Loader;
-const npmlog_1 = __importDefault(require("npmlog"));
+const log_1 = __importDefault(require("../components/log"));
 const path_1 = __importDefault(require("path"));
 const index_1 = require("../index");
 exports.command = "load";
@@ -23,7 +23,7 @@ function Loader(file, customPath) {
                 role: commandModule.role || "user",
                 exec: commandModule.default,
             };
-            npmlog_1.default.info("Loader", `Loaded command: ${commandModule.command}`);
+            log_1.default.info("Loader", `Loaded command: ${commandModule.command}`);
         }
     }
 }

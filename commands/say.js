@@ -59,7 +59,6 @@ async function default_1(msg) {
     const buffer = Buffer.from(response.data);
     const tempDir = "./.temp";
     const tempPath = `${tempDir}/${Date.now()}.mp3`;
-    // Ensure the temp directory exists
     await fs_1.default.promises.mkdir(tempDir, { recursive: true });
     await fs_1.default.promises.writeFile(tempPath, buffer);
     const media = whatsapp_web_js_1.MessageMedia.fromFilePath(tempPath);

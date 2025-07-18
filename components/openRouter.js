@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateText = exports.openRouterApiKey = exports.openrouter = void 0;
+exports.generateText = exports.openrouter = void 0;
 const ai_sdk_provider_1 = require("@openrouter/ai-sdk-provider");
 const ai_1 = require("ai");
 Object.defineProperty(exports, "generateText", { enumerable: true, get: function () { return ai_1.generateText; } });
-const openRouterApiKey = process.env.OPEN_ROUTER_API_KEY;
-exports.openRouterApiKey = openRouterApiKey;
-const openrouter = (0, ai_sdk_provider_1.createOpenRouter)({ apiKey: openRouterApiKey });
+const openrouter = (0, ai_sdk_provider_1.createOpenRouter)({
+    apiKey: process.env.OPEN_ROUTER_API_KEY,
+});
 exports.openrouter = openrouter;

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const npmlog_1 = __importDefault(require("npmlog"));
+const log_1 = __importDefault(require("../components/log"));
 exports.command = "bible";
 exports.role = "user";
 async function default_1(msg) {
@@ -50,7 +50,7 @@ ${v.text.trim()}
         await msg.reply(verses);
     })
         .catch(async (error) => {
-        npmlog_1.default.error("bible", `Error fetching data: ${error.message}`);
+        log_1.default.error("bible", `Error fetching data: ${error.message}`);
         await msg.reply(`Error fetching data. Please try again later.`);
         return;
     });

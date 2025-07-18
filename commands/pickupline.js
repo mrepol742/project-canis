@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const npmlog_1 = __importDefault(require("npmlog"));
+const log_1 = __importDefault(require("../components/log"));
 const font_1 = __importDefault(require("../components/font"));
 exports.command = "pickupline";
 exports.role = "user";
@@ -17,7 +17,7 @@ async function default_1(msg) {
         await msg.reply((0, font_1.default)(response.data.pickupline));
     })
         .catch(async (error) => {
-        npmlog_1.default.error("pickupline", `Error fetching data: ${error.message}`);
+        log_1.default.error("pickupline", `Error fetching data: ${error.message}`);
         await msg.reply(`Error fetching data. Please try again later.`);
     });
 }
