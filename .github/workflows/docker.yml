@@ -1,0 +1,45 @@
+name: Docker CI
+
+on:
+  push:
+    branches: ["build"]
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+    
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          ref: build
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.APP_DOCKER_USERNAME }}
+          password: ${{ secrets.APP_DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t mrepol742/project-canis:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push mrepol742/project-canis:latest
+
+      - name: Run Docker container
+        run: |
+          docker run -d -p 3000:3000 --name project-canis mrepol742/project-canis:latest
+
+      - name: Check container logs
+        run: |
+          docker logs project-canis
+
+      - name: Stop and remove container
+        if: always()
+        run: |
+          docker stop project-canis
+          docker rm project-canis
