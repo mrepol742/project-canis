@@ -35,6 +35,8 @@ const messageEvent = (msg) => {
     // ignore message if it is older than 10 seconds
     if (msg.timestamp < Date.now() / 1000 - 10)
         return;
+    // process normalization
+    msg.body = msg.body.normalize("NFKC");
     const prefix = !msg.body.startsWith(commandPrefix);
     const senderId = msg.from.split("@")[0];
     /*
