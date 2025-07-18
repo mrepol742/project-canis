@@ -79,7 +79,7 @@ export default function Font(text: string) {
       return char
         .split("")
         .map(function (char) {
-          return mathSansMap[char];
+          return mathSansMap[char] || char;
         })
         .join("");
     })

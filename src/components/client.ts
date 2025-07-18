@@ -1,8 +1,9 @@
-import log from "npmlog";
+import log from "../components/log";
 import { Client, LocalAuth, Message } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import rateLimiter from "./rateLimiter";
 import { commands } from "../index";
+import { isRateLimitError, getRateLimitInfo } from "./rateLimit";
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
@@ -32,7 +33,7 @@ client.on("auth_failure", (msg) => {
 
 client.initialize();
 
-const messageEvent = (msg: Message) => {
+const messageEvent = async (msg: Message) => {
   // ignore message if it is older than 10 seconds
   if (msg.timestamp < Date.now() / 1000 - 10) return;
 
@@ -87,9 +88,14 @@ const messageEvent = (msg: Message) => {
    * Execute the command handler.
    */
   try {
-    handler.exec(msg);
+    await handler.exec(msg);
   } catch (error) {
-    log.error("Command", "Error occured while processing the request:", error);
+    if (isRateLimitError(error)) {
+      const rateLimitInfo = getRateLimitInfo(error);
+      log.warn(key, "Rate limit exceeded", rateLimitInfo);
+    } else {
+      log.error(key, "Error occured while processing the request.");
+    }
     msg.reply("An error occurred while processing your request.");
   }
 };

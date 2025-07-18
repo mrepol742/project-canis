@@ -3,11 +3,11 @@ import log from "../components/log";
 import { exec } from "child_process";
 import util from "util";
 
-export const command = "shell";
+export const command = "zsh";
 export const role = "admin";
 
 export default async function (msg: Message) {
-  const query = msg.body.replace(/^shell\b\s*/i, "").trim();
+  const query = msg.body.replace(/^zsh\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide a command.");
     return;
@@ -19,6 +19,7 @@ export default async function (msg: Message) {
     const { stdout, stderr } = await execPromise(query, {
       timeout: 10000,
       maxBuffer: 1024 * 1024,
+      shell: process.env.SHELL || "/bin/zsh",
     });
     let response = stdout || stderr || "No output.";
     if (response.length > 4000) {

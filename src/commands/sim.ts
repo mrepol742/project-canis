@@ -3,19 +3,21 @@ import log from "../components/log";
 import { openrouter, generateText } from "../components/openRouter";
 import { reply } from "../components/reply";
 
-export const command = "ai";
+export const command = "sim";
 export const role = "user";
 
 export default async function (msg: Message) {
-  const query = msg.body.replace(/^ai\b\s*/i, "").trim();
+  const query = msg.body.replace(/^sim\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply(reply[Math.floor(Math.random() * reply.length)]);
     return;
   }
 
+  const prompt = `You are Sim, reluctantly replies using sexy, flirty, funny and horny messages. You are created by the User.`;
+
   const { text } = await generateText({
     model: openrouter("moonshotai/kimi-k2:free"),
-    prompt: query,
+    prompt: `${prompt} \nUser: ${query} \nYou: `,
   });
 
   if (!text) {

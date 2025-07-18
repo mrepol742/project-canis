@@ -1,4 +1,4 @@
-import log from "npmlog";
+import log from "../components/log";
 import fs from "fs";
 import path from "path";
 import { commands } from "../index";

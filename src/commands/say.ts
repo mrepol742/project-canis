@@ -1,5 +1,5 @@
 import { Message, MessageMedia } from "whatsapp-web.js";
-import log from "npmlog";
+import log from "../components/log";
 import * as GoogleTTS from "google-tts-api";
 import fs from "fs";
 import axios from "axios";

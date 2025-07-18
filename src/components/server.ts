@@ -1,5 +1,5 @@
 import http from "http";
-import log from "npmlog";
+import log from "../components/log";
 
 const port = process.env.PORT || 3000;
 

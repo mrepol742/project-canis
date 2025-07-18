@@ -5,6 +5,7 @@ import log from "npmlog";
 import { Message } from "whatsapp-web.js";
 import fs from "fs";
 import path from "path";
+import "./components/log";
 import Loader from "./components/loader";
 import "./components/process";
 import "./components/server";

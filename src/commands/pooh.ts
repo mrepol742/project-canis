@@ -1,6 +1,6 @@
 import { Message, MessageMedia } from "whatsapp-web.js";
 import axios from "axios";
-import log from "npmlog";
+import log from "../components/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 

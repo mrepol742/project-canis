@@ -1,5 +1,5 @@
 import { Message } from "whatsapp-web.js";
-import log from "npmlog";
+import log from "../components/log";
 
 export const command = "ping";
 export const role = "user";
