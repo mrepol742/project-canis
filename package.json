@@ -23,6 +23,7 @@
     "email": "mrepol742@gmail.com"
   },
   "dependencies": {
+    "@openrouter/ai-sdk-provider": "^1.0.0-beta.1",
     "@prisma/client": "^6.12.0",
     "axios": "^1.10.0",
     "dotenv": "^17.2.0",
