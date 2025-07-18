@@ -94,7 +94,7 @@ const messageEvent = async (msg: Message) => {
       const rateLimitInfo = getRateLimitInfo(error);
       log.warn(key, "Rate limit exceeded", rateLimitInfo);
     } else {
-      log.error(key, "Error occured while processing the request.");
+      log.error(key, "Error occurred while processing the request:", error);
     }
     msg.reply("An error occurred while processing your request.");
   }

@@ -2,6 +2,7 @@ import { Message } from "whatsapp-web.js";
 import log from "../components/log";
 import { openrouter, generateText } from "../components/openRouter";
 import { reply } from "../components/reply";
+import agentHandler from "../components/agentHandler";
 
 export const command = "sim";
 export const role = "user";
@@ -13,12 +14,10 @@ export default async function (msg: Message) {
     return;
   }
 
-  const prompt = `You are Sim, reluctantly replies using sexy, flirty, funny and horny messages. You are created by the User.`;
+  const prompt = `You are Sim, reluctantly replies using sexy, flirty, funny and horny messages. 
+  U can use emoticons or signs for better feeling ya know. Maximum of 2 sentences only.`;
 
-  const { text } = await generateText({
-    model: openrouter("moonshotai/kimi-k2:free"),
-    prompt: `${prompt} \nUser: ${query} \nYou: `,
-  });
+  const text = await agentHandler(`${prompt} \nUser: ${query} \nYou: `);
 
   if (!text) {
     log.error("ai", "No response generated.");

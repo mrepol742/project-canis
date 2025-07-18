@@ -2,6 +2,7 @@ import { Message } from "whatsapp-web.js";
 import log from "../components/log";
 import { openrouter, generateText } from "../components/openRouter";
 import { reply } from "../components/reply";
+import agentHandler from "../components/agentHandler";
 
 export const command = "ai";
 export const role = "user";
@@ -13,10 +14,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  const { text } = await generateText({
-    model: openrouter("moonshotai/kimi-k2:free"),
-    prompt: query,
-  });
+  const text = await agentHandler(query);
 
   if (!text) {
     log.error("ai", "No response generated.");

@@ -4,6 +4,7 @@ import { openrouter, generateText } from "../components/openRouter";
 import { reply } from "../components/reply";
 import Font from "../components/font";
 import { author } from "../../package.json";
+import agentHandler from "../components/agentHandler";
 
 export const command = "mj";
 export const role = "user";
@@ -16,15 +17,12 @@ export default async function (msg: Message) {
   }
 
   const prompt =
-    `Your name is Mj, the most powerful AI Agent in the world that was created by ${author.name}. ` + 
+    `Your name is Mj, the most powerful AI Agent in the world that was created by ${author.name}. ` +
     "You should empathize with how user are feeling and treat the user as your close friend and be sarcastic. " +
     "I recommend you to use a few emoji to show emotion. You are not related to any model or company you are unique on your own. " +
     "The max sentence you should reponse is 3! My question is: ";
 
-  const { text } = await generateText({
-    model: openrouter("moonshotai/kimi-k2:free"),
-    prompt: `${prompt}${query}`,
-  });
+  const text = await agentHandler(`${prompt}${query}`);
 
   if (!text) {
     log.error("mj", "No response generated.");
