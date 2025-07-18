@@ -5,3 +5,5 @@ dist
 .temp
 *.log
 *.env
+
+/src/generated/prisma

@@ -47,10 +47,11 @@ const messageEvent = (msg) => {
     /*
      * Check if the message starts with the command prefix.
      */
-    const keyWithPrefix = msg.body.split(" ")[0];
-    const key = keyWithPrefix.startsWith(commandPrefix)
-        ? keyWithPrefix.slice(commandPrefix.length)
-        : keyWithPrefix;
+    const messageBody = msg.body.split(" ")[0];
+    const bodyHasPrefix = messageBody.startsWith(commandPrefix);
+    const key = bodyHasPrefix
+        ? messageBody.slice(commandPrefix.length)
+        : messageBody;
     const handler = index_1.commands[key.toLocaleLowerCase()];
     if (!handler)
         return;
@@ -74,9 +75,7 @@ const messageEvent = (msg) => {
     }
     if (debug)
         npmlog_1.default.info("Message", msg.body.slice(0, 255));
-    msg.body = commandPrefixLess
-        ? msg.body
-        : msg.body.slice(commandPrefix.length).trim();
+    msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
     /*
      * Execute the command handler.
      */

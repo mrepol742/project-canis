@@ -11,9 +11,9 @@ const index_1 = require("../index");
 exports.command = "load";
 exports.role = "admin";
 const commandsPath = path_1.default.join(__dirname, "..", "commands");
-function Loader(file) {
+function Loader(file, customPath) {
     if (/\.js$|\.ts$/.test(file)) {
-        const filePath = path_1.default.join(commandsPath, file);
+        const filePath = path_1.default.join(customPath || commandsPath, file);
         delete require.cache[require.resolve(filePath)];
         const commandModule = require(filePath);
         if (typeof commandModule.command === "string" &&

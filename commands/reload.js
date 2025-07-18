@@ -9,9 +9,33 @@ const npmlog_1 = __importDefault(require("npmlog"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const index_1 = require("../index");
+const loader_1 = __importDefault(require("../components/loader"));
 exports.command = "reload";
 exports.role = "admin";
 async function default_1(msg) {
+    const query = msg.body.replace(/^reload\b\s*/i, "").trim();
+    if (query.length !== 0) {
+        if (!index_1.commands[query.toLocaleLowerCase()]) {
+            await msg.reply(`Command "${query}" not found.`);
+            return;
+        }
+        const commandsPath = path_1.default.join(__dirname, "..", "commands");
+        const possibleExtensions = [".ts", ".js"];
+        let found = false;
+        for (const ext of possibleExtensions) {
+            const filePath = path_1.default.join(commandsPath, `${query}${ext}`);
+            if (fs_1.default.existsSync(filePath)) {
+                (0, loader_1.default)(`${query}${ext}`);
+                found = true;
+            }
+        }
+        if (!found)
+            await msg.reply(`Failed to reload command "${query}".`);
+        if (found)
+            await msg.reply(`Reloaded command "${query}".`);
+        return;
+    }
+    // Reload all commands
     let count = 0;
     const commandsPath = path_1.default.join(__dirname, "..", "commands");
     fs_1.default.readdirSync(commandsPath).forEach((file) => {

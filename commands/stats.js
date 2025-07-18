@@ -6,28 +6,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const os_1 = __importDefault(require("os"));
-const package_json_1 = require("../../package.json");
+const systeminformation_1 = __importDefault(require("systeminformation"));
 exports.command = "stats";
 exports.role = "user";
 async function default_1(msg) {
     const stats = {
-        platform: os_1.default.platform(),
+        OS: os_1.default.release(),
         arch: os_1.default.arch(),
-        cpuCount: os_1.default.cpus().length,
+        cpu: os_1.default.cpus(),
+        usedMemory: os_1.default.totalmem() - os_1.default.freemem(),
         totalMemory: os_1.default.totalmem(),
-        freeMemory: os_1.default.freemem(),
-        uptime: process.uptime(),
+        uptime: process.uptime()
     };
+    const gpuInfo = await systeminformation_1.default.graphics();
+    const osInfo = await systeminformation_1.default.osInfo();
     const statsMessage = `
       *System Stats:*
-      - Platform: ${stats.platform}
-      - Architecture: ${stats.arch}
-      - CPU Count: ${stats.cpuCount}
-      - Total Memory: ${(stats.totalMemory / 1024 ** 3).toFixed(2)} GB
-      - Free Memory: ${(stats.freeMemory / 1024 ** 3).toFixed(2)} GB
+
+      - OS: ${osInfo.distro} ${osInfo.kernel}
+      - CPU: ${stats.cpu[0].model}
+      - GPU: ${gpuInfo.controllers.map(c => c.model).join(", ")}
+      - RAM: ${(stats.usedMemory / (1024 ** 3)).toFixed(2)} GB / ${(stats.totalMemory / (1024 ** 3)).toFixed(2)} GB
+      - VRam: ${gpuInfo.controllers.map(c => c.vram).join(", ")}
       - Uptime: ${(stats.uptime / 3600).toFixed(2)} hours
-      - Node.js Version: ${process.version}
-      - ${package_json_1.name}: ${package_json_1.version}
+      - Load Avg: ${os_1.default.loadavg().map(n => n.toFixed(2)).join(", ")}
+      - Process: #${process.pid} ${process.title}
+      - Node.js: ${process.version}
     `;
     await msg.reply(statsMessage);
 }
