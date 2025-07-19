@@ -1,12 +1,12 @@
-import log from "../components/log";
+import log from "./log";
 import fs from "fs";
 import path from "path";
-import { commands } from "../index";
+import { commands } from "../../index";
 
 export const command = "load";
 export const role = "admin";
 
-const commandsPath = path.join(__dirname, "..", "commands");
+const commandsPath = path.join(__dirname, "..", "..", "commands");
 
 export default function Loader(file: string, customPath?: string) {
   if (/\.js$|\.ts$/.test(file)) {

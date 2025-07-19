@@ -1,6 +1,6 @@
 import { Message, MessageMedia } from "whatsapp-web.js";
 import axios from "axios";
-import log from "../components/log";
+import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
@@ -9,6 +9,7 @@ export const role = "user";
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^npm\b\s*/i, "").trim();
+  if (query.includes(" ")) return;
   if (query.length === 0) {
     await msg.reply("Please provide a search query.");
     return;
@@ -26,15 +27,15 @@ export default async function (msg: Message) {
       const repository = response.data.repository;
       const author_email = response.data.author_email;
       const repo = `
- *${name}*
- ${version}
- ${description}
+     *${name}*
+     ${version}
+     ${description}
 
- - Author: ${author}
- - Email: ${author_email}
- - Last Updated: ${last_published}
- - Repository: ${repository}
- - Downloads This Year: ${downloads_this_year}
+     - Author: ${author}
+     - Email: ${author_email}
+     - Last Updated: ${last_published}
+     - Repository: ${repository}
+     - Downloads This Year: ${downloads_this_year}
  `;
       await msg.reply(repo);
     })

@@ -1,10 +1,13 @@
 import { Message } from "whatsapp-web.js";
-import log from "../components/log";
-import { openrouter, generateText } from "../components/openRouter";
-import { reply } from "../components/reply";
-import Font from "../components/font";
+import log from "../components/utils/log";
+import Font from "../components/utils/font";
 import { author } from "../../package.json";
-import agentHandler from "../components/agentHandler";
+import {
+  greetings,
+  greetingsLength,
+} from "../components/ai/response/greetings";
+import agentHandler from "../components/ai/agentHandler";
+import { client } from "../components/client";
 
 export const command = "mj";
 export const role = "user";
@@ -12,7 +15,7 @@ export const role = "user";
 export default async function (msg: Message) {
   const query = msg.body.replace(/^mj\b\s*/i, "").trim();
   if (query.length === 0) {
-    await msg.reply(reply[Math.floor(Math.random() * reply.length)]);
+    await msg.reply(greetings[Math.floor(Math.random() * greetingsLength)]);
     return;
   }
 
@@ -31,6 +34,12 @@ export default async function (msg: Message) {
     );
     return;
   }
+  const font = Font(text);
 
-  await msg.reply(Font(text));
+  if (Math.random() < 0.5) {
+    const chat = await msg.getChat();
+    await client.sendMessage(chat.id._serialized, font);
+    return;
+  }
+  await msg.reply(font);
 }

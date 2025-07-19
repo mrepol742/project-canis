@@ -1,10 +1,10 @@
 import { Message } from "whatsapp-web.js";
 import axios from "axios";
-import log from "../components/log";
+import log from "../components/utils/log";
 import fs from "fs";
 import path from "path";
 import { commands } from "../index";
-import Loader from "../components/loader";
+import Loader from "../components/utils/loader";
 
 export const command = "reload";
 export const role = "admin";

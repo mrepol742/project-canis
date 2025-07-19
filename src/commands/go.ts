@@ -1,6 +1,6 @@
 import { Message } from "whatsapp-web.js";
 import axios from "axios";
-import log from "../components/log";
+import log from "../components/utils/log";
 
 export const command = "go";
 export const role = "user";

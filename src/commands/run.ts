@@ -1,5 +1,5 @@
 import { Message } from "whatsapp-web.js";
-import log from "../components/log";
+import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
 import fs from "fs/promises";

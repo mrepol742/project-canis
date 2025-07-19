@@ -1,6 +1,6 @@
 import { Message, MessageMedia } from "whatsapp-web.js";
 import axios from "axios";
-import log from "../components/log";
+import log from "../components/utils/log";
 import fs from "fs/promises";
 
 export const command = "alert";

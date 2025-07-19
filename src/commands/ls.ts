@@ -1,5 +1,5 @@
 import { Message } from "whatsapp-web.js";
-import log from "../components/log";
+import log from "../components/utils/log";
 import { commands } from "../index";
 
 export const command = "ls";

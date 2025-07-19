@@ -1,6 +1,6 @@
 import { Message, MessageMedia } from "whatsapp-web.js";
 import axios from "axios";
-import log from "../components/log";
+import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
@@ -24,21 +24,21 @@ export default async function (msg: Message) {
     .then(async (response) => {
       const user = response.data;
       const info = `
-  *${user.name || user.login}*
-  ${user.bio || ""}
+      *${user.name || user.login}*
+      ${user.bio || ""}
   
-  - Place: ${user.location || "N/A"}
-  - Repos: ${user.public_repos}
-  - Followers: ${user.followers}
-  - Following: ${user.following}
-  - Gists: ${user.public_gists}
-  - Repo: ${user.public_repos}
-  - X: ${
-    user.twitter_username
-      ? `https://twitter.com/${user.twitter_username}`
-      : "N/A"
-  }
-  - Link: ${user.blog || "N/A"}
+      - Place: ${user.location || "N/A"}
+      - Repos: ${user.public_repos}
+      - Followers: ${user.followers}
+      - Following: ${user.following}
+      - Gists: ${user.public_gists}
+      - Repo: ${user.public_repos}
+      - X: ${
+        user.twitter_username
+          ? `https://twitter.com/${user.twitter_username}`
+          : "N/A"
+      }
+      - Link: ${user.blog || "N/A"}
   `;
 
       await msg.reply(info);

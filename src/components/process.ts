@@ -1,4 +1,4 @@
-import log from "../components/log";
+import log from "./utils/log";
 
 process.on("SIGHUP", function () {
   process.exit(0);

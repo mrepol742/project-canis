@@ -1,6 +1,6 @@
 import { Message, MessageMedia } from "whatsapp-web.js";
 import axios from "axios";
-import log from "../components/log";
+import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
@@ -16,9 +16,9 @@ export default async function (msg: Message) {
       const image = response.data.image;
 
       const color = `
- *${name}*
- \`${hex}\`
- `;
+     *${name}*
+     \`${hex}\`
+     `;
       await msg.reply(color);
     })
     .catch(async (error) => {

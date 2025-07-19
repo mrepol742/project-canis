@@ -1,5 +1,5 @@
 import { Message } from "whatsapp-web.js";
-import log from "../components/log";
+import log from "../components/utils/log";
 import os from "os";
 import si from "systeminformation";
 
@@ -13,7 +13,6 @@ export default async function (msg: Message) {
     cpu: os.cpus(),
     usedMemory: os.totalmem() - os.freemem(),
     totalMemory: os.totalmem(),
-    uptime: process.uptime()
   };
 
   const [gpuInfo, osInfo, shell, networkInterfaces] = await Promise.all([
@@ -23,16 +22,14 @@ export default async function (msg: Message) {
     si.networkInterfaces()
   ]);
 
-  const uptimeMinutes = Math.floor(stats.uptime / 60);
   const statsMessage = `
-      *System Stats:*
+      *System Stats*
 
       - OS: ${osInfo.distro} ${osInfo.kernel}
       - CPU: ${stats.cpu[0].model}
       - GPU: ${gpuInfo.controllers.map(c => c.model).join(", ")}
       - RAM: ${(stats.usedMemory / (1024 ** 3)).toFixed(2)} GB / ${(stats.totalMemory / (1024 ** 3)).toFixed(2)} GB
       - VRam: ${gpuInfo.controllers.map(c => c.vram).join(", ")} MB
-      - Uptime: ${uptimeMinutes} minutes
       - Load Avg: ${os.loadavg().map(n => n.toFixed(2)).join(", ")}
       - Process: #${process.pid} ${process.title}
       - Shell: ${shell}
