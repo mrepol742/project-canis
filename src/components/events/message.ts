@@ -1,23 +1,25 @@
 import { Message } from "whatsapp-web.js";
 import log from "../utils/log";
-import { commands } from "../../index"
+import { commands } from "../../index";
 import rateLimiter from "../utils/rateLimiter";
 import { isRateLimitError, getRateLimitInfo } from "../utils/rateLimit";
 import sleep from "../utils/sleep";
+import { findOrCreateUser, isBlocked } from "../services/user";
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
 const superAdmin = process.env.SUPER_ADMIN || "";
 
-export default async function message(msg: Message){
+export default async function message(msg: Message) {
   // ignore message if it is older than 10 seconds
   if (msg.timestamp < Date.now() / 1000 - 10) return;
 
   // process normalization
   msg.body = msg.body
     .normalize("NFKC")
-    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "");
+    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
+    .trim();
 
   const prefix = !msg.body.startsWith(commandPrefix);
   const senderId = msg.from.split("@")[0];
@@ -34,10 +36,18 @@ export default async function message(msg: Message){
   const messageBody = msg.body.split(" ")[0];
   const bodyHasPrefix = messageBody.startsWith(commandPrefix);
   const key = bodyHasPrefix
-    ? messageBody.slice(commandPrefix.length)
+    ? messageBody.slice(commandPrefix.length).trim()
     : messageBody;
-  const handler = commands[key.toLocaleLowerCase()];
+  const handler = commands[key.toLowerCase()];
   if (!handler) return;
+
+  /*
+   * Block users from running commands.
+   */
+  const isBlockedUser = await isBlocked(senderId);
+  if (isBlockedUser) {
+    return;
+  }
 
   /*
    * Rate limit commands to prevent abuse.
@@ -58,15 +68,30 @@ export default async function message(msg: Message){
     return;
   }
 
-  if (debug) log.info("Message", msg.body.slice(0, 255));
+  if (debug) {
+    log.info("Message", senderId, msg.body.slice(0, 150));
+  }
   msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
 
   /*
    * Execute the command handler.
    */
   try {
-    await sleep(1000); // Optional delay to prevent flooding
-    await handler.exec(msg);
+    await Promise.all([
+      handler.exec(msg),
+      (async () => {
+        if (!msg.fromMe) {
+          const user = await findOrCreateUser(msg);
+
+          if (user) {
+            await sleep(2000); // Prevent rate limiting issues
+            await msg.react("✅");
+          }
+        }
+
+        return Promise.resolve();
+      })(),
+    ]);
   } catch (error) {
     if (isRateLimitError(error)) {
       const rateLimitInfo = getRateLimitInfo(error);
@@ -76,4 +101,4 @@ export default async function message(msg: Message){
     }
     msg.reply("An error occurred while processing your request.");
   }
-};
+}

@@ -10,12 +10,37 @@ generator client {
 }
 
 datasource db {
-  provider = env("DATABASE_PROVIDER")
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  name  String
-  number String  @unique
+  id          Int      @id @default(autoincrement())
+  lid         String   @unique
+  name        String
+  number      String
+  countryCode String
+  type        String
+  mode        String
+  about       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Block {
+  id        Int      @id @default(autoincrement())
+  lid       String   @unique
+  mode      String
+  reason    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Group {
+  id          Int      @id @default(autoincrement())
+  gid         String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

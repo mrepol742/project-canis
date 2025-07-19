@@ -1,7 +1,6 @@
-const rateLimitMap: Map<string, { timestamps: number[]; notified: boolean }> =
-  new Map();
-const LIMIT = 10;
-const WINDOW_MS = 60 * 1000; // 1 minute
+const rateLimitMap: Map<string, { timestamps: number[]; notified: boolean }> = new Map();
+const LIMIT = 3;
+const WINDOW_MS = 20000;
 
 /**
  * Returns:
@@ -13,7 +12,7 @@ export default function rateLimiter(number: string): true | false | null {
   const now = Date.now();
   const entry = rateLimitMap.get(number) || { timestamps: [], notified: false };
 
-  // Remove timestamps older than 1 minute
+  // Remove older timestamps
   entry.timestamps = entry.timestamps.filter((ts) => now - ts < WINDOW_MS);
 
   if (entry.timestamps.length >= LIMIT) {
