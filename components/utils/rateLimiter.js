@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = rateLimiter;
 const rateLimitMap = new Map();
-const LIMIT = 10;
-const WINDOW_MS = 60 * 1000;
+const LIMIT = 3;
+const WINDOW_MS = 20000;
 function rateLimiter(number) {
     const now = Date.now();
     const entry = rateLimitMap.get(number) || { timestamps: [], notified: false };
