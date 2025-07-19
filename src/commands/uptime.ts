@@ -9,9 +9,8 @@ export const role = "user";
 export default async function (msg: Message) {
   const uptimeMinutes = Math.floor(process.uptime() / 60);
   const statsMessage = `
-      *Update*
-
-      ${uptimeMinutes} minutes #${process.pid}
+      *${uptimeMinutes} minutes*
+      #${process.pid}
       `;
 
   await msg.reply(statsMessage);

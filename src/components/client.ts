@@ -8,9 +8,13 @@ import {
 } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import messageEvent from "./events/message";
-import groupJoin from "./events/groups/join";
 import groupLeave from "./events/groups/leave";
+import groupJoin from "./events/groups/join";
 import reaction from "./events/reaction";
+import ready from "./events/ready";
+
+import fs from "fs";
+import path from "path";
 
 const client = new Client({
   authStrategy: new LocalAuth(),
@@ -22,7 +26,7 @@ client.on("qr", (qr: string) => {
   qrcode.generate(qr, { small: true });
 });
 
-client.on("ready", () => log.info("Client", "WhatsApp client is ready!"));
+client.on("ready", async () => ready());
 client.on("message_reaction", async (react: Reaction) =>
   reaction(client, react)
 );
