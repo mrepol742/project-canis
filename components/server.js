@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
-const log_1 = __importDefault(require("../components/log"));
+const log_1 = __importDefault(require("./utils/log"));
 const port = process.env.PORT || 3000;
 http_1.default
     .createServer((req, res) => {

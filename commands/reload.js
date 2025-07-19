@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
-const log_1 = __importDefault(require("../components/log"));
+const log_1 = __importDefault(require("../components/utils/log"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const index_1 = require("../index");
-const loader_1 = __importDefault(require("../components/loader"));
+const loader_1 = __importDefault(require("../components/utils/loader"));
 exports.command = "reload";
 exports.role = "admin";
 async function default_1(msg) {

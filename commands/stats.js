@@ -16,7 +16,6 @@ async function default_1(msg) {
         cpu: os_1.default.cpus(),
         usedMemory: os_1.default.totalmem() - os_1.default.freemem(),
         totalMemory: os_1.default.totalmem(),
-        uptime: process.uptime()
     };
     const [gpuInfo, osInfo, shell, networkInterfaces] = await Promise.all([
         systeminformation_1.default.graphics(),
@@ -24,16 +23,14 @@ async function default_1(msg) {
         systeminformation_1.default.shell(),
         systeminformation_1.default.networkInterfaces()
     ]);
-    const uptimeMinutes = Math.floor(stats.uptime / 60);
     const statsMessage = `
-      *System Stats:*
+      *System Stats*
 
       - OS: ${osInfo.distro} ${osInfo.kernel}
       - CPU: ${stats.cpu[0].model}
       - GPU: ${gpuInfo.controllers.map(c => c.model).join(", ")}
       - RAM: ${(stats.usedMemory / (1024 ** 3)).toFixed(2)} GB / ${(stats.totalMemory / (1024 ** 3)).toFixed(2)} GB
       - VRam: ${gpuInfo.controllers.map(c => c.vram).join(", ")} MB
-      - Uptime: ${uptimeMinutes} minutes
       - Load Avg: ${os_1.default.loadavg().map(n => n.toFixed(2)).join(", ")}
       - Process: #${process.pid} ${process.title}
       - Shell: ${shell}

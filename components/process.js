@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const log_1 = __importDefault(require("../components/log"));
+const log_1 = __importDefault(require("./utils/log"));
 process.on("SIGHUP", function () {
     process.exit(0);
 });

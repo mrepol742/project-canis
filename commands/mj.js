@@ -5,17 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
-const log_1 = __importDefault(require("../components/log"));
-const reply_1 = require("../components/reply");
-const font_1 = __importDefault(require("../components/font"));
+const log_1 = __importDefault(require("../components/utils/log"));
+const font_1 = __importDefault(require("../components/utils/font"));
 const package_json_1 = require("../../package.json");
-const agentHandler_1 = __importDefault(require("../components/agentHandler"));
+const greetings_1 = require("../components/ai/response/greetings");
+const agentHandler_1 = __importDefault(require("../components/ai/agentHandler"));
+const client_1 = require("../components/client");
 exports.command = "mj";
 exports.role = "user";
 async function default_1(msg) {
     const query = msg.body.replace(/^mj\b\s*/i, "").trim();
     if (query.length === 0) {
-        await msg.reply(reply_1.reply[Math.floor(Math.random() * reply_1.reply.length)]);
+        await msg.reply(greetings_1.greetings[Math.floor(Math.random() * greetings_1.greetingsLength)]);
         return;
     }
     const prompt = `Your name is Mj, the most powerful AI Agent in the world that was created by ${package_json_1.author.name}. ` +
@@ -28,5 +29,11 @@ async function default_1(msg) {
         await msg.reply("Hmmmm... I couldn't generate a response. Please try again.");
         return;
     }
-    await msg.reply((0, font_1.default)(text));
+    const font = (0, font_1.default)(text);
+    if (Math.random() < 0.5) {
+        const chat = await msg.getChat();
+        await client_1.client.sendMessage(chat.id._serialized, font);
+        return;
+    }
+    await msg.reply(font);
 }

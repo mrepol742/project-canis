@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/log"));
+const log_1 = __importDefault(require("../components/utils/log"));
 exports.command = "npm";
 exports.role = "user";
 async function default_1(msg) {
     const query = msg.body.replace(/^npm\b\s*/i, "").trim();
+    if (query.includes(" "))
+        return;
     if (query.length === 0) {
         await msg.reply("Please provide a search query.");
         return;
@@ -27,15 +29,15 @@ async function default_1(msg) {
         const repository = response.data.repository;
         const author_email = response.data.author_email;
         const repo = `
- *${name}*
- ${version}
- ${description}
+     *${name}*
+     ${version}
+     ${description}
 
- - Author: ${author}
- - Email: ${author_email}
- - Last Updated: ${last_published}
- - Repository: ${repository}
- - Downloads This Year: ${downloads_this_year}
+     - Author: ${author}
+     - Email: ${author_email}
+     - Last Updated: ${last_published}
+     - Repository: ${repository}
+     - Downloads This Year: ${downloads_this_year}
  `;
         await msg.reply(repo);
     })

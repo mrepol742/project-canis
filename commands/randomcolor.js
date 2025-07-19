@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/log"));
+const log_1 = __importDefault(require("../components/utils/log"));
 exports.command = "randomcolor";
 exports.role = "user";
 async function default_1(msg) {
@@ -17,9 +17,9 @@ async function default_1(msg) {
         const name = response.data.name;
         const image = response.data.image;
         const color = `
- *${name}*
- \`${hex}\`
- `;
+     *${name}*
+     \`${hex}\`
+     `;
         await msg.reply(color);
     })
         .catch(async (error) => {

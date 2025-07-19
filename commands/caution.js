@@ -7,7 +7,7 @@ exports.role = exports.command = void 0;
 exports.default = default_1;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/log"));
+const log_1 = __importDefault(require("../components/utils/log"));
 const promises_1 = __importDefault(require("fs/promises"));
 exports.command = "caution";
 exports.role = "user";

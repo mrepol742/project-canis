@@ -5,12 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = Loader;
-const log_1 = __importDefault(require("../components/log"));
+const log_1 = __importDefault(require("./log"));
 const path_1 = __importDefault(require("path"));
-const index_1 = require("../index");
+const index_1 = require("../../index");
 exports.command = "load";
 exports.role = "admin";
-const commandsPath = path_1.default.join(__dirname, "..", "commands");
+const commandsPath = path_1.default.join(__dirname, "..", "..", "commands");
 function Loader(file, customPath) {
     if (/\.js$|\.ts$/.test(file)) {
         const filePath = path_1.default.join(customPath || commandsPath, file);

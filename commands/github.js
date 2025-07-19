@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/log"));
+const log_1 = __importDefault(require("../components/utils/log"));
 exports.command = "github";
 exports.role = "user";
 async function default_1(msg) {
@@ -24,19 +24,19 @@ async function default_1(msg) {
         .then(async (response) => {
         const user = response.data;
         const info = `
-  *${user.name || user.login}*
-  ${user.bio || ""}
+      *${user.name || user.login}*
+      ${user.bio || ""}
   
-  - Place: ${user.location || "N/A"}
-  - Repos: ${user.public_repos}
-  - Followers: ${user.followers}
-  - Following: ${user.following}
-  - Gists: ${user.public_gists}
-  - Repo: ${user.public_repos}
-  - X: ${user.twitter_username
+      - Place: ${user.location || "N/A"}
+      - Repos: ${user.public_repos}
+      - Followers: ${user.followers}
+      - Following: ${user.following}
+      - Gists: ${user.public_gists}
+      - Repo: ${user.public_repos}
+      - X: ${user.twitter_username
             ? `https://twitter.com/${user.twitter_username}`
             : "N/A"}
-  - Link: ${user.blog || "N/A"}
+      - Link: ${user.blog || "N/A"}
   `;
         await msg.reply(info);
     })

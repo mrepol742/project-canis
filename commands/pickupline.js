@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/log"));
-const font_1 = __importDefault(require("../components/font"));
+const log_1 = __importDefault(require("../components/utils/log"));
+const font_1 = __importDefault(require("../components/utils/font"));
 exports.command = "pickupline";
 exports.role = "user";
 async function default_1(msg) {
