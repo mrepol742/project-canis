@@ -9,6 +9,15 @@ import Loader from "../components/utils/loader";
 export const command = "reload";
 export const role = "admin";
 
+export const info = {
+  command: "reload",
+  description: "Reload a specific command or all commands.",
+  usage: "reload [command]",
+  example: "reload poli",
+  role: "admin",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^reload\b\s*/i, "").trim();
 
@@ -44,17 +53,18 @@ export default async function (msg: Message) {
       delete require.cache[require.resolve(filePath)];
       const commandModule = require(filePath);
 
-      if (
-        typeof commandModule.command === "string" &&
-        typeof commandModule.default === "function"
-      ) {
-        commands[commandModule.command] = {
-          command: commandModule.command,
-          role: commandModule.role || "user",
+      if (typeof commandModule.default === "function") {
+        commands[commandModule.info.command] = {
+          command: commandModule.info.command,
+          description: commandModule.info.description || "No description",
+          usage: commandModule.info.usage || "No usage",
+          example: commandModule.info.example || "No example",
+          role: commandModule.info.user || "user",
+          cooldown: commandModule.info.cooldown || 5000,
           exec: commandModule.default,
         };
         count++;
-        log.info("Loader", `Reloaded command: ${commandModule.command}`);
+        log.info("Loader", `Reloaded command: ${commandModule.info.command}`);
       }
     }
   });

@@ -2,8 +2,14 @@ import { Message } from "whatsapp-web.js";
 import axios from "axios";
 import log from "../components/utils/log";
 
-export const command = "go";
-export const role = "user";
+export const info = {
+  command: "go",
+  description: "Search with duckduckgo.",
+  usage: "go <query>",
+  example: "go weather today",
+  role: "user",
+  cooldown: 5000,
+};
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^go\b\s*/i, "").trim();

@@ -7,6 +7,15 @@ import { client } from "../components/client";
 export const command = "randomcolor";
 export const role = "user";
 
+export const info = {
+  command: "randomcolor",
+  description: "Generate a random color with its name and hex code.",
+  usage: "randomcolor",
+  example: "randomcolor",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   await axios
     .get(`https://api.popcat.xyz/randomcolor`)

@@ -8,6 +8,15 @@ import Font from "../components/utils/font";
 export const command = "pickupline";
 export const role = "user";
 
+export const info = {
+  command: "pickupline",
+  description: "Fetch a random pick-up line.",
+  usage: "pickupline",
+  example: "pickupline",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   await axios
     .get(`https://api.popcat.xyz/pickuplines`)

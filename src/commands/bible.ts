@@ -2,8 +2,14 @@ import { Message } from "whatsapp-web.js";
 import axios from "axios";
 import log from "../components/utils/log";
 
-export const command = "bible";
-export const role = "user";
+export const info = {
+  command: "bible",
+  description: "Fetch a Bible verse or the verse of the day.",
+  usage: "bible --random | --today | --verse <book chapter:verse>",
+  example: "bible --verse Job 4:9",
+  role: "user",
+  cooldown: 5000,
+};
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^bible\b\s*/i, "").trim();

@@ -7,6 +7,15 @@ import { client } from "../components/client";
 export const command = "waifu";
 export const role = "user";
 
+export const info = {
+  command: "waifu",
+  description: "Get a random waifu image or a specific type of waifu.",
+  usage: "waifu [type]",
+  example: "waifu neko",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^waifu\b\s*/i, "").trim();
   if (query.length !== 0) {

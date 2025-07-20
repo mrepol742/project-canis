@@ -4,8 +4,14 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "caution";
-export const role = "user";
+export const info = {
+  command: "caution",
+  description: "Generate a caution image with the provided text.",
+  usage: "caution <text>",
+  example: "caution This is a caution message!",
+  role: "user",
+  cooldown: 5000,
+};
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^caution\b\s*/i, "").trim();

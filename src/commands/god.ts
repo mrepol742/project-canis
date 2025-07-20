@@ -4,8 +4,14 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "god";
-export const role = "user";
+export const info = {
+  command: "god",
+  description: "Generate a phone image with the provided text.",
+  usage: "god <text>",
+  example: "god how to sleep 6 hours in 2 hours",
+  role: "user",
+  cooldown: 5000,
+};
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^god\b\s*/i, "").trim();

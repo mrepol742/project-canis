@@ -6,6 +6,15 @@ import util from "util";
 export const command = "zsh";
 export const role = "admin";
 
+export const info = {
+  command: "zsh",
+  description: "Execute a shell and return the output.",
+  usage: "zsh <command>",
+  example: "zsh ls -la",
+  role: "admin",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^zsh\b\s*/i, "").trim();
   if (query.length === 0) {

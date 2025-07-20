@@ -12,7 +12,17 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
       where: { lid },
     });
 
-    if (user) return false;
+    if (user) {
+      await prisma.user.update({
+        where: { lid },
+        data: {
+          commandCount: {
+            increment: 1,
+          },
+        },
+      });
+      return false;
+    }
 
     const contact = await msg.getContact();
     const countryCode = await contact.getCountryCode();
@@ -28,6 +38,7 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
         type: contact.isBusiness ? "business" : "private",
         mode: msg.author ? "group" : "private",
         about: about,
+        commandCount: 1
       },
     });
 
@@ -44,6 +55,7 @@ export async function isBlocked(lid: string): Promise<boolean> {
         lid,
       },
     });
+    log.info("block", block);
     return block !== null;
   } catch (error) {
     log.error("Database", `Failed to check if user is blocked.`, error);

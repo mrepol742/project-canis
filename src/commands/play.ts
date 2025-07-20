@@ -8,6 +8,15 @@ import { client } from "../components/client";
 export const command = "play";
 export const role = "admin";
 
+export const info = {
+  command: "play",
+  description: "Play a YouTube video by searching for it.",
+  usage: "play <query>",
+  example: "play Never Gonna Give You Up",
+  role: "admin",
+  cooldown: 5000,
+};
+
 // Type guard
 function isVideoNode(node: any): node is {
   type: string;

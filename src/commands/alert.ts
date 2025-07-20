@@ -3,8 +3,14 @@ import axios from "axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
 
-export const command = "alert";
-export const role = "user";
+export const info = {
+  command: "alert",
+  description: "Generate an alert image with the provided text.",
+  usage: "alert <text>",
+  example: "alert This is an important message!",
+  role: "user",
+  cooldown: 5000,
+};
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^alert\b\s*/i, "").trim();

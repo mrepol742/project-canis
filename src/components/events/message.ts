@@ -44,7 +44,7 @@ export default async function message(msg: Message) {
   /*
    * Block users from running commands.
    */
-  const isBlockedUser = await isBlocked(senderId);
+  const isBlockedUser = await isBlocked(msg.author ? msg.author.split("@")[0] : senderId);
   if (isBlockedUser) {
     return;
   }

@@ -7,6 +7,15 @@ import { client } from "../components/client";
 export const command = "poli";
 export const role = "user";
 
+export const info = {
+  command: "poli",
+  description: "Generate an image based on a prompt using Pollinations.",
+  usage: "poli <prompt>",
+  example: "poli a beautiful sunset over the mountains",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^poli\b\s*/i, "").trim();
   if (query.length === 0) {

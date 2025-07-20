@@ -7,8 +7,17 @@ import { client } from "../components/client";
 export const command = "npm";
 export const role = "user";
 
+export const info = {
+  command: "npm",
+  description: "Search for npm package information.",
+  usage: "npm <package-name>",
+  example: "npm express",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
-  const query = msg.body.replace(/^npm\b\s*/i, "").trim();
+  const query = msg.body.replace(/^(npm(?:\s+install)?)\s+/i, "").trim();
   if (query.includes(" ")) return;
   if (query.length === 0) {
     await msg.reply("Please provide a search query.");

@@ -7,6 +7,15 @@ import fs from "fs/promises";
 export const command = "run";
 export const role = "admin";
 
+export const info = {
+  command: "run",
+  description: "Run a code snippet in a specified programming language.",
+  usage: "run <language>\n<code>",
+  example: "run python\nprint('Hello, World!')",
+  role: "admin",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const body = msg.body.trim();
   const match = body.match(/^run\s+(python|java|c|js|php)\s*\r?\n([\s\S]+)/i);

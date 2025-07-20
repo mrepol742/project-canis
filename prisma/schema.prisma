@@ -15,16 +15,17 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  lid         String   @unique
-  name        String
-  number      String
-  countryCode String
-  type        String
-  mode        String
-  about       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  lid          String   @unique
+  name         String
+  number       String
+  countryCode  String
+  type         String
+  mode         String
+  about        String?
+  commandCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Block {

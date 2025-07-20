@@ -6,6 +6,16 @@ import { client } from "../components/client";
 
 export const command = "pooh";
 export const role = "user";
+
+export const info = {
+  command: "pooh",
+  description: "Generate a Pooh image with two texts.",
+  usage: "pooh <text1> | <text2>",
+  example: "pooh I love you | I love you too",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const args = msg.body
     .replace(/^pooh\b\s*/i, "")

@@ -21,7 +21,15 @@ log.info("Bot", `Command prefix: ${commandPrefix}`);
 
 const commands: Record<
   string,
-  { command: string; exec: (msg: Message) => void; role: string }
+  {
+    command: string;
+    description: string;
+    usage: string;
+    example: string;
+    role: string;
+    cooldown: number;
+    exec: (msg: Message) => void;
+  }
 > = {};
 
 fs.readdirSync(commandsPath).forEach((file) => Loader(file));

@@ -8,6 +8,15 @@ import { client } from "../components/client";
 export const command = "say";
 export const role = "user";
 
+export const info = {
+  command: "say",
+  description: "Convert text to speech and send it as an audio message.",
+  usage: "say <text>",
+  example: "say Hello, how are you?",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^say\b\s*/i, "").trim();
   if (query.length === 0) {

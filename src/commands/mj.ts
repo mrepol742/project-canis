@@ -9,8 +9,14 @@ import {
 import agentHandler from "../components/ai/agentHandler";
 import { client } from "../components/client";
 
-export const command = "mj";
-export const role = "user";
+export const info = {
+  command: "mj",
+  description: "Interact with the Mj AI agent.",
+  usage: "mj <query>",
+  example: "mj How can I improve my productivity?",
+  role: "user",
+  cooldown: 5000,
+};
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^mj\b\s*/i, "").trim();

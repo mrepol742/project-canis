@@ -10,6 +10,15 @@ import { client } from "../components/client";
 export const command = "sim";
 export const role = "user";
 
+export const info = {
+  command: "sim",
+  description: "Generate a sexy, flirty, funny, and horny response.",
+  usage: "sim <text>",
+  example: "sim You are so beautiful",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^sim\b\s*/i, "").trim();
   if (query.length === 0) {

@@ -4,8 +4,14 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "github";
-export const role = "user";
+export const info = {
+  command: "github",
+  description: "Fetch GitHub user information.",
+  usage: "github <username>",
+  example: "github octocat",
+  role: "user",
+  cooldown: 5000,
+};
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^github\b\s*/i, "").trim();

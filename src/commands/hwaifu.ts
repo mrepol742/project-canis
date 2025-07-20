@@ -4,8 +4,14 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "hwaifu";
-export const role = "admin";
+export const info = {
+  command: "hwaifu",
+  description: "Generate a waifu image with optional categories.",
+  usage: "hwaifu [neko|trap|blowjob]",
+  example: "hwaifu neko",
+  role: "admin",
+  cooldown: 5000,
+};
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^hwaifu\b\s*/i, "").trim();

@@ -5,6 +5,15 @@ import log from "../components/utils/log";
 export const command = "wiki";
 export const role = "user";
 
+export const info = {
+  command: "wiki",
+  description: "Search Wikipedia for a summary of a topic.",
+  usage: "wiki <query>",
+  example: "wiki JavaScript",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^wiki\b\s*/i, "").trim();
   if (query.length === 0) {

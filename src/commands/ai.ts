@@ -10,6 +10,15 @@ import { client } from "../components/client";
 export const command = "ai";
 export const role = "user";
 
+export const info = {
+  command: "ai",
+  description: "Interact with the AI agent.",
+  usage: "ai <query>",
+  example: "ai What is the weather like today?",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^ai\b\s*/i, "").trim();
   if (query.length === 0) {

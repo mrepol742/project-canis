@@ -7,6 +7,15 @@ import { client } from "../components/client";
 export const command = "qrcode";
 export const role = "user";
 
+export const info = {
+  command: "qrcode",
+  description: "Generate a QR code from the provided text.",
+  usage: "qrcode <text>",
+  example: "qrcode https://example.com",
+  role: "user",
+  cooldown: 5000,
+};
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^qrcode\b\s*/i, "").trim();
   if (query.length === 0) {

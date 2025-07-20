@@ -4,10 +4,16 @@ import { exec } from "child_process";
 import util from "util";
 import { prisma } from "../components/prisma";
 
-export const command = "block";
-export const role = "admin";
+export const info = {
+  command: "block",
+  description: "Block or unblock users from sending messages.",
+  usage: "block <@user> [--rem]",
+  example: "block @user123",
+  role: "admin",
+  cooldown: 5000,
+};
 
-export default async function block(msg: Message) {
+export default async function (msg: Message) {
   if (msg.mentionedIds.length === 0) {
     await msg.reply("Please mention a user to block.");
     return;
