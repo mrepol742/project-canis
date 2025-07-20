@@ -3,14 +3,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.role = exports.command = void 0;
+exports.info = exports.role = exports.command = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
 const log_1 = __importDefault(require("../components/utils/log"));
 exports.command = "npm";
 exports.role = "user";
+exports.info = {
+    command: "npm",
+    description: "Search for npm package information.",
+    usage: "npm <package-name>",
+    example: "npm express",
+    role: "user",
+    cooldown: 5000,
+};
 async function default_1(msg) {
-    const query = msg.body.replace(/^npm\b\s*/i, "").trim();
+    const query = msg.body.replace(/^(npm(?:\s+install)?)\s+/i, "").trim();
     if (query.includes(" "))
         return;
     if (query.length === 0) {

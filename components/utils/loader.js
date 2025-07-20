@@ -16,14 +16,17 @@ function Loader(file, customPath) {
         const filePath = path_1.default.join(customPath || commandsPath, file);
         delete require.cache[require.resolve(filePath)];
         const commandModule = require(filePath);
-        if (typeof commandModule.command === "string" &&
-            typeof commandModule.default === "function") {
-            index_1.commands[commandModule.command] = {
-                command: commandModule.command,
-                role: commandModule.role || "user",
+        if (typeof commandModule.default === "function") {
+            index_1.commands[commandModule.info.command] = {
+                command: commandModule.info.command,
+                description: commandModule.info.description || "No description",
+                usage: commandModule.info.usage || "No usage",
+                example: commandModule.info.example || "No example",
+                role: commandModule.info.user || "user",
+                cooldown: commandModule.info.cooldown || 5000,
                 exec: commandModule.default,
             };
-            log_1.default.info("Loader", `Loaded command: ${commandModule.command}`);
+            log_1.default.info("Loader", `Loaded command: ${commandModule.info.command}`);
         }
     }
 }

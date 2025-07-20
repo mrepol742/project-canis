@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.role = exports.command = void 0;
+exports.info = exports.role = exports.command = void 0;
 exports.default = play;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const fs_1 = __importDefault(require("fs"));
@@ -13,6 +13,14 @@ const ytdl_core_1 = __importDefault(require("ytdl-core"));
 const client_1 = require("../components/client");
 exports.command = "play";
 exports.role = "admin";
+exports.info = {
+    command: "play",
+    description: "Play a YouTube video by searching for it.",
+    usage: "play <query>",
+    example: "play Never Gonna Give You Up",
+    role: "admin",
+    cooldown: 5000,
+};
 function isVideoNode(node) {
     return node?.type === "Video" && typeof node.video_id === "string";
 }

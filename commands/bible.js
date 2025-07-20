@@ -3,12 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
 const log_1 = __importDefault(require("../components/utils/log"));
-exports.command = "bible";
-exports.role = "user";
+exports.info = {
+    command: "bible",
+    description: "Fetch a Bible verse or the verse of the day.",
+    usage: "bible --random | --today | --verse <book chapter:verse>",
+    example: "bible --verse Job 4:9",
+    role: "user",
+    cooldown: 5000,
+};
 async function default_1(msg) {
     const query = msg.body.replace(/^bible\b\s*/i, "").trim();
     if (!/^--(random|today|verse(\s+\w+\s*\d+:\d+)?)$/i.test(query)) {

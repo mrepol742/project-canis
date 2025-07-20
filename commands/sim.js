@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.role = exports.command = void 0;
+exports.info = exports.role = exports.command = void 0;
 exports.default = default_1;
 const log_1 = __importDefault(require("../components/utils/log"));
 const agentHandler_1 = __importDefault(require("../components/ai/agentHandler"));
@@ -11,6 +11,14 @@ const greetings_1 = require("../components/ai/response/greetings");
 const client_1 = require("../components/client");
 exports.command = "sim";
 exports.role = "user";
+exports.info = {
+    command: "sim",
+    description: "Generate a sexy, flirty, funny, and horny response.",
+    usage: "sim <text>",
+    example: "sim You are so beautiful",
+    role: "user",
+    cooldown: 5000,
+};
 async function default_1(msg) {
     const query = msg.body.replace(/^sim\b\s*/i, "").trim();
     if (query.length === 0) {

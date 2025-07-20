@@ -3,12 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
 const log_1 = __importDefault(require("../components/utils/log"));
-exports.command = "go";
-exports.role = "user";
+exports.info = {
+    command: "go",
+    description: "Search with duckduckgo.",
+    usage: "go <query>",
+    example: "go weather today",
+    role: "user",
+    cooldown: 5000,
+};
 async function default_1(msg) {
     const query = msg.body.replace(/^go\b\s*/i, "").trim();
     if (query.length === 0) {

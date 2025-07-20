@@ -12,7 +12,7 @@ const sleep_1 = __importDefault(require("../utils/sleep"));
 async function ready() {
     log_1.default.info("Client", "WhatsApp client is ready!");
     await (0, sleep_1.default)(5000);
-    const hotReloadPath = path_1.default.resolve(__dirname, "../../../.temp/hotreload");
+    const hotReloadPath = path_1.default.resolve(__dirname, "../../../.temp/restart");
     if (fs_1.default.existsSync(hotReloadPath)) {
         try {
             const tempData = JSON.parse(fs_1.default.readFileSync(hotReloadPath, "utf-8"));
@@ -27,21 +27,21 @@ async function ready() {
                 chatId = tempData.id.id + "@c.us";
             }
             if (chatId) {
-                await client_1.client.sendMessage(chatId, "Hot reload done.");
+                await client_1.client.sendMessage(chatId, "Done");
                 return;
             }
-            log_1.default.error("Hot Reload", "Could not resolve chat ID for message.");
+            log_1.default.error("restart", "Could not resolve chat ID for message.");
         }
         catch (err) {
-            log_1.default.error("Hot Reload", err);
+            log_1.default.error("restart", err);
         }
         finally {
             fs_1.default.unlink(hotReloadPath, (err) => {
                 if (err) {
-                    log_1.default.error("Hot Reload", "Failed to delete hot reload file:", err);
+                    log_1.default.error("restart", "Failed to delete restart file:", err);
                 }
                 else {
-                    log_1.default.info("Hot Reload", "Hot reload file deleted successfully.");
+                    log_1.default.info("restart", "Restart file deleted successfully.");
                 }
             });
         }

@@ -35,7 +35,7 @@ async function message(msg) {
     const handler = index_1.commands[key.toLowerCase()];
     if (!handler)
         return;
-    const isBlockedUser = await (0, user_1.isBlocked)(senderId);
+    const isBlockedUser = await (0, user_1.isBlocked)(msg.author ? msg.author.split("@")[0] : senderId);
     if (isBlockedUser) {
         return;
     }

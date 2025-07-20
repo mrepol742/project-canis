@@ -3,13 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.role = exports.command = void 0;
+exports.info = exports.role = exports.command = void 0;
 exports.default = default_1;
 const child_process_1 = require("child_process");
 const util_1 = __importDefault(require("util"));
 const promises_1 = __importDefault(require("fs/promises"));
 exports.command = "run";
 exports.role = "admin";
+exports.info = {
+    command: "run",
+    description: "Run a code snippet in a specified programming language.",
+    usage: "run <language>\n<code>",
+    example: "run python\nprint('Hello, World!')",
+    role: "admin",
+    cooldown: 5000,
+};
 async function default_1(msg) {
     const body = msg.body.trim();
     const match = body.match(/^run\s+(python|java|c|js|php)\s*\r?\n([\s\S]+)/i);

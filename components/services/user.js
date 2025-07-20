@@ -16,8 +16,17 @@ async function findOrCreateUser(msg) {
         let user = await prisma_1.prisma.user.findUnique({
             where: { lid },
         });
-        if (user)
+        if (user) {
+            await prisma_1.prisma.user.update({
+                where: { lid },
+                data: {
+                    commandCount: {
+                        increment: 1,
+                    },
+                },
+            });
             return false;
+        }
         const contact = await msg.getContact();
         const countryCode = await contact.getCountryCode();
         const about = await contact.getAbout();
@@ -31,6 +40,7 @@ async function findOrCreateUser(msg) {
                 type: contact.isBusiness ? "business" : "private",
                 mode: msg.author ? "group" : "private",
                 about: about,
+                commandCount: 1
             },
         });
     }
@@ -46,6 +56,7 @@ async function isBlocked(lid) {
                 lid,
             },
         });
+        log_1.default.info("block", block);
         return block !== null;
     }
     catch (error) {
