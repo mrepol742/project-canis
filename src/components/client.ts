@@ -13,9 +13,6 @@ import groupJoin from "./events/groups/join";
 import reaction from "./events/reaction";
 import ready from "./events/ready";
 
-import fs from "fs";
-import path from "path";
-
 const client = new Client({
   authStrategy: new LocalAuth(),
 });
