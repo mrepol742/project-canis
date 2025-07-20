@@ -8,7 +8,6 @@ exports.default = default_1;
 const log_1 = __importDefault(require("../components/utils/log"));
 const agentHandler_1 = __importDefault(require("../components/ai/agentHandler"));
 const greetings_1 = require("../components/ai/response/greetings");
-const client_1 = require("../components/client");
 exports.command = "sim";
 exports.role = "user";
 exports.info = {
@@ -30,11 +29,6 @@ async function default_1(msg) {
     if (!text) {
         log_1.default.error("sim", "No response generated.");
         await msg.reply("Sorry, I couldn't generate a response. Please try again.");
-        return;
-    }
-    if (Math.random() < 0.5) {
-        const chat = await msg.getChat();
-        await client_1.client.sendMessage(chat.id._serialized, text);
         return;
     }
     await msg.reply(text);

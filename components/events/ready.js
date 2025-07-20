@@ -16,21 +16,7 @@ async function ready() {
     if (fs_1.default.existsSync(hotReloadPath)) {
         try {
             const tempData = JSON.parse(fs_1.default.readFileSync(hotReloadPath, "utf-8"));
-            let chatId = null;
-            if (typeof tempData.id === "string") {
-                chatId = tempData.id;
-            }
-            else if (tempData.id?._serialized) {
-                chatId = tempData.id._serialized;
-            }
-            else if (tempData.id?.id) {
-                chatId = tempData.id.id + "@c.us";
-            }
-            if (chatId) {
-                await client_1.client.sendMessage(chatId, "Done");
-                return;
-            }
-            log_1.default.error("restart", "Could not resolve chat ID for message.");
+            await client_1.client.sendMessage(tempData.id.remote, "Done");
         }
         catch (err) {
             log_1.default.error("restart", err);
@@ -47,4 +33,3 @@ async function ready() {
         }
     }
 }
-;

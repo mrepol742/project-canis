@@ -10,6 +10,8 @@ const rateLimiter_1 = __importDefault(require("../utils/rateLimiter"));
 const rateLimit_1 = require("../utils/rateLimit");
 const sleep_1 = __importDefault(require("../utils/sleep"));
 const user_1 = require("../services/user");
+const client_1 = require("../client");
+const font_1 = __importDefault(require("../utils/font"));
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
@@ -55,6 +57,14 @@ async function message(msg) {
         log_1.default.info("Message", senderId, msg.body.slice(0, 150));
     }
     msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
+    const originalReply = msg.reply.bind(msg);
+    msg.reply = async (content, chatId, options) => {
+        let text = (0, font_1.default)(typeof content === "string" ? content : content.body) || "";
+        if (Math.random() < 0.5) {
+            return await client_1.client.sendMessage(msg.id.remote, text);
+        }
+        return await originalReply(text, chatId, options);
+    };
     try {
         await Promise.all([
             handler.exec(msg),
