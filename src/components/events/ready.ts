@@ -9,7 +9,7 @@ export default async function ready() {
 
   await sleep(5000); // Give some time for the client to stabilize
 
-  const hotReloadPath = path.resolve(__dirname, "../../../.temp/hotreload");
+  const hotReloadPath = path.resolve(__dirname, "../../../.temp/restart");
   if (fs.existsSync(hotReloadPath)) {
     try {
       const tempData = JSON.parse(fs.readFileSync(hotReloadPath, "utf-8"));
@@ -24,18 +24,18 @@ export default async function ready() {
       }
 
       if (chatId) {
-        await client.sendMessage(chatId, "Hot reload done.");
+        await client.sendMessage(chatId, "Done");
         return;
       }
-      log.error("Hot Reload", "Could not resolve chat ID for message.");
+      log.error("restart", "Could not resolve chat ID for message.");
     } catch (err) {
-      log.error("Hot Reload", err);
+      log.error("restart", err);
     } finally {
       fs.unlink(hotReloadPath, (err) => {
         if (err) {
-          log.error("Hot Reload", "Failed to delete hot reload file:", err);
+          log.error("restart", "Failed to delete restart file:", err);
         } else {
-          log.info("Hot Reload", "Hot reload file deleted successfully.");
+          log.info("restart", "Restart file deleted successfully.");
         }
       });
     }

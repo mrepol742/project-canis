@@ -13,6 +13,19 @@ export default async function block(msg: Message) {
     return;
   }
 
+  if (/^--rem$/.test(msg.body)) {
+    for (const userId of msg.mentionedIds) {
+      const lid = userId.split("@")[0];
+
+      await prisma.block.delete({
+        where: { lid },
+      });
+    }
+
+    await msg.react("✅");
+    return;
+  }
+
   for (const userId of msg.mentionedIds) {
     const lid = userId.split("@")[0];
 
@@ -24,4 +37,5 @@ export default async function block(msg: Message) {
   }
 
   await msg.react("✅");
+  return;
 }

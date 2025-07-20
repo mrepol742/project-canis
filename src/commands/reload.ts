@@ -11,6 +11,7 @@ export const role = "admin";
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^reload\b\s*/i, "").trim();
+
   if (query.length !== 0) {
     if (!commands[query.toLocaleLowerCase()]) {
       await msg.reply(`Command "${query}" not found.`);

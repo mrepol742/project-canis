@@ -2,7 +2,7 @@ import { Message } from "whatsapp-web.js";
 import fs from "fs/promises";
 import log from "../components/utils/log";
 
-export const command = "hotreload";
+export const command = "restart";
 export const role = "admin";
 
 export default async function (msg: Message) {
@@ -11,9 +11,9 @@ export default async function (msg: Message) {
   const tempDir = "./.temp";
   await fs.mkdir(tempDir, { recursive: true });
 
-  const tempPath = `${tempDir}/hotreload`;
+  const tempPath = `${tempDir}/restart`;
   await fs.writeFile(tempPath, JSON.stringify(msg));
 
-  log.info("hotreload", "exiting...");
+  log.info("restart", "exiting...");
   process.exit(0);
 }
