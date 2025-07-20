@@ -33,11 +33,6 @@ export default async function (msg: Message) {
     await msg.reply("Sorry, I couldn't generate a response. Please try again.");
     return;
   }
-
-  if (Math.random() < 0.5) {
-    const chat = await msg.getChat();
-    await client.sendMessage(chat.id._serialized, text);
-    return;
-  }
+  
   await msg.reply(text);
 }

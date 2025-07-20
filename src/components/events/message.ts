@@ -1,10 +1,17 @@
-import { Message } from "whatsapp-web.js";
+import {
+  Client,
+  Message,
+  MessageContent,
+  MessageSendOptions,
+} from "whatsapp-web.js";
 import log from "../utils/log";
 import { commands } from "../../index";
 import rateLimiter from "../utils/rateLimiter";
 import { isRateLimitError, getRateLimitInfo } from "../utils/rateLimit";
 import sleep from "../utils/sleep";
 import { findOrCreateUser, isBlocked } from "../services/user";
+import { client } from "../client";
+import Font from "../utils/font";
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
@@ -44,7 +51,9 @@ export default async function message(msg: Message) {
   /*
    * Block users from running commands.
    */
-  const isBlockedUser = await isBlocked(msg.author ? msg.author.split("@")[0] : senderId);
+  const isBlockedUser = await isBlocked(
+    msg.author ? msg.author.split("@")[0] : senderId
+  );
   if (isBlockedUser) {
     return;
   }
@@ -72,6 +81,21 @@ export default async function message(msg: Message) {
     log.info("Message", senderId, msg.body.slice(0, 150));
   }
   msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
+
+  const originalReply = msg.reply.bind(msg);
+  msg.reply = async (
+    content: MessageContent,
+    chatId?: string,
+    options?: MessageSendOptions
+  ): Promise<Message> => {
+    let text =
+      Font(typeof content === "string" ? content : (content as any).body) || "";
+
+    if (Math.random() < 0.5) {
+      return await client.sendMessage(msg.id.remote, text);
+    }
+    return await originalReply(text, chatId, options);
+  };
 
   /*
    * Execute the command handler.

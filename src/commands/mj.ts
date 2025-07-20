@@ -40,12 +40,6 @@ export default async function (msg: Message) {
     );
     return;
   }
-  const font = Font(text);
 
-  if (Math.random() < 0.5) {
-    const chat = await msg.getChat();
-    await client.sendMessage(chat.id._serialized, font);
-    return;
-  }
-  await msg.reply(font);
+  await msg.reply(text);
 }
