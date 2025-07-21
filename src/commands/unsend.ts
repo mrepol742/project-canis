@@ -21,8 +21,5 @@ export default async function (msg: Message) {
 
   if (quoted.fromMe) {
     await quoted.delete(true, true);
-    if (msg.fromMe) {
-      await msg.delete(true, true);
-    }
   }
 }

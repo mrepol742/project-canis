@@ -21,6 +21,15 @@ export default async function message(msg: Message) {
   // ignore message if it is older than 10 seconds
   if (msg.timestamp < Date.now() / 1000 - 10) return;
 
+  if (
+    msg.hasQuotedMsg ||
+    msg.isForwarded ||
+    msg.isGif ||
+    msg.isStatus ||
+    msg.broadcast
+  )
+    return; // ignore them all
+
   // process normalization
   msg.body = msg.body
     .normalize("NFKC")
