@@ -24,9 +24,9 @@
     "email": "mrepol742@gmail.com"
   },
   "dependencies": {
-    "@openrouter/ai-sdk-provider": "^1.0.0-beta.3",
+    "@openrouter/ai-sdk-provider": "^0.7.2",
     "@prisma/client": "^6.12.0",
-    "ai": "^5.0.0-canary.24",
+    "ai": "^4.3.19",
     "axios": "^1.10.0",
     "dotenv": "^17.2.0",
     "fb-downloader-scrapper": "^3.0.1",
