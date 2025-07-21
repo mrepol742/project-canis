@@ -13,7 +13,7 @@ export const info = {
   description: "Play a YouTube music by searching for it.",
   usage: "play <query>",
   example: "play Never Gonna Give You Up",
-  role: "admin",
+  role: "user",
   cooldown: 5000,
 };
 

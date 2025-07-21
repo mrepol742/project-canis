@@ -16,7 +16,7 @@ export const info = {
 export default async function (msg: Message) {
   const query = msg.body.replace(/^github\b\s*/i, "").trim();
   if (query.length === 0) {
-    await msg.reply("Please provide a username.");
+    await msg.reply("Please provide a search query.");
     return;
   }
 

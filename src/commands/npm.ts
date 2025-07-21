@@ -15,9 +15,13 @@ export const info = {
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^(npm(?:\s+install)?)\s+/i, "").trim();
-  if (query.includes(" ")) return;
   if (query.length === 0) {
     await msg.reply("Please provide a search query.");
+    return;
+  }
+
+  if (query.includes(" ")) {
+    await msg.reply("Please provide a single package name without spaces.");
     return;
   }
 

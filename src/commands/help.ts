@@ -16,7 +16,7 @@ type CommandType = {
   role: string;
 };
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 10;
 
 function paginate(items: string[], page: number, pageSize: number): string[] {
   const start = (page - 1) * pageSize;
@@ -29,19 +29,20 @@ function buildUserPage(
   totalPages: number
 ): string {
   let response = `
-  User commands
+  Use \`help <command>\` for more details on a specific command.\n
   < ─────────── >\n   •  ${userCommands.join("\n   •  ") || "_None_"}\n\n`;
-  response += `< ${page > 1 ? "prev" : ""} ─────────── ${
-    page == totalPages ? "" : "next"
-  } >`;
+  response += `< ─────────── >`;
+  response += `\n\`Page ${page} of ${totalPages}\``;
   return response;
 }
 
 function buildAdminPage(adminCommands: string[]): string {
-  return `Admin commands
+  return `
+  Use \`help <command>\` for more details on a specific command.\n
   < ─────────── >\n   •  ${
     adminCommands.join("\n   •  ") || "_None_"
-  }\n< ─────────── >`;
+  }\n< ─────────── >
+  `;
 }
 
 export default async function (msg: Message) {
@@ -56,7 +57,7 @@ export default async function (msg: Message) {
   const matchCommands = commands[query];
   if (matchCommands) {
     const response = `
-    *${matchCommands.command}*
+    \`${matchCommands.command}\`
     ${matchCommands.description || "No description"}
     
     *Usage:* ${matchCommands.usage || "No usage"}
@@ -79,7 +80,7 @@ export default async function (msg: Message) {
   }
 
   // help [page]
-  const match = query.match(/help\s*(\d+)?/i);
+  const match = query.match(/(\d+)?/i);
   const page = Math.max(1, match && match[1] ? parseInt(match[1], 10) : 1);
 
   const userCommands = Object.values(commands)

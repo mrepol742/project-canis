@@ -14,7 +14,7 @@ export const info = {
   description: "Play a YouTube video by searching for it.",
   usage: "video <query>",
   example: "video Never Gonna Give You Up",
-  role: "admin",
+  role: "user",
   cooldown: 5000,
 };
 
