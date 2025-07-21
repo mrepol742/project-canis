@@ -13,6 +13,8 @@ export const info = {
 };
 
 export default async function (msg: Message) {
+  if (!/^uptime\b/i.test(msg.body)) return;
+  
   const uptimeMinutes = Math.floor(process.uptime() / 60);
   const statsMessage = `
       *${uptimeMinutes} minutes*
