@@ -5,9 +5,6 @@ import fs from "fs";
 import axios from "axios";
 import { client } from "../components/client";
 
-export const command = "say";
-export const role = "user";
-
 export const info = {
   command: "say",
   description: "Convert text to speech and send it as an audio message.",
@@ -33,13 +30,21 @@ export default async function (msg: Message) {
   const response = await axios.get(url, { responseType: "arraybuffer" });
   const buffer = Buffer.from(response.data);
   const tempDir = "./.temp";
-  const tempPath = `${tempDir}/${Date.now()}.mp3`;
+  const filename = `say_${Date.now()}.mp3`;
+  const tempPath = `${tempDir}/say_${Date.now()}.mp3`;
 
   // Ensure the temp directory exists
   await fs.promises.mkdir(tempDir, { recursive: true });
-
   await fs.promises.writeFile(tempPath, buffer);
-  const media = MessageMedia.fromFilePath(tempPath);
-  await msg.reply(media);
+
+  const audioBuffer = fs.readFileSync(tempPath);
+  const media = new MessageMedia(
+    "audio/mpeg",
+    audioBuffer.toString("base64"),
+    `${filename}.mp3`
+  );
+  await msg.reply(media, msg.from, {
+    sendAudioAsVoice: true,
+  });
   await fs.promises.unlink(tempPath);
 }

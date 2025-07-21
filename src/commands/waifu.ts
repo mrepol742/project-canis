@@ -2,10 +2,6 @@ import { Message, MessageMedia } from "whatsapp-web.js";
 import axios from "axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
-import { client } from "../components/client";
-
-export const command = "waifu";
-export const role = "user";
 
 export const info = {
   command: "waifu",

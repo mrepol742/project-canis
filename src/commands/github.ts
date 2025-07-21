@@ -34,7 +34,6 @@ export default async function (msg: Message) {
       ${user.bio || ""}
   
       - Place: ${user.location || "N/A"}
-      - Repos: ${user.public_repos}
       - Followers: ${user.followers}
       - Following: ${user.following}
       - Gists: ${user.public_gists}

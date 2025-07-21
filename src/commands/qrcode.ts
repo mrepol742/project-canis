@@ -4,9 +4,6 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "qrcode";
-export const role = "user";
-
 export const info = {
   command: "qrcode",
   description: "Generate a QR code from the provided text.",

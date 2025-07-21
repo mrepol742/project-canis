@@ -1,6 +1,6 @@
 const rateLimitMap: Map<string, { timestamps: number[]; notified: boolean }> = new Map();
 const LIMIT = 3;
-const WINDOW_MS = 20000;
+const WINDOW_MS = 600000;
 
 /**
  * Returns:

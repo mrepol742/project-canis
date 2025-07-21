@@ -4,9 +4,6 @@ import { exec } from "child_process";
 import util from "util";
 import fs from "fs/promises";
 
-export const command = "run";
-export const role = "admin";
-
 export const info = {
   command: "run",
   description: "Run a code snippet in a specified programming language.",

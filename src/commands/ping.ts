@@ -1,9 +1,6 @@
 import { Message } from "whatsapp-web.js";
 import log from "../components/utils/log";
 
-export const command = "ping";
-export const role = "user";
-
 export const info = {
   command: "ping",
   description: "Check if the bot is online.",

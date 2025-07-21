@@ -4,9 +4,6 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "randomcolor";
-export const role = "user";
-
 export const info = {
   command: "randomcolor",
   description: "Generate a random color with its name and hex code.",

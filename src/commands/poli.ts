@@ -4,9 +4,6 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "poli";
-export const role = "user";
-
 export const info = {
   command: "poli",
   description: "Generate an image based on a prompt using Pollinations.",

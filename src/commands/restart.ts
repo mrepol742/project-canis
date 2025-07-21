@@ -2,9 +2,6 @@ import { Message } from "whatsapp-web.js";
 import fs from "fs/promises";
 import log from "../components/utils/log";
 
-export const command = "restart";
-export const role = "admin";
-
 export const info = {
   command: "restart",
   description: "Restart the bot.",

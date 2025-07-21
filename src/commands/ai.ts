@@ -5,10 +5,6 @@ import {
   greetings,
   greetingsLength,
 } from "../components/ai/response/greetings";
-import { client } from "../components/client";
-
-export const command = "ai";
-export const role = "user";
 
 export const info = {
   command: "ai",
@@ -33,6 +29,6 @@ export default async function (msg: Message) {
     await msg.reply("Sorry, I couldn't generate a response. Please try again.");
     return;
   }
-  
+
   await msg.reply(text);
 }

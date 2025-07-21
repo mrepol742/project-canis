@@ -4,9 +4,6 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "pooh";
-export const role = "user";
-
 export const info = {
   command: "pooh",
   description: "Generate a Pooh image with two texts.",

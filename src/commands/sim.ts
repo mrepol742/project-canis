@@ -5,10 +5,6 @@ import {
   greetings,
   greetingsLength,
 } from "../components/ai/response/greetings";
-import { client } from "../components/client";
-
-export const command = "sim";
-export const role = "user";
 
 export const info = {
   command: "sim",

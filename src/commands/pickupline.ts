@@ -5,9 +5,6 @@ import fs from "fs/promises";
 import { client } from "../components/client";
 import Font from "../components/utils/font";
 
-export const command = "pickupline";
-export const role = "user";
-
 export const info = {
   command: "pickupline",
   description: "Fetch a random pick-up line.",

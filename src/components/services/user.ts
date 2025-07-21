@@ -38,14 +38,27 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
         type: contact.isBusiness ? "business" : "private",
         mode: msg.author ? "group" : "private",
         about: about,
-        commandCount: 1
+        commandCount: 1,
       },
     });
-
   } catch (error) {
     log.error("Database", `Failed to find or create user.`, error);
   }
   return true;
+}
+
+export async function getUserbyLid(lid: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        lid,
+      },
+    });
+    return user;
+  } catch (error) {
+    log.error("Database", `Failed to get user by lid: ${lid}`, error);
+  }
+  return null;
 }
 
 export async function isBlocked(lid: string): Promise<boolean> {
@@ -55,7 +68,7 @@ export async function isBlocked(lid: string): Promise<boolean> {
         lid,
       },
     });
-    log.info("block", block);
+
     return block !== null;
   } catch (error) {
     log.error("Database", `Failed to check if user is blocked.`, error);

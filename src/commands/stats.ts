@@ -4,9 +4,6 @@ import os from "os";
 import si from "systeminformation";
 import { getUserCount, getBlockUserCount } from "../components/services/user";
 
-export const command = "stats";
-export const role = "user";
-
 export const info = {
   command: "stats",
   description: "Get system statistics including CPU, RAM, GPU, and more.",

@@ -4,9 +4,6 @@ import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
 
-export const command = "npm";
-export const role = "user";
-
 export const info = {
   command: "npm",
   description: "Search for npm package information.",
@@ -24,34 +21,59 @@ export default async function (msg: Message) {
     return;
   }
 
-  await axios
-    .get(`https://api.popcat.xyz/npm?q=${encodeURIComponent(query)}`)
-    .then(async (response) => {
-      const name = response.data.name;
-      const version = response.data.version;
-      const description = response.data.description;
-      const author = response.data.author;
-      const last_published = response.data.last_published;
-      const downloads_this_year = response.data.downloads_this_year;
-      const repository = response.data.repository;
-      const author_email = response.data.author_email;
-      const repo = `
-     *${name}*
-     ${version}
-     ${description}
+  try {
+    const response = await axios.get(
+      `https://registry.npmjs.org/${encodeURIComponent(query)}`
+    );
+    const data = response.data;
 
-     - Author: ${author}
-     - Email: ${author_email}
-     - Last Updated: ${last_published}
-     - Repository: ${repository}
-     - Downloads This Year: ${downloads_this_year}
- `;
-      await msg.reply(repo);
-    })
-    .catch(async (error) => {
-      log.error("npm", `Error fetching data: ${error.message}`);
-      await msg.reply(
-        `Error fetching data "${query}". Please try again later.`
-      );
-    });
+    if (data.error) return await msg.reply(`No package found for "${query}".`);
+
+    // Get latest version
+    const latestVersion = data["dist-tags"]?.latest;
+    const versionData = latestVersion ? data.versions[latestVersion] : null;
+
+    if (!versionData) {
+      await msg.reply(`No data found for package "${query}".`);
+      return;
+    }
+
+    const name = data.name || "-";
+    const version = versionData.version || "-";
+    const description = versionData.description || "-";
+    const author = versionData.author?.name || "-";
+    const homepage = versionData.homepage || "-";
+    const repository = versionData.repository?.url || "-";
+    const license = versionData.license || "-";
+    const lastPublished = data.time?.[latestVersion] || "-";
+
+    // Format lastPublished date nicely, e.g., "June 13 2002"
+    let formattedPublished = "-";
+    if (lastPublished && lastPublished !== "-") {
+      const date = new Date(lastPublished);
+      formattedPublished = date.toLocaleString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    const repo = `
+    *${name}* (v${version})
+    ${description}
+
+    - Author: ${author}
+    - License: ${license}
+    - Homepage: ${homepage}
+    - Repository: ${repository}
+    - Last Published: ${formattedPublished}
+    `;
+
+    await msg.reply(repo);
+  } catch (error: any) {
+    log.error("npm", `Error fetching data: ${error.message}`);
+    await msg.reply(
+      `Error fetching data for "${query}". Please try again later.`
+    );
+  }
 }

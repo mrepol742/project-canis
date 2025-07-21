@@ -13,20 +13,24 @@ import groupLeave from "./events/groups/leave";
 import groupJoin from "./events/groups/join";
 import reaction from "./events/reaction";
 import ready from "./events/ready";
+import revoke from "./events/revoke";
 
 const client = new Client({
+  puppeteer: {
+    executablePath: "/opt/google/chrome/google-chrome",
+  },
   authStrategy: new LocalAuth(),
 });
 
 client.on("loading_screen", (percent: number, message: string) =>
-  log.info("loading", `..................... ${percent}%`)
+  log.info("Loading", `${percent}%`)
 );
 client.on("authenticated", () =>
-  log.info("auth", "Client authenticated successfully.")
+  log.info("Auth", "Client authenticated successfully.")
 );
 client.on("qr", (qr: string) => {
   // Generate and scan this code with your phone
-  log.info("qrcode", "Scan this QR code with your WhatsApp app:");
+  log.info("QR", "Scan this QR code with your WhatsApp app:");
   qrcode.generate(qr, { small: true });
 });
 client.on("ready", async () => ready());
@@ -40,10 +44,14 @@ client.on(
   async (msg: Message, newBody: String, prevBody: String) =>
     messageEdit(msg, newBody, prevBody)
 );
+client.on(
+  "message_revoke_everyone",
+  async (msg: Message, revoked_msg?: Message) => revoke(msg, revoked_msg)
+);
 client.on("group_join", async (notif: GroupNotification) => groupJoin(notif));
 client.on("group_leave", async (notif: GroupNotification) => groupLeave(notif));
 client.on("auth_failure", (msg: String) =>
-  log.error("auth", "Authentication failed. Please try again.")
+  log.error("Auth", "Authentication failed. Please try again.")
 );
 
 client.initialize();

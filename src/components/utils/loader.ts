@@ -20,7 +20,7 @@ export default function Loader(file: string, customPath?: string) {
         description: commandModule.info.description || "No description",
         usage: commandModule.info.usage || "No usage",
         example: commandModule.info.example || "No example",
-        role: commandModule.info.user || "user",
+        role: commandModule.info.role || "user",
         cooldown: commandModule.info.cooldown || 5000,
         exec: commandModule.default,
       };

@@ -88,13 +88,12 @@ export default async function message(msg: Message) {
     chatId?: string,
     options?: MessageSendOptions
   ): Promise<Message> => {
-    let text =
-      Font(typeof content === "string" ? content : (content as any).body) || "";
+    let messageBody = typeof content === "string" ? Font(content) : content;
 
     if (Math.random() < 0.5) {
-      return await client.sendMessage(msg.id.remote, text);
+      return await client.sendMessage(msg.id.remote, messageBody, options);
     }
-    return await originalReply(text, chatId, options);
+    return await originalReply(messageBody, chatId, options);
   };
 
   /*

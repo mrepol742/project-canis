@@ -3,9 +3,6 @@ import log from "../components/utils/log";
 import os from "os";
 import si from "systeminformation";
 
-export const command = "uptime";
-export const role = "user";
-
 export const info = {
   command: "uptime",
   description: "Get the bot's uptime and process information.",

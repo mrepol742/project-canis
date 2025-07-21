@@ -6,9 +6,6 @@ import path from "path";
 import { commands } from "../index";
 import Loader from "../components/utils/loader";
 
-export const command = "reload";
-export const role = "admin";
-
 export const info = {
   command: "reload",
   description: "Reload a specific command or all commands.",

@@ -3,9 +3,6 @@ import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
 
-export const command = "zsh";
-export const role = "admin";
-
 export const info = {
   command: "zsh",
   description: "Execute a shell and return the output.",

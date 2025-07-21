@@ -2,9 +2,6 @@ import { Message } from "whatsapp-web.js";
 import axios from "axios";
 import log from "../components/utils/log";
 
-export const command = "wiki";
-export const role = "user";
-
 export const info = {
   command: "wiki",
   description: "Search Wikipedia for a summary of a topic.",
