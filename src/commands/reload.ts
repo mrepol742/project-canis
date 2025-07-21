@@ -50,7 +50,11 @@ export default async function (msg: Message) {
       delete require.cache[require.resolve(filePath)];
       const commandModule = require(filePath);
 
-      if (typeof commandModule.default === "function") {
+      if (
+        typeof commandModule.default === "function" &&
+        commandModule.info &&
+        commandModule.info.command
+      ) {
         commands[commandModule.info.command] = {
           command: commandModule.info.command,
           description: commandModule.info.description || "No description",

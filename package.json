@@ -29,6 +29,7 @@
     "ai": "^5.0.0-canary.24",
     "axios": "^1.10.0",
     "dotenv": "^17.2.0",
+    "fb-downloader-scrapper": "^3.0.1",
     "google-tts-api": "^2.0.2",
     "groq-sdk": "^0.27.0",
     "npmlog": "^7.0.1",
