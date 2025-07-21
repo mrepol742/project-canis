@@ -10,6 +10,7 @@ import Loader from "./components/utils/loader";
 import "./components/process";
 import "./components/server";
 import "./components/client";
+import "./components/utils/data";
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";

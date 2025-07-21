@@ -1,0 +1,1967 @@
+[
+    {
+        "question": "What is the chemical symbol for the element gold?",
+        "choices" : [
+            "Au", "Ag", "Fe", "Cu"
+        ],
+        "answer": "au",
+        "topic": "science"
+    },
+    {
+        "question": "Which force is responsible for the attraction between two masses?",
+        "choices" : [
+            "Electromagnetic force", "Gravitational force", "Nuclear force", "Frictional force"
+        ],
+        "answer": "gravitationalforce",
+        "topic": "science"
+    },
+    {
+        "question": "What is the main function of the ozone layer in the Earth's atmosphere?",
+        "choices" : [
+            "Absorbing ultraviolet radiation", "Producing oxygen", "Regulating temperature", "Generating rainfall"
+        ],
+        "answer": "absorbingultravioletradiation",
+        "topic": "science"
+    },
+    {
+        "question": "Who developed the theory of relativity?",
+        "choices" : [
+            "Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"
+        ],
+        "answer": "alberteinstein",
+        "topic": "science"
+    },
+    {
+        "question": "What is the basic unit of heredity in living organisms?",
+        "choices" : [
+            "Protein", "Gene", "Chromosome", "Enzyme"
+        ],
+        "answer": "gene",
+        "topic": "science"
+    },
+    {
+        "question": "Which gas is the most abundant in Earth's atmosphere?",
+        "choices" : [
+            "Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"
+        ],
+        "answer": "nitrogen",
+        "topic": "science"
+    },
+    {
+        "question": "What is the chemical formula for water?",
+        "choices" : [
+            "H2O", "CO2", "CH4", "O2"
+        ],
+        "answer": "h2o",
+        "topic": "science"
+    },
+    {
+        "question": "Which planet is known as the \"Blue Planet\" due to its abundant water?",
+        "choices" : [
+            "Earth", "Mars", "Venus", "Neptune"
+        ],
+        "answer": "earth",
+        "topic": "science"
+    },
+    {
+        "question": "What is the process by which plants release water vapor into the atmosphere?",
+        "choices" : [
+            "Condensation", "Transpiration", "Evaporation", "Precipitation"
+        ],
+        "answer": "transpiration",
+        "topic": "science"
+    },
+    {
+        "question": "Which scientist is credited with the discovery of penicillin?",
+        "choices" : [
+            "Louis Pasteur", "Alexander Fleming", "Marie Curie", "Robert Koch"
+        ],
+        "answer": "alexanderfleming",
+        "topic": "science"
+    },
+    {
+        "question": "What is the main component of Earth's core?",
+        "choices" : [
+            "Iron", "Nickel", "Copper", "Aluminum"
+        ],
+        "answer": "iron",
+        "topic": "science"
+    },
+    {
+        "question": "Which type of electromagnetic waves has the shortest wavelength?",
+        "choices" : [
+            "Radio waves", "Microwaves", "X-rays", "Gamma rays"
+        ],
+        "answer": "gammarays",
+        "topic": "science"
+    },
+    {
+        "question": "What is the unit of measurement for electric current?",
+        "choices" : [
+            "Volt", "Ampere", "Watt", "Ohm"
+        ],
+        "answer": "ampere",
+        "topic": "science"
+    },
+    {
+        "question": "Which gas is responsible for the greenhouse effect on Earth?",
+        "choices" : [
+            "Oxygen", "Nitrogen", "Carbon dioxide", "Methane"
+        ],
+        "answer": "carbondioxide",
+        "topic": "science"
+    },
+    {
+        "question": "What is the largest organ in the human body?",
+        "choices" : [
+            "Heart", "Liver", "Skin", "Brain"
+        ],
+        "answer": "skin",
+        "topic": "science"
+    },
+    {
+        "question": "Who proposed the heliocentric model of the solar system?",
+        "choices" : [
+            "Ptolemy", "Copernicus", "Kepler", "Galileo"
+        ],
+        "answer": "copernicus",
+        "topic": "science"
+    },
+    {
+        "question": "Which of the following is a renewable energy source?",
+        "choices" : [
+            "Coal", "Natural gas", "Solar power", "Nuclear power"
+        ],
+        "answer": "solarpower",
+        "topic": "science"
+    },
+    {
+        "question": "What is the function of red blood cells in the human body?",
+        "choices" : [
+            "Carrying oxygen", "Fighting infections", "Clotting blood", "Producing antibodies"
+        ],
+        "answer": "carryingoxygen",
+        "topic": "science"
+    },
+    {
+        "question": "Which scientist is known for the theory of natural selection?",
+        "choices" : [
+            "Charles Darwin", "Gregor Mendel", "Thomas Edison", "Marie Curie"
+        ],
+        "answer": "charlesdarwin",
+        "topic": "science"
+    },
+    {
+        "question": "What is the SI unit of pressure?",
+        "choices" : [
+            "Pascal", "Newton", "Joule", "Kilogram"
+        ],
+        "answer": "pascal",
+        "topic": "science"
+    },
+    {
+        "question": "What is the value of π (pi) to two decimal places?",
+        "choices" : [
+            "3.14", "2.71", "1.61", "4.20"
+        ],
+        "answer": "3.14",
+        "topic": "math"
+    },
+    {
+        "question": "Which of the following is a prime number?",
+        "choices" : [
+            "1", "6", "11", "4"
+        ],
+        "answer": "11",
+        "topic": "math"
+    },
+    {
+        "question": "Which of the following is a prime number?",
+        "choices" : [
+            "1", "6", "11", "4"
+        ],
+        "answer": "11",
+        "topic": "math"
+    },
+    {
+        "question": "If a triangle has angles measuring 45°, 45°, and 90°, what type of triangle is it?",
+        "choices" : [
+            "Equilateral", "Isosceles", "Scalene", "Right-angled"
+        ],
+        "answer": "right-angled",
+        "topic": "math"
+    },
+    {
+        "question": "What is the square root of 144?",
+        "choices" : [
+            "10", "12", "14", "16"
+        ],
+        "answer": "12",
+        "topic": "math"
+    },
+    {
+        "question": "Solve for x: 2x - 5 = 11",
+        "choices" : [
+            "3", "8", "5", "-3"
+        ],
+        "answer": "3",
+        "topic": "math"
+    },
+    {
+        "question": "What is the area of a rectangle with length 8 units and width 5 units?",
+        "choices" : [
+            "13 square units", "20 square units", "26 square units", "40 square units"
+        ],
+        "answer": "20squareunits",
+        "topic": "math"
+    },
+    {
+        "question": "Which trigonometric function is equal to the ratio of the opposite side to the hypotenuse in a right-angled triangle?",
+        "choices" : [
+            "Sine", "Cosine", "Tangent", "Cotangent"
+        ],
+        "answer": "sine",
+        "topic": "math"
+    },
+    {
+        "question": "If a = 3 and b = 4, what is the value of a² + b²?",
+        "choices" : [
+            "5", "7", "9", "25"
+        ],
+        "answer": "25",
+        "topic": "math"
+    },
+    {
+        "question": "What is the value of 5! (5 factorial)?",
+        "choices" : [
+            "20", "60", "120", "720"
+        ],
+        "answer": "120",
+        "topic": "math"
+    },
+    {
+        "question": "If the perimeter of a square is 20 units, what is the length of one side?",
+        "choices" : [
+            "2 units", "4 units", "5 units", "10 units"
+        ],
+        "answer": "4units",
+        "topic": "math"
+    },
+    {
+        "question": "Which of the following is the identity element for addition?",
+        "choices" : [
+            "0", "1", "-1", "10"
+        ],
+        "answer": "0",
+        "topic": "math"
+    },
+    {
+        "question": "What is the sum of the angles in a hexagon?",
+        "choices" : [
+            "90 degrees", "120 degrees", "180 degrees", "360 degrees"
+        ],
+        "answer": "360degrees",
+        "topic": "math"
+    },
+    {
+        "question": "If a right-angled triangle has legs measuring 6 units and 8 units, what is the length of the hypotenuse?",
+        "choices" : [
+            "10 units", "12 units", "14 units", "15 units"
+        ],
+        "answer": "10units",
+        "topic": "math"
+    },
+    {
+        "question": "What is the value of log₂(8)?",
+        "choices" : [
+            "2", "3", "4", "8"
+        ],
+        "answer": "3",
+        "topic": "math"
+    },
+    {
+        "question": "If a = 2 and b = 3, what is the value of a³ + b³",
+        "choices" : [
+            "5", "11", "35", "125"
+        ],
+        "answer": "125",
+        "topic": "math"
+    },
+    {
+        "question": "What is the midpoint between the points (2, 4) and (6, 8) in a Cartesian coordinate system?",
+        "choices" : [
+            "(4, 6)", "(3, 5)", "(8, 12)", "(0, 0)"
+        ],
+        "answer": "(4,6)",
+        "topic": "math"
+    },
+    {
+        "question": "If a circle has a radius of 5 units, what is its circumference? (Use π = 3.14)",
+        "choices" : [
+            "10.5 units", "15.7 units", "31.4 units", "78.5 units"
+        ],
+        "answer": "31.4units",
+        "topic": "math"
+    },
+    {
+        "question": "What is the slope of a line passing through the points (3, 5) and (7, 9)?",
+        "choices" : [
+            "1", "2", "4", "6"
+        ],
+        "answer": "1",
+        "topic": "math"
+    },
+    {
+        "question": "If a square has an area of 36 square units, what is the length of each side?",
+        "choices" : [
+            "4 units", "6 units", "9 units", "12 units"
+        ],
+        "answer": "6units",
+        "topic": "math"
+    },
+    {
+        "question": "What is the value of sin(30 degrees)? (Use π = 3.14)",
+        "choices" : [
+            "0.5", "0.75", "1.0", "1.5"
+        ],
+        "answer": "0.5",
+        "topic": "math"
+    },
+    {
+        "question": "Which programming language is commonly used for developing mobile applications?",
+        "choices" : [
+            "Java", "C++", "Python", "Swift"
+        ],
+        "answer": "swift",
+        "topic": "technology"
+    },
+    {
+        "question": "What does the acronym \"URL\" stand for in the context of web technology?",
+        "choices" : [
+            "Universal Resource Locator", "Unified Rendering Language", "ser Registration Link", "Underlying Resource List"
+        ],
+        "answer": "universalresourcelocator",
+        "topic": "technology"
+    },
+    {
+        "question": "Which type of storage device uses NAND flash memory technology?",
+        "choices" : [
+            "Hard disk drive (HDD)", "Solid State Drive (SSD)", "CD-ROM", "Floppy disk"
+        ],
+        "answer": "solidstatedrive(ssd)",
+        "topic": "technology"
+    },
+    {
+        "question": "What is the purpose of a firewall in computer networks?",
+        "choices" : [
+            "To prevent hardware malfunctions", "To block unauthorized access", "To enhance internet speed", "To facilitate data encryption"
+        ],
+        "answer": "toblockunauthorizedaccess",
+        "topic": "technology"
+    },
+    {
+        "question": "Which protocol is commonly used for secure communication over the internet?",
+        "choices" : [
+            "HTTP", "FTP", "HTTPS", "SMTP"
+        ],
+        "answer": "https",
+        "topic": "technology"
+    },
+    {
+        "question": "In the context of databases, what does SQL stand for?",
+        "choices" : [
+            "Structured Language", "Sequential Query Language", "Standard Question Language", "Structured Query Language"
+        ],
+        "answer": "structuredquerylanguage",
+        "topic": "technology"
+    },
+    {
+        "question": "What is the purpose of a QR code?",
+        "choices" : [
+            "Encoding audio files", "Storing contact information", "Generating barcodese", "Connecting to Wi-Fi networks"
+        ],
+        "answer": "storingcontactinformation",
+        "topic": "technology"
+    },
+    {
+        "question": "Which programming paradigm emphasizes the use of functions and procedures?",
+        "choices" : [
+            "Object-oriented programming (OOP)", "Procedural programming", "Functional programming", "Event-driven programming"
+        ],
+        "answer": "functionalprogramming",
+        "topic": "technology"
+    },
+    {
+        "question": "What is the term for a software application that assists in managing email communication?",
+        "choices" : [
+            "Spreadsheet", "Database", "Word processor", "Email client"
+        ],
+        "answer": "emailclient",
+        "topic": "technology"
+    },
+    {
+        "question": "Which technology is commonly used for wireless communication between devices in close proximity?",
+        "choices" : [
+            "Bluetooth", "NFC (Near Field Communication)", "Wi-Fi", "GPS"
+        ],
+        "answer": "bluetooth",
+        "topic": "technology"
+    },
+    {
+        "question": "What does the acronym \"AI\" stand for in the context of technology?",
+        "choices" : [
+            "Advanced Interface", "Artificial Intelligence", "Automated Integration", "Augmented Information"
+        ],
+        "answer": "artificialintelligence",
+        "topic": "technology"
+    },
+    {
+        "question": "Which cloud computing service provides virtualized computing resources over the internet?",
+        "choices" : [
+            "Amazon Web Services (AWS)", "Microsoft Office 365", "Dropbox", "Adobe Creative Cloud"
+        ],
+        "answer": "amazonwebservices(aws)",
+        "topic": "technology"
+    },
+    {
+        "question": "What is the purpose of a version control system in software development?",
+        "choices" : [
+            "Managing project budgets", "Tracking changes in code", "Optimizing website performance", "Conducting user testing"
+        ],
+        "answer": "trackingchangesincode",
+        "topic": "technology"
+    },
+    {
+        "question": "Which programming language is often used for data analysis and machine learning?",
+        "choices" : [
+            "Java", "R", "Ruby", "PHP"
+        ],
+        "answer": "r",
+        "topic": "technology"
+    },
+    {
+        "question": "What is the term for a program that replicates itself and spreads to other computers or networks?",
+        "choices" : [
+            "Spyware", "Malware", "Virus", "Firewall"
+        ],
+        "answer": "virus",
+        "topic": "technology"
+    },
+    {
+        "question": "Which of the following is a type of renewable energy technology?",
+        "choices" : [
+            "Nuclear power", "Fossil fuels", "Solar power", "Natural gas"
+        ],
+        "answer": "solarpower",
+        "topic": "technology"
+    },
+    {
+        "question": "What is the purpose of a VPN (Virtual Private Network)?",
+        "choices" : [
+            "Enhancing internet speed", "Securing network connections", "Managing databases", "Creating virtual machines"
+        ],
+        "answer": "securingnetworkconnections",
+        "topic": "technology"
+    },
+    {
+        "question": "What is webvium?",
+        "choices" : [
+            "Browser", "CSS Framework", "Library", "Social Media"
+        ],
+        "answer": "browser",
+        "topic": "technology"
+    },
+    {
+        "question": "Who created this chatbot?",
+        "choices" : [
+            "Mj", "Bill", "Mark", "Jeff"
+        ],
+        "answer": "mj",
+        "topic": "technology"
+    },
+    {
+        "question": "When did chatbot launch?",
+        "choices" : [
+            "Nov 2022", "Jun 2023", "Jan 2024", "March 2022"
+        ],
+        "answer": "nov2022",
+        "topic": "technology"
+    },
+    {
+        "question": "What is the primary purpose of marinating meat?",
+        "choices" : [
+            "Enhancing color", "Increasing tenderness", "Adding sweetness", "Reducing cooking time"
+        ],
+        "answer": "increasingtenderness",
+        "topic": "cooking"
+    },
+    {
+        "question": "Which herb is commonly used in Italian cuisine and is a key ingredient in pesto sauce?",
+        "choices" : [
+            "Cilantro", "Basil", "Thyme", "Rosemary"
+        ],
+        "answer": "basil",
+        "topic": "cooking"
+    },
+    {
+        "question": "What cooking method involves immersing food in hot liquid, often for an extended period?",
+        "choices" : [
+            "Grilling", "Sautéing", "Boiling", "Roasting"
+        ],
+        "answer": "boiling",
+        "topic": "cooking"
+    },
+    {
+        "question": "What is the main ingredient in guacamole, a popular Mexican dip?",
+        "choices" : [
+            "Tomatoes", "Avocado", "Onions", "Cilantro"
+        ],
+        "answer": "avocado",
+        "topic": "cooking"
+    },
+    {
+        "question": "Which type of pasta is shaped like small rice grains and is often used in soups?",
+        "choices" : [
+            "Penne", "Orzo", "Fusilli", "Linguine"
+        ],
+        "answer": "orzo",
+        "topic": "cooking"
+    },
+    {
+        "question": "What is the purpose of cream of tartar in baking?",
+        "choices" : [
+            "Leavening agent", "Flavor enhancer", "Acidic stabilizer", "Thickening agent"
+        ],
+        "answer": "acidicstabilizer",
+        "topic": "cooking"
+    },
+    {
+        "question": "Which type of rice is commonly used in sushi?",
+        "choices" : [
+            "Basmati", "Jasmine", "Arborio", "Sushi rice"
+        ],
+        "answer": "sushirice",
+        "topic": "cooking"
+    },
+    {
+        "question": "In baking, what does proofing refer to?",
+        "choices" : [
+            "Testing for doneness", "Allowing dough to rise", "Applying a glaze", "Adding seasoning"
+        ],
+        "answer": "allowingdoughtorise",
+        "topic": "cooking"
+    },
+    {
+        "question": "What is the key ingredient in the classic French dish coq au vin?",
+        "choices" : [
+            "Beef", "Chicken", "Lamb", "Fish"
+        ],
+        "answer": "chicken",
+        "topic": "cooking"
+    },
+    {
+        "question": "Which spice is known as the \"queen of spices\" and is often used in both sweet and savory dishes?",
+        "choices" : [
+            "Cumin", "Turmeric", "Cardamom", "Cinnamon"
+        ],
+        "answer": "cinnamon",
+        "topic": "cooking"
+    },
+    {
+        "question": "What is the main ingredient in the Middle Eastern dish hummus?",
+        "choices" : [
+            "Chickpeas", "Lentils", "Black beans", "Kidney beans"
+        ],
+        "answer": "chickpeas",
+        "topic": "cooking"
+    },
+    {
+        "question": "Which type of lettuce is commonly used in Caesar salads?",
+        "choices" : [
+            "Romaine", "Iceberg", "Spinach", "Arugula"
+        ],
+        "answer": "romaine",
+        "topic": "cooking"
+    },
+    {
+        "question": "What is the purpose of deglazing a pan in cooking?",
+        "choices" : [
+            "Adding flavor", "Preventing burning", "Cleaning the pan", "Making a sauce"
+        ],
+        "answer": "makingasauce",
+        "topic": "cooking"
+    },
+    {
+        "question": "Which of the following is a traditional Japanese seasoning made from fermented soybeans?",
+        "choices" : [
+            "Hoisin sauce", "Miso", "Ponzu sauce", "Mirin"
+        ],
+        "answer": "miso",
+        "topic": "cooking"
+    },
+    {
+        "question": "In barbecue terminology, what is the \"bark\" on smoked meats?",
+        "choices" : [
+            "A type of wood chip", "Charred grill marks", "Crust formed during smoking", "Barbecue sauce coating"
+        ],
+        "answer": "crustformedduringsmoking",
+        "topic": "cooking"
+    },
+    {
+        "question": "What is the main ingredient in the dish ratatouille?",
+        "choices" : [
+            "Eggplant", "Zucchini", "Bell peppersg", "All of the above"
+        ],
+        "answer": "alloftheabove",
+        "topic": "cooking"
+    },
+    {
+        "question": "What is the primary muscle targeted during a bicep curl?",
+        "choices" : [
+            "Quadriceps", "Hamstrings", "Triceps", "Bicepse"
+        ],
+        "answer": "biceps",
+        "topic": "workout"
+    },
+    {
+        "question": "Which exercise primarily works the muscles of the chest?",
+        "choices" : [
+            "Deadlift", "Bench press", "Leg press", "Plank"
+        ],
+        "answer": "benchpress",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the purpose of stretching before a workout?",
+        "choices" : [
+            "Increase heart rate", "Build muscle mass", "Improve flexibility", "Boost endurance"
+        ],
+        "answer": "improveflexibility",
+        "topic": "workout"
+    },
+    {
+        "question": "In weightlifting, what does the acronym \"RM\" stand for?",
+        "choices" : [
+            "Repetition Maximum", "Resting Mode", "Resistance Measurement", "Recovery Method"
+        ],
+        "answer": "repetitionmaximum",
+        "topic": "workout"
+    },
+    {
+        "question": "Which type of exercise is known for targeting the core muscles?",
+        "choices" : [
+            "Squats", "Crunches", "Lunges", "Shoulder press"
+        ],
+        "answer": "crunches",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the main benefit of cardiovascular exercise?",
+        "choices" : [
+            "Increased flexibility", "Enhanced muscle strength", "Improved heart health", "Boosted metabolism"
+        ],
+        "answer": "improvedhearthealth",
+        "topic": "workout"
+    },
+    {
+        "question": "Which nutrient is essential for muscle repair and growth after a workout?",
+        "choices" : [
+            "Carbohydrates", "Protein", "Fat", "Fiber"
+        ],
+        "answer": "protein",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the purpose of a cool-down after exercise?",
+        "choices" : [
+            "Prevent muscle soreness", "Increase adrenaline levels", "Enhance muscle activation", "Lower heart rate gradually"
+        ],
+        "answer": "lowerheartrategradually",
+        "topic": "workout"
+    },
+    {
+        "question": "Which exercise is effective for targeting the gluteal muscles (buttocks)?",
+        "choices" : [
+            "Calf raises", "Deadlifts", "Plank", "Hip thrusts"
+        ],
+        "answer": "hipthrusts",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the recommended duration for moderate-intensity aerobic exercise per week, according to fitness guidelines?",
+        "choices" : [
+            "30 minutes", "60 minutes", "90 minutes", "120 minutes"
+        ],
+        "answer": "60minutes",
+        "topic": "workout"
+    },
+    {
+        "question": "Which of the following is a compound exercise that targets multiple muscle groups?",
+        "choices" : [
+            "Bicep curl", "Leg press", "Tricep kickback", "Wrist curl"
+        ],
+        "answer": "legpress",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the purpose of a stability ball in a workout routine?",
+        "choices" : [
+            "Increase resistance", "Improve balance and core strength", "Target specific muscle groups", "Enhance cardiovascular endurance"
+        ],
+        "answer": "improvebalanceandcorestrength",
+        "topic": "workout"
+    },
+    {
+        "question": "Which type of exercise is known for improving joint flexibility and range of motion?",
+        "choices" : [
+            "Isometric", "Plyometric", "Flexibility", "Isotonic"
+        ],
+        "answer": "flexibility",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the primary energy source for short bursts of high-intensity exercise, such as sprinting?",
+        "choices" : [
+            "Fats", "Proteins", "Carbohydrates", "Glycogen"
+        ],
+        "answer": "carbohydrates",
+        "topic": "workout"
+    },
+    {
+        "question": "Which exercise targets the muscles of the back and is performed by pulling weight toward the chest?",
+        "choices" : [
+            "Bench press", "Lat pulldown", "Shoulder press", "Leg curl"
+        ],
+        "answer": "latpulldown",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the purpose of interval training in a workout routine?",
+        "choices" : [
+            "Build muscle mass", "Increase endurance", "Enhance flexibility", "Improve balance"
+        ],
+        "answer": "increaseendurance",
+        "topic": "workout"
+    },
+    {
+        "question": "Which type of exercise is characterized by a slow and controlled movement through a full range of motion?",
+        "choices" : [
+            "Plyometric", "Isometric", "Isotonic", "Dynamice"
+        ],
+        "answer": "isotonic",
+        "topic": "workout"
+    },
+    {
+        "question": "Which muscle group does the plank exercise primarily target?",
+        "choices" : [
+            "Abdominals", "Quadriceps", "Biceps", "Deltoids"
+        ],
+        "answer": "abdominals",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the recommended rest interval between sets for muscle hypertrophy (muscle growth)?",
+        "choices" : [
+            "10 seconds", "30 seconds", "1 minute", "3 minutes"
+        ],
+        "answer": "1minute",
+        "topic": "workout"
+    },
+    {
+        "question": "Which exercise involves lifting a weight from shoulder height to overhead in one continuous motion?",
+        "choices" : [
+            "Deadlift", "Clean and jerk", "Snatch", "Military press"
+        ],
+        "answer": "cleanandjerk",
+        "topic": "workout"
+    },
+    {
+        "question": "What is the name of the horizontal lines on a musical staff?",
+        "choices" : [
+            "Clefs", "Measures", "Staves", "Ledger lines"
+        ],
+        "answer": "staves",
+        "topic": "music"
+    },
+    {
+        "question": "Which woodwind instrument is known for its double reed and distinctive sound?",
+        "choices" : [
+            "Clarinet", "Flute", "Oboe", "Saxophone"
+        ],
+        "answer": "oboe",
+        "topic": "music"
+    },
+    {
+        "question": "In music notation, what does \"piano\" indicate?",
+        "choices" : [
+            "Play softly", "Play loudly", "Play with a fast tempo", "Play with a slow tempo"
+        ],
+        "answer": "playsoftly",
+        "topic": "music"
+    },
+    {
+        "question": "Who is often referred to as the \"King of Pop\"?",
+        "choices" : [
+            "Michael Jackson", "Elvis Presley", "Prince", "Madonna"
+        ],
+        "answer": "michaeljackson",
+        "topic": "music"
+    },
+    {
+        "question": "Which of the following is a percussion instrument?",
+        "choices" : [
+            "Violin", "Trumpet", "Drum", "Piano"
+        ],
+        "answer": "drum",
+        "topic": "music"
+    },
+    {
+        "question": "Which musical genre is characterized by a fast tempo, syncopated rhythms, and improvisation?",
+        "choices" : [
+            "Jazz", "Classical", "Country", "Blues"
+        ],
+        "answer": "jazz",
+        "topic": "music"
+    },
+    {
+        "question": "Who composed the famous Symphony No. 9, commonly known as the \"Choral Symphony\"?",
+        "choices" : [
+            "Wolfgang Amadeus Mozart", "Ludwig van Beethoven", "Johann Sebastian Bach", "Pyotr Ilyich Tchaikovsky"
+        ],
+        "answer": "ludwigvanbeethoven",
+        "topic": "music"
+    },
+    {
+        "question": "What is the term for a musical composition for nine instruments or voices?",
+        "choices" : [
+            "Solo", "Duet", "Trio", "Nonet"
+        ],
+        "answer": "nonet",
+        "topic": "music"
+    },
+    {
+        "question": "Which instrument family does the trumpet belong to?",
+        "choices" : [
+            "String", "Brass", "Woodwind", "Percussion"
+        ],
+        "answer": "brass",
+        "topic": "music"
+    },
+    {
+        "question": "What does the term \"fortissimo\" indicate in sheet music?",
+        "choices" : [
+            "Play softly", "Play moderately", "Play very loudly", "Play with a gradual increase in volume"
+        ],
+        "answer": "playveryloudly",
+        "topic": "music"
+    },
+    {
+        "question": "Which legendary guitarist is known for his work with the band Queen?",
+        "choices" : [
+            "Eric Clapton", "Jimmy Page", "Brian May", "Jimi Hendrix"
+        ],
+        "answer": "brianmay",
+        "topic": "music"
+    },
+    {
+        "question": "What is the standard tuning for a classical guitar's six strings from lowest to highest pitch?",
+        "choices" : [
+            "E-A-D-G-B-En", "A-D-G-C-E-A", "G-B-E-A-D-G", "D-G-C-F-A-D"
+        ],
+        "answer": "e-a-d-g-b-e",
+        "topic": "music"
+    },
+    {
+        "question": "In musical terms, what does \"allegro\" mean?",
+        "choices" : [
+            "Slow", "Fast", "Loud", "Soft"
+        ],
+        "answer": "fast",
+        "topic": "music"
+    },
+    {
+        "question": "Who is often referred to as the \"Queen of Soul\"?",
+        "choices" : [
+            "Whitney Houston", "Aretha Franklin", "Beyoncé", "Diana Ross"
+        ],
+        "answer": "arethafranklin",
+        "topic": "music"
+    },
+    {
+        "question": "Which of the following is a traditional Japanese stringed instrument?",
+        "choices" : [
+            "Banjo", "Sitar", "Shamisen", "Mandolin"
+        ],
+        "answer": "shamisen",
+        "topic": "music"
+    },
+    {
+        "question": "Which musical term indicates a gradual increase in loudness?",
+        "choices" : [
+            "Crescendo", "Decrescendo", "Staccato", "Legato"
+        ],
+        "answer": "crescendo",
+        "topic": "music"
+    },
+    {
+        "question": "Who is known for his contributions to electronic music and iconic albums like \"Random Access Memories\"?",
+        "choices" : [
+            "Aphex Twin", "Daft Punk", "Kraftwerk", "Tiesto"
+        ],
+        "answer": "daftpunk",
+        "topic": "music"
+    },
+    {
+        "question": "Which of the following is a traditional Irish wind instrument with a distinctive sound?",
+        "choices" : [
+            "Bagpipes", "Flute", "Fiddle", "Tin Whistle"
+        ],
+        "answer": "tinwhistle",
+        "topic": "music"
+    },
+    {
+        "question": "Which famous composer is known for his \"Moonlight Sonata\" and \"Fur Elise\"?",
+        "choices" : [
+            "Wolfgang Amadeus Mozart", "Ludwig van Beethoven", "Franz Schubert", "Johann Sebastian Bach"
+        ],
+        "answer": "ludwigvanbeethoven",
+        "topic": "music"
+    },
+    {
+        "question": "What is the standard number of keys on a grand piano?",
+        "choices" : [
+            "61", "76", "88", "100"
+        ],
+        "answer": "88",
+        "topic": "music"
+    },
+    {
+        "question": "In which sport would you perform a slam dunk?",
+        "choices" : [
+            "Soccer", "Basketball", "Tennis", "Golf"
+        ],
+        "answer": "basketball",
+        "topic": "sports"
+    },
+    {
+        "question": "Which country won the FIFA World Cup in 2018?",
+        "choices" : [
+            "Germany", "Brazil", "France", "Argentina"
+        ],
+        "answer": "france",
+        "topic": "sports"
+    },
+    {
+        "question": "What is the scoring term for three strikes in a row in bowling?",
+        "choices" : [
+            "Triple", "Strikeout", "Hat-trick", "Turkey"
+        ],
+        "answer": "turkey",
+        "topic": "sports"
+    },
+    {
+        "question": "In American football, how many points is a touchdown worth?",
+        "choices" : [
+            "3", "6", "7", "2"
+        ],
+        "answer": "6",
+        "topic": "sports"
+    },
+    {
+        "question": "Which Grand Slam tennis tournament is played on clay courts?",
+        "choices" : [
+            "Wimbledon", "Australian Open", "US Open", "French Open"
+        ],
+        "answer": "frenchopen",
+        "topic": "sports"
+    },
+    {
+        "question": "In golf, what is the term for completing a hole in one stroke under par?",
+        "choices" : [
+            "Birdie", "Eagle", "Albatross", "Bogey"
+        ],
+        "answer": "birdie",
+        "topic": "sports"
+    },
+    {
+        "question": "Which Olympic event includes a combination of skiing, shooting, and cross-country running?",
+        "choices" : [
+            "Biathlon", "Triathlon", "Pentathlon", "Decathlon"
+        ],
+        "answer": "biathlon",
+        "topic": "sports"
+    },
+    {
+        "question": "Who holds the record for the most Olympic gold medals in swimming?",
+        "choices" : [
+            "Michael Phelps", "Ian Thorpe", "Mark Spitz", "Ryan Lochte"
+        ],
+        "answer": "Michael Phelps",
+        "topic": "sports"
+    },
+    {
+        "question": "Which sport is known as the \"Sport of Kings\"?",
+        "choices" : [
+            "Polo", "Horse racing", "Fencing", "Archery"
+        ],
+        "answer": "horseracing",
+        "topic": "sports"
+    },
+    {
+        "question": "What is the term for a perfect score of 10 in gymnastics?",
+        "choices" : [
+            "Ace", "Perfect 10", "Bullseye", "Gold standard"
+        ],
+        "answer": "perfect10",
+        "topic": "sports"
+    },
+    {
+        "question": "Which team won the Super Bowl in 2021?",
+        "choices" : [
+            "New England Patriots", "Kansas City Chiefs", "San Francisco 49ers", "Tampa Bay Buccaneers"
+        ],
+        "answer": "tampabaybuccaneers",
+        "topic": "sports"
+    },
+    {
+        "question": "In cricket, what is the term for a batsman being declared out without scoring any runs?",
+        "choices" : [
+            "Duck", "Goose", "Grouse", "Eagle"
+        ],
+        "answer": "duck",
+        "topic": "sports"
+    },
+    {
+        "question": "Which athlete is often referred to as \"The Fastest Man on Earth\"?",
+        "choices" : [
+            "Usain Bolt", "Carl Lewis", "Jesse Owens", "Michael Johnson"
+        ],
+        "answer": "usainbolt",
+        "topic": "sports"
+    },
+    {
+        "question": "What is the term for a perfect game in bowling (12 consecutive strikes)?",
+        "choices" : [
+            "Grand Slam", "Perfect 300", "Turkey", "Strikeout"
+        ],
+        "answer": "perfect300",
+        "topic": "sports"
+    },
+    {
+        "question": "In which sport can you find a penalty box?",
+        "choices" : [
+            "Soccer", "Ice hockey", "Cricket", "Baseball"
+        ],
+        "answer": "icehockey",
+        "topic": "sports"
+    },
+    {
+        "question": "Who is the head of state in the United States?",
+        "choices" : [
+            "President", "Prime Ministery", "Chancellor", "Monarch"
+        ],
+        "answer": "president",
+        "topic": "politics"
+    },
+    {
+        "question": "What is the term for a government ruled by a single person with absolute power?",
+        "choices" : [
+            "Oligarchy", "Monarchy", "Autocracy", "Democracy"
+        ],
+        "answer": "autocracy",
+        "topic": "politics"
+    },
+    {
+        "question": "Which branch of government interprets laws and ensures they align with the constitution?",
+        "choices" : [
+            "Executive", "Legislative", "Judicial", "Administrative"
+        ],
+        "answer": "judicial",
+        "topic": "politics"
+    },
+    {
+        "question": "In the United Kingdom, what is the upper house of Parliament called?",
+        "choices" : [
+            "House of Commons", "House of Lords", "House of Representatives", "Senate"
+        ],
+        "answer": "houseoflords",
+        "topic": "politics"
+    },
+    {
+        "question": "What is the primary function of the United Nations (UN)?",
+        "choices" : [
+            "International trade regulation", "Humanitarian aid", "Environmental protection", "Global peace and security"
+        ],
+        "answer": "globalpeaceandsecurity",
+        "topic": "politics"
+    },
+    {
+        "question": "Who is the leader of the political party that wins the most seats in the British general election?",
+        "choices" : [
+            "Prime Minister", "Chancellor", "Speaker of the House", "Opposition Leader"
+        ],
+        "answer": "primeminister",
+        "topic": "politics"
+    },
+    {
+        "question": "Which document outlines the fundamental principles and laws of a nation?",
+        "choices" : [
+            "Constitutionr", "Declaration of Independence", "Magna Cartase", "Bill of Rights"
+        ],
+        "answer": "constitution",
+        "topic": "politics"
+    },
+    {
+        "question": "In the U.S. government, what is the role of the Vice President?",
+        "choices" : [
+            "Head of state", "Chief Justice", "Presiding officer of the Senate", "Speaker of the Houses"
+        ],
+        "answer": "presidingofficerofthesenate",
+        "topic": "politics"
+    },
+    {
+        "question": "Which country has a system of government known as a federal parliamentary democracy?",
+        "choices" : [
+            "Germany", "Canada", "China", "Russia"
+        ],
+        "answer": "canada",
+        "topic": "politics"
+    },
+    {
+        "question": "What is the term for a political system in which citizens directly vote on laws and policies?",
+        "choices" : [
+            "Representative democracy", "Oligarchy", "Direct democracy", "Totalitarianism"
+        ],
+        "answer": "directdemocrac",
+        "topic": "politics"
+    },
+    {
+        "question": "Who is the current Secretary-General of the United Nations (as of my knowledge cutoff in January 2022)?",
+        "choices" : [
+            "Angela Merkel", "Antonio Guterres", "Justin Trudeau", "Emmanuel Macron"
+        ],
+        "answer": "antonioguterres",
+        "topic": "politics"
+    },
+    {
+        "question": "What is the name of the official residence of the President of the United States?",
+        "choices" : [
+            "Buckingham Palace", "10 Downing Street", "The White House", "Elysee Palace"
+        ],
+        "answer": "thewhitehouse",
+        "topic": "politics"
+    },
+    {
+        "question": "Which of the following is a form of proportional representation in voting systems?",
+        "choices" : [
+            "First-past-the-post", "Single transferable votet", "Plurality votingu", "Two-round systeme"
+        ],
+        "answer": "singletransferablevote",
+        "topic": "politics"
+    },
+    {
+        "question": "Who has the power to veto legislation in the United States?",
+        "choices" : [
+            "Speaker of the House", "President", "Chief Justice", "Senate Majority Leader"
+        ],
+        "answer": "president",
+        "topic": "politics"
+    },
+    {
+        "question": "In which country does the Chancellor serve as the head of government?",
+        "choices" : [
+            "France", "Germany", "United Kingdom", "Italy"
+        ],
+        "answer": "germany",
+        "topic": "politics"
+    },
+    {
+        "question": "Which political ideology emphasizes social equality and collective ownership of resources?",
+        "choices" : [
+            "Capitalism", "Liberalism", "Socialism", "Conservatism"
+        ],
+        "answer": "socialism",
+        "topic": "politics"
+    },
+    {
+        "question": "Who is the chief executive officer of a U.S. state government?",
+        "choices" : [
+            "Governor", "Mayor", "Senator", "President"
+        ],
+        "answer": "governor",
+        "topic": "politics"
+    },
+    {
+        "question": "What is the purpose of a filibuster in the U.S. Senate?",
+        "choices" : [
+            "To block legislation", "To propose new laws", "To confirm judicial appointments", "To override a veto"
+        ],
+        "answer": "toblocklegislation",
+        "topic": "politics"
+    },
+    {
+        "question": "Which political term refers to a sudden and illegal seizure of power from a government?",
+        "choices" : [
+            "Revolution", "Rebellion", "Coup d'état", "Uprising"
+        ],
+        "answer": "coupd'état",
+        "topic": "politics"
+    },
+    {
+        "question": "What is the name of the agreement that sets rules for international trade and economic cooperation?",
+        "choices" : [
+            "NATO", "Kyoto Protocol", "Paris Agreement", "World Trade Organization (WTO)"
+        ],
+        "answer": "worldtradeorganization(wto)",
+        "topic": "politics"
+    },
+    {
+        "question": "The capital of _______ is known for its historic landmarks, including the Colosseum and the Vatican City.",
+        "answer": "italy",
+        "topic": "random"
+    },
+    {
+        "question": "Photosynthesis is the process by which plants convert sunlight into energy, producing oxygen as a byproduct in the process of _______.",
+        "answer": "carbondioxideabsorption",
+        "topic": "random"
+    },
+    {
+        "question": "The law of supply and demand is a fundamental principle in _______ that explains the interaction between producers and consumers in a market.",
+        "answer": "economics",
+        "topic": "random"
+    },
+    {
+        "question": "__________ is the largest planet in our solar system and is known for its prominent Great Red Spot.",
+        "answer": "jupiter",
+        "topic": "random"
+    },
+    {
+        "question": "The novel \"To Kill a Mockingbird\" by Harper Lee addresses issues of racial injustice and moral growth in the fictional town of _______.",
+        "answer": "maycomb",
+        "topic": "random"
+    },
+    {
+        "question": "The theory of relativity, formulated by _______ in the early 20th century, revolutionized our understanding of space, time, and gravity.",
+        "answer": "alberteistein",
+        "topic": "random"
+    },
+    {
+        "question": "The Great Barrier Reef, the world's largest coral reef system, is located off the coast of _______.",
+        "answer": "australia",
+        "topic": "random"
+    },
+    {
+        "question": "The Mona Lisa, painted by _______ during the Renaissance, is one of the most famous and iconic artworks in the world.",
+        "answer": "leonardodavinci",
+        "topic": "random"
+    },
+    {
+        "question": "The human skeletal system is composed of 206 bones, providing structure and support for the body's various functions, such as _______.",
+        "answer": "movementandprotectionoforgans",
+        "topic": "random"
+    },
+    {
+        "question": "The concept of \"survival of the fittest\" is closely associated with _______'s theory of natural selection.",
+        "answer": "charlesdarwin",
+        "topic": "random"
+    },
+    {
+        "question": "The Eiffel Tower, an iconic landmark, stands in the heart of _______ and attracts millions of visitors each year.",
+        "answer": "paris",
+        "topic": "random"
+    },
+    {
+        "question": "__________ is the largest mammal on Earth and is known for its enormous size and distinctive spout.",
+        "answer": "thebluewhale",
+        "topic": "random"
+    },
+    {
+        "question": "The process of converting water into vapor through heating is known as _______.",
+        "answer": "evaporation",
+        "topic": "random"
+    },
+    {
+        "question": "The \"Mona Lisa\" is displayed in the _______ Museum, one of the world's most renowned art museums.",
+        "answer": "louvre",
+        "topic": "random"
+    },
+    {
+        "question": "The musical genre _______ originated in the African American communities of New Orleans and has diverse styles such as Dixieland and swing.",
+        "answer": "jazz",
+        "topic": "random"
+    },
+    {
+        "question": "The neurotransmitter dopamine plays a crucial role in regulating mood, pleasure, and motivation in the _______ system.",
+        "answer": "nervous",
+        "topic": "random"
+    },
+    {
+        "question": "__________ is the process by which plants release water vapor into the atmosphere through small pores in their leaves.",
+        "answer": "transpiration",
+        "topic": "random"
+    },
+    {
+        "question": "The Taj Mahal, an iconic marble mausoleum, was built in the 17th century in the city of _______.",
+        "answer": "agra",
+        "topic": "random"
+    },
+    {
+        "question": "__________ is a programming language commonly used for web development and is known for its versatility and ease of learning.",
+        "answer": "javascript",
+        "topic": "random"
+    },
+    {
+        "question": "The concept of \"supply and demand\" is a fundamental principle in _______ that explains the interaction between producers and consumers in a market.",
+        "answer": "economics",
+        "topic": "random"
+    },
+    {
+        "question": "What is the name of my creator?",
+        "answer": "melvinjonesrepol",
+        "topic": "random"
+    },
+    {
+        "question": "What is my name?",
+        "answer": "mj",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: TNAAH\n(Hint: A place of worship)",
+        "answer": "athan",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: GLEOY\n(Hint: Honor and praise)",
+        "answer": "glory",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: NICEAM\n(Hint: A place to watch movies)",
+        "answer": "cinema",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: IHSP\n(Hint: A large boat)",
+        "answer": "ship",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: EVITAR\n(Hint: Energetic and engaged)",
+        "answer": "active",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: ELPORBME\n(Hint: An issue or challenge)",
+        "answer": "problem",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: PIRENC\n(Hint: A royal title)",
+        "answer": "prince",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: RYOSMTERY\n(Hint: Something difficult to understand)",
+        "answer": "mystery",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: TINERNTE\n(Hint: Worldwide computer network)",
+        "answer": "internet",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Amazon River is the longest river in the world.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still perfectly edible.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Great Wall of China is visible from the Moon with the naked eye.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The currency of Switzerland is the Euro.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Mount Everest, the world's highest peak, is located in the Himalayas.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Atlantic Ocean is the largest ocean on Earth.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Cleopatra lived closer in time to the moon landing than to the construction of the Great Pyramid of Giza.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Bananas are berries.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Statue of Liberty was a gift from France to the United States.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Bees can recognize human faces..",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Earth is the only planet in our solar system that rotates clockwise.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Pacific Ocean is shrinking due to the movement of tectonic plates.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Mona Lisa has a twin sister.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The speed of light is faster than the speed of sound.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: A group of flamingos is called a \"flock.\"",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Earth's atmosphere is composed primarily of nitrogen.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Alaska is the easternmost state in the United States.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Jupiter has the shortest day of all the planets in our solar system..",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Great Barrier Reef is the world's largest single structure made by living organisms.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The platypus lays eggs.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ mountain in the world is Mount Everest.",
+        "answer": "tallest",
+        "topic": "random"
+    },
+    {
+        "question": "In winter, polar bears have a __________ layer of fur to keep them warm.",
+        "answer": "thick",
+        "topic": "random"
+    },
+    {
+        "question": "__________ people attended the concert last night.",
+        "answer": "many",
+        "topic": "random"
+    },
+    {
+        "question": "The scientist made a __________ discovery that could revolutionize medicine.",
+        "answer": "groundbreaking",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ movie I watched last week was both thrilling and suspenseful.",
+        "answer": "exciting",
+        "topic": "random"
+    },
+    {
+        "question": "She owns a __________ collection of rare stamps.",
+        "answer": "valuable",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ mountain range stretches across several countries.",
+        "answer": "majestic",
+        "topic": "random"
+    },
+    {
+        "question": "In the garden, there is a __________ rose blooming with vibrant colors.",
+        "answer": "beautiful",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ building in the city is a marvel of modern architecture.",
+        "answer": "tallest",
+        "topic": "random"
+    },
+    {
+        "question": "The chef prepared a __________ dish using fresh, organic ingredients.",
+        "answer": "delicious",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ car on the market is known for its fuel efficiency.",
+        "answer": "greenest",
+        "topic": "random"
+    },
+    {
+        "question": "After the storm, a __________ rainbow appeared in the sky.",
+        "answer": "gorgeous",
+        "topic": "random"
+    },
+    {
+        "question": "The team conducted a __________ experiment to test the hypothesis.",
+        "answer": "controlled",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ forest is home to a diverse range of wildlife.",
+        "answer": "dense",
+        "topic": "random"
+    },
+    {
+        "question": "My grandmother has a __________ collection of antique furniture.",
+        "answer": "priceless",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ apple in the basket was chosen to make the pie.",
+        "answer": "juiciest",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ skyscraper in the city provides stunning panoramic views.",
+        "answer": "tallest",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ book on the shelf is a classic that everyone should read.",
+        "answer": "oldest",
+        "topic": "random"
+    },
+    {
+        "question": "We had a __________ time at the amusement park, riding roller coasters and enjoying the attractions.",
+        "answer": "fantastic",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ student in the class received a special award for academic excellence.",
+        "answer": "brightest",
+        "topic": "random"
+    },
+    {
+        "question": "Naruto Uzumaki dreams of becoming the strongest __________ in his village.",
+        "answer": "ninja",
+        "topic": "random"
+    },
+    {
+        "question": "In the anime 'One Piece,' Monkey D. Luffy searches for the legendary treasure known as the _________.",
+        "answer": "onepiece",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Attack on Titan,' humanity battles giant creatures known as __________.",
+        "answer": "titans",
+        "topic": "random"
+    },
+    {
+        "question": "Saitama, the protagonist of 'One Punch Man,' defeats enemies with just a single __________.",
+        "answer": "punch",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'My Hero Academia' is set in a world where people have superpowers, also known as __________.",
+        "answer": "quirks",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Fullmetal Alchemist: Brotherhood' follows brothers Edward and Alphonse Elric as they search for the Philosopher's __________.",
+        "answer": "stone",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Demon Slayer,' Tanjiro Kamado joins the Demon Slayer Corps to avenge his family and cure his sister Nezuko from a demon __________.",
+        "answer": "curse",
+        "topic": "random"
+    },
+    {
+        "question": "The protagonist of 'Death Note,' Light Yagami, discovers a supernatural notebook that allows him to kill anyone by writing their name in the __________.",
+        "answer": "deathnote",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Dragon Ball Z,' Goku achieves a powerful transformation known as __________ Saiyan.",
+        "answer": "super",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Sword Art Online' explores the virtual world of Aincrad, where players find themselves trapped in a __________ MMORPG.",
+        "answer": "virtual",
+        "topic": "random"
+    },
+    {
+        "question": "In 'One Piece,' the main character Luffy aims to become the Pirate __________.",
+        "answer": "king",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Cowboy Bebop' follows a group of bounty hunters traveling through space on the spaceship __________.",
+        "answer": "bebop",
+        "topic": "random"
+    },
+    {
+        "question": "The magical girl series 'Sailor Moon' features a group of girls protecting the world from evil forces, led by the titular character, __________.",
+        "answer": "sailormoon",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Hunter x Hunter,' Gon Freecss aspires to become a Hunter and find his missing __________.",
+        "answer": "father",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Yu Yu Hakusho' follows Yusuke Urameshi, who is given a second chance at life after sacrificing himself to save a child from a __________.",
+        "answer": "car",
+        "topic": "random"
+    },
+    {
+        "question": "The character Inuyasha seeks the Shikon __________ to become a full demon.",
+        "answer": "jewel",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Neon Genesis Evangelion' involves the use of giant __________ to combat mysterious beings called Angels.",
+        "answer": "mechs",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Bleach' follows Ichigo Kurosaki, who gains the powers of a Soul Reaper after accidentally obtaining a __________.",
+        "answer": "zanpakuto",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Fullmetal Alchemist: Brotherhood,' Edward Elric loses his arm and leg while attempting to perform forbidden __________.",
+        "answer": "alchemy",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Fairy Tail' revolves around a guild of wizards, with Natsu Dragneel being a powerful __________.",
+        "answer": "firedragonslayer",
+        "topic": "random"
+    },
+    {
+        "question": "The character Light Yagami uses the __________ Death Note to eliminate criminals in 'Death Note'.",
+        "answer": "mysterious",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Tokyo Ghoul,' Kaneki Ken transforms into a half-ghoul after a chance encounter with a __________.",
+        "answer": "ghoul",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'My Hero Academia' is set in a world where students attend U.A. High School to become professional __________.",
+        "answer": "heroes",
+        "topic": "random"
+    },
+    {
+        "question": "The character Kenshin Himura in 'Rurouni Kenshin' is a former __________ seeking redemption for his past actions.",
+        "answer": "hitokiri",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Code Geass' features a protagonist named Lelouch vi __________ who gains the power of Geass.",
+        "answer": "britannia",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Demon Slayer,' Tanjiro Kamado's sister Nezuko becomes a demon after a __________ attack.",
+        "answer": "demon",
+        "topic": "random"
+    },
+    {
+        "question": "Who is the main character in Detective Conan?",
+        "choices" : [
+            "Shinichi Kudo", "Kaito Kuroba", "Heiji Hattori", "Ran Mouri"
+        ],
+        "answer": "shinichikudo",
+        "topic": "anime"
+    },
+    {
+        "question": "What is the name of the criminal organization that shrinks Shinichi Kudo into a child in Detective Conan?",
+        "choices" : [
+            "Black Organization", "Red Haibara Group", "White Syndicate", "Blue Crime Ring"
+        ],
+        "answer": "blackorganization",
+        "topic": "anime"
+    },
+    {
+        "question": "What is the name of Shinichi Kudo's childhood friend and romantic interest?",
+        "choices" : [
+            "Kazuha Toyama", "Sonoko Suzuki", "Ai Haibara", "Ran Mouri"
+        ],
+        "answer": "ranmouri",
+        "topic": "anime"
+    },
+    {
+        "question": "Who is known as the \"Detective of the West\" in Detective Conan?",
+        "choices" : [
+            "Heiji Hattori", "Conan Edogawa", "Kogoro Mouri", "Gin"
+        ],
+        "answer": "heijihattori",
+        "topic": "anime"
+    },
+    {
+        "question": "What is the alias used by Shinichi Kudo when he takes on the identity of a child detective?",
+        "choices" : [
+            "Conan Edogawa", "Kaito Kuroba", "Heiji Hattori", "Saguru Hakuba"
+        ],
+        "answer": "conanedogawa",
+        "topic": "anime"
+    },
+    {
+        "question": "What does SUV stand for in the automotive world?",
+        "choices" : [
+            "Sport Utility Vehicle", "Super Urban Van", "Speedy Undercarriage Venture", "Standard Undercarriage Vehicle"
+        ],
+        "answer": "sportutilityvehicle",
+        "topic": "cars"
+    },
+    {
+        "question": "Which car company produces the Mustang model?",
+        "choices" : [
+            "Chevrolet", "Ford", "Honda", "Toyota"
+        ],
+        "answer": "ford",
+        "topic": "cars"
+    },
+    {
+        "question": "What does ABS stand for in relation to car safety?",
+        "choices" : [
+            "Automatic Braking System", "All-wheel Brake System", "Anti-lock Braking System", "Accelerated Brake Setup"
+        ],
+        "answer": "anti-lockbrakingsystem",
+        "topic": "cars"
+    },
+    {
+        "question": "Which country is known for the automaker Volkswagen?",
+        "choices" : [
+            "United States", "Germany", "Japan", "Italy"
+        ],
+        "answer": "germany",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the purpose of a catalytic converter in a car?",
+        "choices" : [
+            "Improve fuel efficiency", "Enhance horsepower", "Reduce emissions", "Increase tire lifespan"
+        ],
+        "answer": "reduceemissions",
+        "topic": "cars"
+    },
+    {
+        "question": "What does the term \"horsepower\" measure in a car engine?",
+        "choices" : [
+            "Speed", "Fuel efficiency", "Engine power", "Car weight"
+        ],
+        "answer": "enginepower",
+        "topic": "cars"
+    },
+    {
+        "question": "Which brand is famous for the luxury SUV model called the Range Rover?",
+        "choices" : [
+            "Mercedes-Benz", "Land Rover", "Audi", "Lexus"
+        ],
+        "answer": "landrover",
+        "topic": "cars"
+    },
+    {
+        "question": "What does EV stand for in the context of cars?",
+        "choices" : [
+            "Electric Vehicle", "Efficient Van", "Engine Vibration", "Eco-friendly Vehicle"
+        ],
+        "answer": "electricvehicle",
+        "topic": "cars"
+    },
+    {
+        "question": "In car terms, what does the acronym RPM stand for?",
+        "choices" : [
+            "Revolutions Per Minute", "Racing Performance Mode", "Roadside Parking Mechanism", "Rapid Power Movement"
+        ],
+        "answer": "revolutionsperminute",
+        "topic": "cars"
+    },
+    {
+        "question": "Which gas is commonly used in car air conditioning systems?",
+        "choices" : [
+            "Oxygen", "Nitrogen", "Helium", "Refrigerant (R134a)"
+        ],
+        "answer": "refrigerant(r134a)",
+        "topic": "cars"
+    },
+    {
+        "question": "What does 4WD stand for in the automotive world?",
+        "choices" : [
+            "Four-Wheel Drive", "Forward Wheel Drive", "Front Wheel Disengaged", "Four-Wheel Drift"
+        ],
+        "answer": "four-wheeldrive",
+        "topic": "cars"
+    },
+    {
+        "question": "Which brand is known for the iconic 911 model?",
+        "choices" : [
+            "Porsche", "Ferrari", "Lamborghini", "Aston Martin"
+        ],
+        "answer": "porsche",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the purpose of a differential in a car?",
+        "choices" : [
+            "Control fuel injection", "Transfer power between wheels", "Enhance aerodynamics", "Regulate tire pressure"
+        ],
+        "answer": "transferpowerbetweenwheels",
+        "topic": "cars"
+    },
+    {
+        "question": "Which automaker produces the Prius, a popular hybrid car model?",
+        "choices" : [
+            "Ford", "Toyota", "Honda", "Chevrolet"
+        ],
+        "answer": "toyota",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the primary function of an alternator in a car?",
+        "choices" : [
+            "Generate electricity", "Cool the engine", "Control suspension", "Measure tire pressure"
+        ],
+        "answer": "generateelectricity",
+        "topic": "cars"
+    },
+    {
+        "question": "What does the term \"MPG\" stand for in car specifications?",
+        "choices" : [
+            "Miles Per Gallon", "Maximum Power Gauge", "Motor Performance Grade", "Maintenance Policy Guide"
+        ],
+        "answer": "milespergallon",
+        "topic": "cars"
+    },
+    {
+        "question": "Which car company produces the popular Civic model?",
+        "choices" : [
+            "Ford", "Honda", "Toyota", "Chevrolet"
+        ],
+        "answer": "honda",
+        "topic": "cars"
+    },
+    {
+        "question": "What does CVT stand for in relation to car transmissions?",
+        "choices" : [
+            "Constant Velocity Transmission", "Controlled Vibration Technology", "Continuous Variable Transmission", "Coordinated Valve Timing"
+        ],
+        "answer": "continuousvariabletransmission",
+        "topic": "cars"
+    },
+    {
+        "question": "Which luxury car brand has a logo featuring a silver arrow?",
+        "choices" : [
+            "BMW", "Mercedes-Benz", "Audi", "Jaguar"
+        ],
+        "answer": "mercedes-benz",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the primary function of a car's radiator?",
+        "choices" : [
+            "Brake fluid storage", "Engine cooling", "Fuel injection control", "Airbag deployment"
+        ],
+        "answer": "enginecooling",
+        "topic": "cars"
+    },
+    {
+        "question": "Which car feature provides better traction on slippery roads?",
+        "choices" : [
+            "Cruise control", "ABS brakes", "Traction control", "Power windowst"
+        ],
+        "answer": "tractioncontrol",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the purpose of a turbocharger in a car engine?",
+        "choices" : [
+            "Increase fuel efficiency", "Enhance exhaust sound", "Improve horsepower", "Regulate tire pressure"
+        ],
+        "answer": "improvehorsepower",
+        "topic": "cars"
+    },
+    {
+        "question": "Which company produces the Wrangler, a popular off-road SUV model?",
+        "choices" : [
+            "Ford", "Toyota", "Jeep", "Chevrolet"
+        ],
+        "answer": "jeep",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the function of a car's shock absorbers?",
+        "choices" : [
+            "Control steering", "Absorb road shocks", "Regulate fuel injection", "Adjust tire pressure"
+        ],
+        "answer": "absorbroadshocks",
+        "topic": "cars"
+    },
+    {
+        "question": "Which car component is responsible for igniting the fuel-air mixture in the engine?",
+        "choices" : [
+            "Spark plug", "Fuel injector", "Alternator", "Radiator"
+        ],
+        "answer": "sparkplug",
+        "topic": "cars"
+    },
+    {
+        "question": "Which brand is known for the luxury SUV model called the Cayenne?",
+        "choices" : [
+            "Porsche", "BMW", "Audi", "Mercedes-Benz"
+        ],
+        "answer": "Porsche",
+        "topic": "cars"
+    },
+    {
+        "question": "What does the term \"AWD\" stand for in the automotive world?",
+        "choices" : [
+            "All-Wheel Drive", "Automatic Window Display", "Accelerated Wheel Drive", "Adaptive Wiper Design"
+        ],
+        "answer": "all-wheeldrive",
+        "topic": "cars"
+    },
+    {
+        "question": "Which company produces the popular Silverado truck model?",
+        "choices" : [
+            "Ford", "Toyota", "Chevrolete", "Dodge"
+        ],
+        "answer": "chevrolet",
+        "topic": "cars"
+    }
+]
