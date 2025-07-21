@@ -4,9 +4,9 @@ import { commands } from "../index";
 
 export const info = {
   command: "help",
-  description: "List all available commands.",
-  usage: "help",
-  example: "help",
+  description: "List available commands and their usage.",
+  usage: "help [page] | [role]",
+  example: "help admin",
   role: "user",
   cooldown: 5000,
 };

@@ -10,7 +10,7 @@ export const info = {
   command: "reload",
   description: "Reload a specific command or all commands.",
   usage: "reload [command]",
-  example: "reload poli",
+  example: "reload ai",
   role: "admin",
   cooldown: 5000,
 };
@@ -36,39 +36,53 @@ export default async function (msg: Message) {
       }
     }
 
-    if (!found) await msg.reply(`Failed to reload command "${query}".`);
-    if (found) await msg.reply(`Reloaded command "${query}".`);
+    if (!found)
+      await msg.reply(
+        `
+    \`Failed to load\`
+    ${query}
+    `
+      );
+    if (found)
+      await msg.reply(
+        `
+      \`Successfully reloaded\`
+      ${query}
+      `
+      );
     return;
   }
 
   // Reload all commands
   let count = 0;
+  const newCommands: string[] = [];
+  const removeCommands: string[] = [];
   const commandsPath = path.join(__dirname, "..", "commands");
+
   fs.readdirSync(commandsPath).forEach((file) => {
     if (/\.js$|\.ts$/.test(file)) {
-      const filePath = path.join(commandsPath, file);
-      delete require.cache[require.resolve(filePath)];
-      const commandModule = require(filePath);
-
-      if (
-        typeof commandModule.default === "function" &&
-        commandModule.info &&
-        commandModule.info.command
-      ) {
-        commands[commandModule.info.command] = {
-          command: commandModule.info.command,
-          description: commandModule.info.description || "No description",
-          usage: commandModule.info.usage || "No usage",
-          example: commandModule.info.example || "No example",
-          role: commandModule.info.user || "user",
-          cooldown: commandModule.info.cooldown || 5000,
-          exec: commandModule.default,
-        };
-        count++;
-        log.info("Loader", `Reloaded command: ${commandModule.info.command}`);
+      const commandName = file.replace(/\.(js|ts)$/, "");
+      if (!commands[commandName]) {
+        newCommands.push(commandName);
+      } else {
+        removeCommands.push(commandName);
       }
+      Loader(file);
+      count++;
     }
   });
 
-  await msg.reply(`Reloaded ${count} commands.`);
+  let text = `
+  \`Reloaded\`
+  ${count} commands
+  `;
+
+  if (newCommands.length > 0) {
+    text += `
+  \`Found new command(s)\`
+  ${newCommands.join(", ")}
+  `;
+  }
+
+  await msg.reply(text);
 }

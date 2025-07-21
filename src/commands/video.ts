@@ -66,7 +66,9 @@ export default async function (msg: Message) {
     `${title}.mp4`
   );
 
-  await msg.reply(media, msg.from);
+  await msg.reply(media, msg.from, {
+    caption: `${title}`,
+  });
   await fs.promises.unlink(tempPath);
   await fs.promises.unlink(tempPath + ".mp4");
 }

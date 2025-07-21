@@ -35,7 +35,9 @@ export default async function (msg: Message) {
       await fs.writeFile(tempPath, response.data);
 
       const media = MessageMedia.fromFilePath(tempPath);
-      await msg.reply(media);
+      await msg.reply(media, msg.from, {
+        caption: query,
+      });
       await fs.unlink(tempPath);
     })
     .catch(async (error) => {

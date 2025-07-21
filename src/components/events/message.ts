@@ -16,7 +16,6 @@ import Font from "../utils/font";
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
-const superAdmin = process.env.SUPER_ADMIN || "";
 
 export default async function message(msg: Message) {
   // ignore message if it is older than 10 seconds
@@ -61,11 +60,11 @@ export default async function message(msg: Message) {
   /*
    * Rate limit commands to prevent abuse.
    */
-  if (senderId !== superAdmin) {
+  if (!msg.fromMe) {
     const rate = rateLimiter(msg.from);
     if (rate === null) return;
     if (!rate) {
-      msg.reply("You are sending commands too fast. Please wait a minute.");
+      msg.reply("Please wait a minute or so.");
       return;
     }
   }
@@ -73,7 +72,7 @@ export default async function message(msg: Message) {
   /*
    * Role base restrictions.
    */
-  if (handler.role === "admin" && !msg.fromMe && senderId !== superAdmin) {
+  if (handler.role === "admin" && !msg.fromMe) {
     return;
   }
 

@@ -3,6 +3,8 @@ import log from "../components/utils/log";
 import os from "os";
 import si from "systeminformation";
 import { getUserCount, getBlockUserCount } from "../components/services/user";
+import { client } from "../components/client";
+import { commands } from "../index";
 
 export const info = {
   command: "stats",
@@ -23,15 +25,25 @@ export default async function (msg: Message) {
     totalMemory: os.totalmem(),
   };
 
-  const [gpuInfo, osInfo, shell, networkInterfaces, userCount, blockUserCount] =
-    await Promise.all([
-      si.graphics(),
-      si.osInfo(),
-      si.shell(),
-      si.networkInterfaces(),
-      getUserCount(),
-      getBlockUserCount(),
-    ]);
+  const [
+    gpuInfo,
+    osInfo,
+    shell,
+    networkInterfaces,
+    userCount,
+    blockUserCount,
+    whatsAppVersion,
+    whatsAppState,
+  ] = await Promise.all([
+    si.graphics(),
+    si.osInfo(),
+    si.shell(),
+    si.networkInterfaces(),
+    getUserCount(),
+    getBlockUserCount(),
+    client.getWWebVersion(),
+    client.getState()
+  ]);
 
   const statsMessage = `
       \`System Monitor\`
@@ -54,6 +66,9 @@ export default async function (msg: Message) {
         .map((iface) => `${iface.iface} ${iface.speed} Mbps`)
         .join(", ")}
       Node.js: ${process.version}
+      WA: ${whatsAppVersion}
+      WA State: ${whatsAppState}
+      Commands: ${Object.keys(commands).length}
       Users: ${userCount}
       Blocked Users: ${blockUserCount}
     `;
