@@ -95,3 +95,29 @@ export async function getBlockUserCount(): Promise<number> {
     return 0;
   }
 }
+
+export async function getUsers(): Promise<any[]> {
+  try {
+    const users = await prisma.user.groupBy({
+      by: ["number", "name"],
+      _sum: {
+        commandCount: true,
+      },
+      orderBy: {
+        _sum: {
+          commandCount: "desc",
+        },
+      },
+    });
+
+    // format
+    return users.map((u) => ({
+      name: u.name,
+      number: u.number,
+      commandCount: u._sum.commandCount,
+    }));
+  } catch (error) {
+    log.error("Database", `Failed to get users.`, error);
+    return [];
+  }
+}

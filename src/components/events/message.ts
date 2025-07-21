@@ -22,7 +22,7 @@ export default async function message(msg: Message) {
   if (msg.timestamp < Date.now() / 1000 - 10) return;
 
   if (
-    msg.hasQuotedMsg ||
+    // (msg.hasQuotedMsg && !msg.fromMe) ||
     msg.isForwarded ||
     msg.isGif ||
     msg.isStatus ||

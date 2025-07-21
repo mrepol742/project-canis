@@ -19,7 +19,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  if (/^--rem$/.test(msg.body)) {
+  if (/^block\s--rem/.test(msg.body)) {
     for (const userId of msg.mentionedIds) {
       const lid = userId.split("@")[0];
 
@@ -28,7 +28,7 @@ export default async function (msg: Message) {
       });
     }
 
-    await msg.react("✅");
+    await msg.react("❌");
     return;
   }
 
