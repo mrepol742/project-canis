@@ -12,7 +12,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^logout\b/i.test(msg.body)) return;
+  if (!/^logout$/i.test(msg.body)) return;
 
   try {
     await client.logout();

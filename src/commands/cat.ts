@@ -11,7 +11,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^cat\b/i.test(msg.body)) return;
+  if (!/^cat$/i.test(msg.body)) return;
 
   const response = cat[Math.floor(Math.random() * cat.length)];
   if (response.length === 0) return await msg.reply("Cat is silent...");

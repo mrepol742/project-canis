@@ -14,6 +14,8 @@ export const info = {
 };
 
 export default async function (msg: Message) {
+  if (!/^randomcolor$/i.test(msg.body)) return;
+
   await axios
     .get(`https://api.popcat.xyz/randomcolor`)
     .then(async (response) => {

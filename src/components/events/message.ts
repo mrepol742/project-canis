@@ -95,6 +95,24 @@ export default async function message(msg: Message) {
     return await originalReply(messageBody, chatId, options);
   };
 
+  if (
+    /^(--?help|\bhelp\b|-h)$/i.test(
+      msg.body.trim().replace(handler.command, "").trim()
+    )
+  ) {
+    const response = `
+    \`${handler.command}\`
+    ${handler.description || "No description"}
+    
+    *Usage:* ${handler.usage || "No usage"}
+    *Example:* ${handler.example || "No example"}
+    *Role:* ${handler.role || "user"}
+    *Cooldown:* ${handler.cooldown || 5000}ms
+    `;
+    await msg.reply(response);
+    return;
+  }
+
   /*
    * Execute the command handler.
    */

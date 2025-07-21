@@ -15,6 +15,8 @@ export const info = {
 };
 
 export default async function (msg: Message) {
+  if (!/^pickupline$/i.test(msg.body)) return;
+
   await axios
     .get(`https://api.popcat.xyz/pickuplines`)
     .then(async (response) => {

@@ -11,6 +11,7 @@ export const info = {
 };
 
 export default function (msg: Message) {
-  if (!/^ping\b/i.test(msg.body)) return;
+  if (!/^ping$/i.test(msg.body)) return;
+  
   msg.reply("pong");
 }

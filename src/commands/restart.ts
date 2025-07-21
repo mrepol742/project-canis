@@ -12,7 +12,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^restart\b/i.test(msg.body)) return;
+  if (!/^restart$/i.test(msg.body)) return;
   await msg.react("🔄");
 
   const tempDir = "./.temp";

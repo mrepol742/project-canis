@@ -16,7 +16,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^stats\b/i.test(msg.body)) return;
+  if (!/^stats$/i.test(msg.body)) return;
   const stats = {
     OS: os.release(),
     arch: os.arch(),

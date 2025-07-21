@@ -11,7 +11,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^quiz\b/i.test(msg.body)) return;
+  if (!/^quiz$/i.test(msg.body)) return;
 
   const response = quiz[Math.floor(Math.random() * quiz.length)];
   if (response.length === 0)
