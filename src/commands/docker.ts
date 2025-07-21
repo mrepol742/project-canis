@@ -43,8 +43,8 @@ export default async function (msg: Message) {
         reply += repos
           .map(
             (repo: any) =>
-              `*${repo.name}*
-              }\nStars: ${repo.star_count} Pulls: ${repo.pull_count}`
+              `\`${repo.name}\`
+              \nStars: ${repo.star_count} Pulls: ${repo.pull_count}`
           )
           .join("\n\n");
         await msg.reply(reply);
@@ -63,6 +63,10 @@ export default async function (msg: Message) {
       await msg.reply(info);
     })
     .catch(async (error) => {
+      if (error.response && error.response.status === 404) {
+        await msg.reply(`No hub/containers found for "${query}".`);
+        return;
+      }
       log.error("docker", `Error fetching data: ${error.message}`);
       await msg.reply(
         `Error fetching data for "${query}". Please try again later.`

@@ -75,6 +75,10 @@ export default async function (msg: Message) {
 
     await msg.reply(repo);
   } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      await msg.reply(`No package found for "${query}".`);
+      return;
+    }
     log.error("npm", `Error fetching data: ${error.message}`);
     await msg.reply(
       `Error fetching data for "${query}". Please try again later.`

@@ -41,6 +41,10 @@ export default async function (msg: Message) {
       await msg.reply(info);
     })
     .catch(async (error) => {
+      if (error.response && error.response.status === 404) {
+        await msg.reply(`No models found for "${query}".`);
+        return;
+      }
       log.error("huggingface", `Error fetching data: ${error.message}`);
       await msg.reply(
         `Error fetching data for "${query}". Please try again later.`
