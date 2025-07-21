@@ -29,7 +29,13 @@ export default async function (msg: Message) {
       const title = data.title || query;
       const description = data.description ? `(${data.description})` : "";
       const extract = data.extract || "No summary available.";
-      await msg.reply(`${title} ${description}\n${extract}`);
+      const text = `
+      \`${title}\`
+      ${description}
+
+      ${extract}
+      `;
+      await msg.reply(text);
     })
     .catch(async (error) => {
       log.error("wiki", `Error fetching data: ${error.message}`);

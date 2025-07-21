@@ -30,20 +30,20 @@ export default async function (msg: Message) {
     .then(async (response) => {
       const user = response.data;
       const info = `
-      *${user.name || user.login}*
+      \`${user.name || user.login}\
       ${user.bio || ""}
   
-      - Place: ${user.location || "N/A"}
-      - Followers: ${user.followers}
-      - Following: ${user.following}
-      - Gists: ${user.public_gists}
-      - Repo: ${user.public_repos}
-      - X: ${
+      Place: ${user.location || "N/A"}
+      Followers: ${user.followers}
+      Following: ${user.following}
+      Gists: ${user.public_gists}
+      Repo: ${user.public_repos}
+      X: ${
         user.twitter_username
           ? `https://twitter.com/${user.twitter_username}`
           : "N/A"
       }
-      - Link: ${user.blog || "N/A"}
+      Link: ${user.blog || "N/A"}
   `;
 
       await msg.reply(info);

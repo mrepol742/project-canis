@@ -16,13 +16,18 @@ export default async function (msg: Message) {
   const response = quiz[Math.floor(Math.random() * quiz.length)];
   if (response.length === 0)
     return await msg.reply("I don't have any quiz questions right now...");
-  const text = `
-  ${response.question}
+  let text = `
+  \`${response.question}\`
+  `;
 
+  if (response.choices && response.choices.length > 0) {
+    text += `
     *Options:*
     ${response.choices
       .map((choice: string, index: number) => `${index + 1}. ${choice}`)
       .join("\n    ")}
-  `;
+    `;
+  }
+
   await msg.reply(text);
 }

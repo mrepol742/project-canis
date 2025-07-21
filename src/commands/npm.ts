@@ -63,14 +63,14 @@ export default async function (msg: Message) {
     }
 
     const repo = `
-    *${name}* (v${version})
+    \`${name}* (v${version})\`
     ${description}
 
-    - Author: ${author}
-    - License: ${license}
-    - Homepage: ${homepage}
-    - Repository: ${repository}
-    - Last Published: ${formattedPublished}
+    Author: ${author}
+    License: ${license}
+    Homepage: ${homepage}
+    Repository: ${repository}
+    Last Published: ${formattedPublished}
     `;
 
     await msg.reply(repo);

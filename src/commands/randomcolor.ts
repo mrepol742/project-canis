@@ -22,8 +22,8 @@ export default async function (msg: Message) {
       const image = response.data.image;
 
       const color = `
-     *${name}*
-     \`${hex}\`
+     \`${name}\`
+     ${hex}
      `;
       await msg.reply(color);
     })

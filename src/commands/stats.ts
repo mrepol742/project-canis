@@ -34,28 +34,28 @@ export default async function (msg: Message) {
     ]);
 
   const statsMessage = `
-      *System Stats*
+      \`System Monitor\`
 
-      - OS: ${osInfo.distro} ${osInfo.kernel}
-      - CPU: ${stats.cpu[0].model}
-      - GPU: ${gpuInfo.controllers.map((c) => c.model).join(", ")}
-      - RAM: ${(stats.usedMemory / 1024 ** 3).toFixed(2)} GB / ${(
+      OS: ${osInfo.distro} ${osInfo.kernel}
+      CPU: ${stats.cpu[0].model}
+      GPU: ${gpuInfo.controllers.map((c) => c.model).join(", ")}
+      RAM: ${(stats.usedMemory / 1024 ** 3).toFixed(2)} GB / ${(
     stats.totalMemory /
     1024 ** 3
   ).toFixed(2)} GB
-      - VRam: ${gpuInfo.controllers.map((c) => c.vram).join(", ")} MB
-      - Load Avg: ${os
+      VRam: ${gpuInfo.controllers.map((c) => c.vram).join(", ")} MB
+      Load Avg: ${os
         .loadavg()
         .map((n) => n.toFixed(2))
         .join(", ")}
-      - Process: #${process.pid} ${process.title}
-      - Shell: ${shell}
-      - Network: ${networkInterfaces
+      Process: #${process.pid} ${process.title}
+      Shell: ${shell}
+      Network: ${networkInterfaces
         .map((iface) => `${iface.iface} ${iface.speed} Mbps`)
         .join(", ")}
-      - Node.js: ${process.version}
-      - Users: ${userCount}
-      - Blocked Users: ${blockUserCount}
+      Node.js: ${process.version}
+      Users: ${userCount}
+      Blocked Users: ${blockUserCount}
     `;
 
   await msg.reply(statsMessage);
