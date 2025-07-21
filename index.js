@@ -14,6 +14,7 @@ const loader_1 = __importDefault(require("./components/utils/loader"));
 require("./components/process");
 require("./components/server");
 require("./components/client");
+require("./components/utils/data");
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
 const autoReload = process.env.AUTO_RELOAD === "true";

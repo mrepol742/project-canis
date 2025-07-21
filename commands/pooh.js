@@ -3,14 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const axios_1 = __importDefault(require("axios"));
 const log_1 = __importDefault(require("../components/utils/log"));
 const promises_1 = __importDefault(require("fs/promises"));
-exports.command = "pooh";
-exports.role = "user";
 exports.info = {
     command: "pooh",
     description: "Generate a Pooh image with two texts.",

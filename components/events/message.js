@@ -15,9 +15,14 @@ const font_1 = __importDefault(require("../utils/font"));
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
-const superAdmin = process.env.SUPER_ADMIN || "";
 async function message(msg) {
     if (msg.timestamp < Date.now() / 1000 - 10)
+        return;
+    if (msg.hasQuotedMsg ||
+        msg.isForwarded ||
+        msg.isGif ||
+        msg.isStatus ||
+        msg.broadcast)
         return;
     msg.body = msg.body
         .normalize("NFKC")
@@ -41,16 +46,16 @@ async function message(msg) {
     if (isBlockedUser) {
         return;
     }
-    if (senderId !== superAdmin) {
+    if (!msg.fromMe) {
         const rate = (0, rateLimiter_1.default)(msg.from);
         if (rate === null)
             return;
         if (!rate) {
-            msg.reply("You are sending commands too fast. Please wait a minute.");
+            msg.reply("Please wait a minute or so.");
             return;
         }
     }
-    if (handler.role === "admin" && !msg.fromMe && senderId !== superAdmin) {
+    if (handler.role === "admin" && !msg.fromMe) {
         return;
     }
     if (debug) {
@@ -59,12 +64,25 @@ async function message(msg) {
     msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
     const originalReply = msg.reply.bind(msg);
     msg.reply = async (content, chatId, options) => {
-        let text = (0, font_1.default)(typeof content === "string" ? content : content.body) || "";
+        let messageBody = typeof content === "string" ? (0, font_1.default)(content) : content;
         if (Math.random() < 0.5) {
-            return await client_1.client.sendMessage(msg.id.remote, text);
+            return await client_1.client.sendMessage(msg.id.remote, messageBody, options);
         }
-        return await originalReply(text, chatId, options);
+        return await originalReply(messageBody, chatId, options);
     };
+    if (/^(--?help|\bhelp\b|-h)$/i.test(msg.body.trim().replace(handler.command, "").trim())) {
+        const response = `
+    \`${handler.command}\`
+    ${handler.description || "No description"}
+    
+    *Usage:* ${handler.usage || "No usage"}
+    *Example:* ${handler.example || "No example"}
+    *Role:* ${handler.role || "user"}
+    *Cooldown:* ${handler.cooldown || 5000}ms
+    `;
+        await msg.reply(response);
+        return;
+    }
     try {
         await Promise.all([
             handler.exec(msg),

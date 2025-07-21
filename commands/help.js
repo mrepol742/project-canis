@@ -5,27 +5,30 @@ exports.default = default_1;
 const index_1 = require("../index");
 exports.info = {
     command: "help",
-    description: "List all available commands.",
-    usage: "help",
-    example: "help",
+    description: "List available commands and their usage.",
+    usage: "help [page] | [role]",
+    example: "help admin",
     role: "user",
     cooldown: 5000,
 };
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 10;
 function paginate(items, page, pageSize) {
     const start = (page - 1) * pageSize;
     return items.slice(start, start + pageSize);
 }
 function buildUserPage(userCommands, page, totalPages) {
     let response = `
-  User commands
+  Use \`help <command>\` for more details on a specific command.\n
   < ─────────── >\n   •  ${userCommands.join("\n   •  ") || "_None_"}\n\n`;
-    response += `< ${page > 1 ? "prev" : ""} ─────────── ${page == totalPages ? "" : "next"} >`;
+    response += `< ─────────── >`;
+    response += `\n\`Page ${page} of ${totalPages}\``;
     return response;
 }
 function buildAdminPage(adminCommands) {
-    return `Admin commands
-  < ─────────── >\n   •  ${adminCommands.join("\n   •  ") || "_None_"}\n< ─────────── >`;
+    return `
+  Use \`help <command>\` for more details on a specific command.\n
+  < ─────────── >\n   •  ${adminCommands.join("\n   •  ") || "_None_"}\n< ─────────── >
+  `;
 }
 async function default_1(msg) {
     const query = msg.body
@@ -35,7 +38,7 @@ async function default_1(msg) {
     const matchCommands = index_1.commands[query];
     if (matchCommands) {
         const response = `
-    *${matchCommands.command}*
+    \`${matchCommands.command}\`
     ${matchCommands.description || "No description"}
     
     *Usage:* ${matchCommands.usage || "No usage"}
@@ -54,7 +57,7 @@ async function default_1(msg) {
         await msg.reply(buildAdminPage(adminCommands));
         return;
     }
-    const match = query.match(/help\s*(\d+)?/i);
+    const match = query.match(/(\d+)?/i);
     const page = Math.max(1, match && match[1] ? parseInt(match[1], 10) : 1);
     const userCommands = Object.values(index_1.commands)
         .filter((cmd) => cmd.role === "user")

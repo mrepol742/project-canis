@@ -4,23 +4,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
-exports.default = play;
+exports.default = default_1;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const fs_1 = __importDefault(require("fs"));
-const child_process_1 = require("child_process");
+const path_1 = __importDefault(require("path"));
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
+const child_process_1 = require("child_process");
 const util_1 = __importDefault(require("util"));
 const execPromise = util_1.default.promisify(child_process_1.exec);
 exports.info = {
-    command: "play",
-    description: "Play a YouTube music by searching for it.",
-    usage: "play <query>",
-    example: "play Never Gonna Give You Up",
+    command: "video",
+    description: "Play a YouTube video by searching for it.",
+    usage: "video <query>",
+    example: "video Never Gonna Give You Up",
     role: "user",
     cooldown: 5000,
 };
-async function play(msg) {
-    const query = msg.body.replace(/^play\b\s*/i, "").trim();
+async function default_1(msg) {
+    const query = msg.body.replace(/^video\b\s*/i, "").trim();
     if (!query) {
         await msg.reply("Please provide a search query.");
         return;
@@ -29,32 +30,32 @@ async function play(msg) {
         cache: new UniversalCache(false),
         generate_session_locally: true,
     });
-    const search = await yt.music.search(query, { type: "song" });
-    const audio = search.contents[0].contents[0];
-    if (!audio) {
+    const search = await yt.search(query, { type: "video" });
+    const video = search.results[0];
+    if (!video) {
         await msg.reply("Unable to find resources for the given query.");
         return;
     }
-    await msg.reply(`Download in progress... "${audio.title}"`);
-    const stream = await yt.download(audio.id, {
+    const title = video.title.toString();
+    await msg.reply(`Download in progress... "${title}"`);
+    const stream = await yt.download(video.video_id, {
         type: "video+audio",
         quality: "best",
         format: "mp4",
     });
     const tempDir = "./.temp";
-    await fs_1.default.mkdirSync(tempDir, { recursive: true });
-    const tempPath = `${tempDir}/${audio.id}.mp4`;
+    await fs_1.default.promises.mkdir(tempDir, { recursive: true });
+    const tempPath = path_1.default.join(tempDir, `${video.video_id}.mp4`);
     let writeStream = fs_1.default.createWriteStream(tempPath);
     for await (const chunk of Utils.streamToIterable(stream)) {
         writeStream.write(chunk);
     }
-    await execPromise(`ffmpeg -y -i "${tempPath}" -vn -ar 44100 -ac 2 -b:a 192k "${tempPath}.mp3"`);
-    const audioBuffer = fs_1.default.readFileSync(tempPath + ".mp3");
-    const media = new whatsapp_web_js_1.MessageMedia("audio/mpeg", audioBuffer.toString("base64"), `${audio.title}.mp3`);
+    await execPromise(`ffmpeg -y -i "${tempPath}" -c:v copy -c:a copy "${tempPath}.mp4"`);
+    const audioBuffer = fs_1.default.readFileSync(tempPath + ".mp4");
+    const media = new whatsapp_web_js_1.MessageMedia("audio/mpeg", audioBuffer.toString("base64"), `${title}.mp4`);
     await msg.reply(media, msg.from, {
-        caption: audio.title,
-        sendAudioAsVoice: true,
+        caption: `${title}`,
     });
     await fs_1.default.promises.unlink(tempPath);
-    await fs_1.default.promises.unlink(tempPath + ".mp3");
+    await fs_1.default.promises.unlink(tempPath + ".mp4");
 }

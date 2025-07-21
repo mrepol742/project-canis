@@ -3,12 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
 const log_1 = __importDefault(require("../components/utils/log"));
-exports.command = "wiki";
-exports.role = "user";
 exports.info = {
     command: "wiki",
     description: "Search Wikipedia for a summary of a topic.",
@@ -30,7 +28,13 @@ async function default_1(msg) {
         const title = data.title || query;
         const description = data.description ? `(${data.description})` : "";
         const extract = data.extract || "No summary available.";
-        await msg.reply(`${title} ${description}\n${extract}`);
+        const text = `
+      \`${title}\`
+      ${description}
+
+      ${extract}
+      `;
+        await msg.reply(text);
     })
         .catch(async (error) => {
         log_1.default.error("wiki", `Error fetching data: ${error.message}`);

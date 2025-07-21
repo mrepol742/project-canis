@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findOrCreateUser = findOrCreateUser;
+exports.getUserbyLid = getUserbyLid;
 exports.isBlocked = isBlocked;
 exports.getUserCount = getUserCount;
 exports.getBlockUserCount = getBlockUserCount;
@@ -40,7 +41,7 @@ async function findOrCreateUser(msg) {
                 type: contact.isBusiness ? "business" : "private",
                 mode: msg.author ? "group" : "private",
                 about: about,
-                commandCount: 1
+                commandCount: 1,
             },
         });
     }
@@ -49,6 +50,20 @@ async function findOrCreateUser(msg) {
     }
     return true;
 }
+async function getUserbyLid(lid) {
+    try {
+        const user = await prisma_1.prisma.user.findUnique({
+            where: {
+                lid,
+            },
+        });
+        return user;
+    }
+    catch (error) {
+        log_1.default.error("Database", `Failed to get user by lid: ${lid}`, error);
+    }
+    return null;
+}
 async function isBlocked(lid) {
     try {
         const block = await prisma_1.prisma.block.findUnique({
@@ -56,7 +71,6 @@ async function isBlocked(lid) {
                 lid,
             },
         });
-        log_1.default.info("block", block);
         return block !== null;
     }
     catch (error) {

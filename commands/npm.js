@@ -3,12 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
 const log_1 = __importDefault(require("../components/utils/log"));
-exports.command = "npm";
-exports.role = "user";
 exports.info = {
     command: "npm",
     description: "Search for npm package information.",
@@ -19,38 +17,60 @@ exports.info = {
 };
 async function default_1(msg) {
     const query = msg.body.replace(/^(npm(?:\s+install)?)\s+/i, "").trim();
-    if (query.includes(" "))
-        return;
     if (query.length === 0) {
         await msg.reply("Please provide a search query.");
         return;
     }
-    await axios_1.default
-        .get(`https://api.popcat.xyz/npm?q=${encodeURIComponent(query)}`)
-        .then(async (response) => {
-        const name = response.data.name;
-        const version = response.data.version;
-        const description = response.data.description;
-        const author = response.data.author;
-        const last_published = response.data.last_published;
-        const downloads_this_year = response.data.downloads_this_year;
-        const repository = response.data.repository;
-        const author_email = response.data.author_email;
+    if (query.includes(" ")) {
+        await msg.reply("Please provide a single package name without spaces.");
+        return;
+    }
+    try {
+        const response = await axios_1.default.get(`https://registry.npmjs.org/${encodeURIComponent(query)}`);
+        const data = response.data;
+        if (data.error)
+            return await msg.reply(`No package found for "${query}".`);
+        const latestVersion = data["dist-tags"]?.latest;
+        const versionData = latestVersion ? data.versions[latestVersion] : null;
+        if (!versionData) {
+            await msg.reply(`No data found for package "${query}".`);
+            return;
+        }
+        const name = data.name || "-";
+        const version = versionData.version || "-";
+        const description = versionData.description || "-";
+        const author = versionData.author?.name || "-";
+        const homepage = versionData.homepage || "-";
+        const repository = versionData.repository?.url || "-";
+        const license = versionData.license || "-";
+        const lastPublished = data.time?.[latestVersion] || "-";
+        let formattedPublished = "-";
+        if (lastPublished && lastPublished !== "-") {
+            const date = new Date(lastPublished);
+            formattedPublished = date.toLocaleString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+            });
+        }
         const repo = `
-     *${name}*
-     ${version}
-     ${description}
+    \`${name}* (v${version})\`
+    ${description}
 
-     - Author: ${author}
-     - Email: ${author_email}
-     - Last Updated: ${last_published}
-     - Repository: ${repository}
-     - Downloads This Year: ${downloads_this_year}
- `;
+    Author: ${author}
+    License: ${license}
+    Homepage: ${homepage}
+    Repository: ${repository}
+    Last Published: ${formattedPublished}
+    `;
         await msg.reply(repo);
-    })
-        .catch(async (error) => {
+    }
+    catch (error) {
+        if (error.response && error.response.status === 404) {
+            await msg.reply(`No package found for "${query}".`);
+            return;
+        }
         log_1.default.error("npm", `Error fetching data: ${error.message}`);
-        await msg.reply(`Error fetching data "${query}". Please try again later.`);
-    });
+        await msg.reply(`Error fetching data for "${query}". Please try again later.`);
+    }
 }

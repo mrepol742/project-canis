@@ -3,12 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const child_process_1 = require("child_process");
 const util_1 = __importDefault(require("util"));
-exports.command = "zsh";
-exports.role = "admin";
 exports.info = {
     command: "zsh",
     description: "Execute a shell and return the output.",

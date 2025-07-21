@@ -3,20 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
-const log_1 = __importDefault(require("../components/utils/log"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const index_1 = require("../index");
 const loader_1 = __importDefault(require("../components/utils/loader"));
-exports.command = "reload";
-exports.role = "admin";
 exports.info = {
     command: "reload",
     description: "Reload a specific command or all commands.",
     usage: "reload [command]",
-    example: "reload poli",
+    example: "reload ai",
     role: "admin",
     cooldown: 5000,
 };
@@ -38,32 +35,43 @@ async function default_1(msg) {
             }
         }
         if (!found)
-            await msg.reply(`Failed to reload command "${query}".`);
+            await msg.reply(`
+    \`Failed to load\`
+    ${query}
+    `);
         if (found)
-            await msg.reply(`Reloaded command "${query}".`);
+            await msg.reply(`
+      \`Successfully reloaded\`
+      ${query}
+      `);
         return;
     }
     let count = 0;
+    const newCommands = [];
+    const removeCommands = [];
     const commandsPath = path_1.default.join(__dirname, "..", "commands");
     fs_1.default.readdirSync(commandsPath).forEach((file) => {
         if (/\.js$|\.ts$/.test(file)) {
-            const filePath = path_1.default.join(commandsPath, file);
-            delete require.cache[require.resolve(filePath)];
-            const commandModule = require(filePath);
-            if (typeof commandModule.default === "function") {
-                index_1.commands[commandModule.info.command] = {
-                    command: commandModule.info.command,
-                    description: commandModule.info.description || "No description",
-                    usage: commandModule.info.usage || "No usage",
-                    example: commandModule.info.example || "No example",
-                    role: commandModule.info.user || "user",
-                    cooldown: commandModule.info.cooldown || 5000,
-                    exec: commandModule.default,
-                };
-                count++;
-                log_1.default.info("Loader", `Reloaded command: ${commandModule.info.command}`);
+            const commandName = file.replace(/\.(js|ts)$/, "");
+            if (!index_1.commands[commandName]) {
+                newCommands.push(commandName);
             }
+            else {
+                removeCommands.push(commandName);
+            }
+            (0, loader_1.default)(file);
+            count++;
         }
     });
-    await msg.reply(`Reloaded ${count} commands.`);
+    let text = `
+  \`Reloaded\`
+  ${count} commands
+  `;
+    if (newCommands.length > 0) {
+        text += `
+  \`Found new command(s)\`
+  ${newCommands.join(", ")}
+  `;
+    }
+    await msg.reply(text);
 }

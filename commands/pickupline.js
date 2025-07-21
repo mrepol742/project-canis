@@ -3,13 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
 const log_1 = __importDefault(require("../components/utils/log"));
 const font_1 = __importDefault(require("../components/utils/font"));
-exports.command = "pickupline";
-exports.role = "user";
 exports.info = {
     command: "pickupline",
     description: "Fetch a random pick-up line.",
@@ -19,6 +17,8 @@ exports.info = {
     cooldown: 5000,
 };
 async function default_1(msg) {
+    if (!/^pickupline$/i.test(msg.body))
+        return;
     await axios_1.default
         .get(`https://api.popcat.xyz/pickuplines`)
         .then(async (response) => {

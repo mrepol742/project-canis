@@ -3,14 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const axios_1 = __importDefault(require("axios"));
 const log_1 = __importDefault(require("../components/utils/log"));
 const promises_1 = __importDefault(require("fs/promises"));
-exports.command = "qrcode";
-exports.role = "user";
 exports.info = {
     command: "qrcode",
     description: "Generate a QR code from the provided text.",
@@ -35,7 +33,9 @@ async function default_1(msg) {
         const tempPath = `${tempDir}/${Date.now()}.png`;
         await promises_1.default.writeFile(tempPath, response.data);
         const media = whatsapp_web_js_1.MessageMedia.fromFilePath(tempPath);
-        await msg.reply(media);
+        await msg.reply(media, msg.from, {
+            caption: query,
+        });
         await promises_1.default.unlink(tempPath);
     })
         .catch(async (error) => {

@@ -1,9 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
-exports.command = "uptime";
-exports.role = "user";
 exports.info = {
     command: "uptime",
     description: "Get the bot's uptime and process information.",
@@ -13,10 +11,13 @@ exports.info = {
     cooldown: 5000,
 };
 async function default_1(msg) {
+    if (!/^uptime\b/i.test(msg.body))
+        return;
     const uptimeMinutes = Math.floor(process.uptime() / 60);
     const statsMessage = `
-      *${uptimeMinutes} minutes*
-      #${process.pid}
+      \`${uptimeMinutes} minutes\`
+      
+      Process ID:#${process.pid}
       `;
     await msg.reply(statsMessage);
 }

@@ -3,13 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const log_1 = __importDefault(require("../components/utils/log"));
 const agentHandler_1 = __importDefault(require("../components/ai/agentHandler"));
 const greetings_1 = require("../components/ai/response/greetings");
-exports.command = "sim";
-exports.role = "user";
 exports.info = {
     command: "sim",
     description: "Generate a sexy, flirty, funny, and horny response.",

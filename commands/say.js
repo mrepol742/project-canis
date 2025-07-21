@@ -36,14 +36,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.info = exports.role = exports.command = void 0;
+exports.info = void 0;
 exports.default = default_1;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const GoogleTTS = __importStar(require("google-tts-api"));
 const fs_1 = __importDefault(require("fs"));
 const axios_1 = __importDefault(require("axios"));
-exports.command = "say";
-exports.role = "user";
 exports.info = {
     command: "say",
     description: "Convert text to speech and send it as an audio message.",
@@ -66,10 +64,14 @@ async function default_1(msg) {
     const response = await axios_1.default.get(url, { responseType: "arraybuffer" });
     const buffer = Buffer.from(response.data);
     const tempDir = "./.temp";
-    const tempPath = `${tempDir}/${Date.now()}.mp3`;
+    const filename = `say_${Date.now()}.mp3`;
+    const tempPath = `${tempDir}/say_${Date.now()}.mp3`;
     await fs_1.default.promises.mkdir(tempDir, { recursive: true });
     await fs_1.default.promises.writeFile(tempPath, buffer);
-    const media = whatsapp_web_js_1.MessageMedia.fromFilePath(tempPath);
-    await msg.reply(media);
+    const audioBuffer = fs_1.default.readFileSync(tempPath);
+    const media = new whatsapp_web_js_1.MessageMedia("audio/mpeg", audioBuffer.toString("base64"), `${filename}.mp3`);
+    await msg.reply(media, msg.from, {
+        sendAudioAsVoice: true,
+    });
     await fs_1.default.promises.unlink(tempPath);
 }

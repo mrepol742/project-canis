@@ -18,7 +18,7 @@ exports.info = {
 async function default_1(msg) {
     const query = msg.body.replace(/^github\b\s*/i, "").trim();
     if (query.length === 0) {
-        await msg.reply("Please provide a username.");
+        await msg.reply("Please provide a search query.");
         return;
     }
     if (query.includes(" ")) {
@@ -30,23 +30,26 @@ async function default_1(msg) {
         .then(async (response) => {
         const user = response.data;
         const info = `
-      *${user.name || user.login}*
+      \`${user.name || user.login}\
       ${user.bio || ""}
   
-      - Place: ${user.location || "N/A"}
-      - Repos: ${user.public_repos}
-      - Followers: ${user.followers}
-      - Following: ${user.following}
-      - Gists: ${user.public_gists}
-      - Repo: ${user.public_repos}
-      - X: ${user.twitter_username
+      Place: ${user.location || "N/A"}
+      Followers: ${user.followers}
+      Following: ${user.following}
+      Gists: ${user.public_gists}
+      Repo: ${user.public_repos}
+      X: ${user.twitter_username
             ? `https://twitter.com/${user.twitter_username}`
             : "N/A"}
-      - Link: ${user.blog || "N/A"}
+      Link: ${user.blog || "N/A"}
   `;
         await msg.reply(info);
     })
         .catch(async (error) => {
+        if (error.response && error.response.status === 404) {
+            await msg.reply(`No user found for "${query}".`);
+            return;
+        }
         log_1.default.error("github", `Error fetching data: ${error.message}`);
         await msg.reply(`Error fetching data for "${query}". Please try again later.`);
         return;
