@@ -25,7 +25,19 @@ export default async function (
   if (quizAttempts) {
     const question = quiz[parseInt(quizAttempts.qid)];
 
-    if (msg.body.trim().toLowerCase() === question.answer.toLowerCase()) {
+    const userInput = msg.body.trim().toLowerCase();
+    const answer = question.answer.replace(/\s+/g, "").toLowerCase();
+    // Find the index of the correct answer in choices
+    const answerIndex =
+      question.choices ?
+      question.choices.findIndex(
+        (c: string) => c.trim().replace(/\s+/g, "").toLowerCase() === answer
+      ) + 1 : -1;
+
+    if (
+      userInput === answer ||
+      (question.choices && userInput === answerIndex.toString())
+    ) {
       await Promise.all([
         msg.reply(done[Math.floor(Math.random() * done.length)]),
         setQuizAttemptAnswered(msg, quoted),
