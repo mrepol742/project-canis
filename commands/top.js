@@ -26,7 +26,7 @@ async function default_1(msg) {
         .filter((u, index) => u.commandCount !== 0 && index < 20)
         .map((u, index) => {
         const displayName = u.name.length > 12 ? u.name.slice(0, 12) + "..." : u.name;
-        return `${index + 1}. ${displayName} - ${u.commandCount} Points`;
+        return `${index + 1}. ${displayName} - ${u.commandCount + u.quizAnswered} Points`;
     })
         .join("\n    ")}
     `;

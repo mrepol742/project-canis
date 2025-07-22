@@ -102,9 +102,10 @@ async function getBlockUserCount() {
 async function getUsers() {
     try {
         const users = await prisma_1.prisma.user.groupBy({
-            by: ["number", "name"],
+            by: ["number", "name", "quizAnswered"],
             _sum: {
                 commandCount: true,
+                quizAnswered: true,
             },
             orderBy: {
                 _sum: {
@@ -116,6 +117,7 @@ async function getUsers() {
             name: u.name,
             number: u.number,
             commandCount: u._sum.commandCount,
+            quizAnswered: u._sum.quizAnswered,
         }));
     }
     catch (error) {

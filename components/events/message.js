@@ -12,6 +12,7 @@ const sleep_1 = __importDefault(require("../utils/sleep"));
 const user_1 = require("../services/user");
 const client_1 = require("../client");
 const font_1 = __importDefault(require("../utils/font"));
+const quiz_1 = __importDefault(require("./quiz"));
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
@@ -23,6 +24,11 @@ async function message(msg) {
         msg.isStatus ||
         msg.broadcast)
         return;
+    if (msg.hasQuotedMsg) {
+        const quoted = await msg.getQuotedMessage();
+        if (await (0, quiz_1.default)(msg, quoted))
+            return;
+    }
     msg.body = msg.body
         .normalize("NFKC")
         .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
@@ -86,12 +92,10 @@ async function message(msg) {
         await Promise.all([
             handler.exec(msg),
             (async () => {
-                if (!msg.fromMe) {
-                    const user = await (0, user_1.findOrCreateUser)(msg);
-                    if (user) {
-                        await (0, sleep_1.default)(2000);
-                        await msg.react("✅");
-                    }
+                const user = await (0, user_1.findOrCreateUser)(msg);
+                if (user) {
+                    await (0, sleep_1.default)(2000);
+                    await msg.react("✅");
                 }
                 return Promise.resolve();
             })(),
