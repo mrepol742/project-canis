@@ -21,7 +21,12 @@ async function default_1(msg, quoted) {
     const quizAttempts = await (0, quiz_1.getQuizAttempts)(quoted);
     if (quizAttempts) {
         const question = data_1.quiz[parseInt(quizAttempts.qid)];
-        if (msg.body.trim().toLowerCase() === question.answer.toLowerCase()) {
+        const userInput = msg.body.trim().toLowerCase();
+        const answer = question.answer.replace(/\s+/g, "").toLowerCase();
+        const answerIndex = question.choices ?
+            question.choices.findIndex((c) => c.trim().replace(/\s+/g, "").toLowerCase() === answer) + 1 : -1;
+        if (userInput === answer ||
+            (question.choices && userInput === answerIndex.toString())) {
             await Promise.all([
                 msg.reply(done[Math.floor(Math.random() * done.length)]),
                 (0, quiz_1.setQuizAttemptAnswered)(msg, quoted),
