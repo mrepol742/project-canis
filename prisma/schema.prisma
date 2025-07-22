@@ -24,6 +24,7 @@ model User {
   mode         String
   about        String?
   commandCount Int      @default(0)
+  quizAnswered Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -70,4 +71,14 @@ model Log {
   output    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Quiz {
+  id         Int       @id @default(autoincrement())
+  mid        String    @unique
+  lid        String
+  qid        String
+  answeredAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }

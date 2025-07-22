@@ -12,6 +12,7 @@ import sleep from "../utils/sleep";
 import { findOrCreateUser, isBlocked } from "../services/user";
 import { client } from "../client";
 import Font from "../utils/font";
+import quiz from "./quiz";
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
@@ -29,6 +30,15 @@ export default async function message(msg: Message) {
     msg.broadcast
   )
     return; // ignore them all
+
+  /*
+   *
+   * Quiz command validation
+   */
+  if (msg.hasQuotedMsg) {
+    const quoted = await msg.getQuotedMessage();
+    if (await quiz(msg, quoted)) return;
+  }
 
   // process normalization
   msg.body = msg.body
@@ -129,13 +139,11 @@ export default async function message(msg: Message) {
     await Promise.all([
       handler.exec(msg),
       (async () => {
-        if (!msg.fromMe) {
-          const user = await findOrCreateUser(msg);
+        const user = await findOrCreateUser(msg);
 
-          if (user) {
-            await sleep(2000); // Prevent rate limiting issues
-            await msg.react("✅");
-          }
+        if (user) {
+          await sleep(2000); // Prevent rate limiting issues
+          await msg.react("✅");
         }
 
         return Promise.resolve();

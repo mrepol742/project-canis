@@ -28,7 +28,7 @@ export default async function (msg: Message) {
       .map((u, index) => {
         const displayName =
           u.name.length > 12 ? u.name.slice(0, 12) + "..." : u.name;
-        return `${index + 1}. ${displayName} - ${u.commandCount} Points`;
+        return `${index + 1}. ${displayName} - ${u.commandCount + u.quizAnswered} Points`;
       })
       .join("\n    ")}
     `;
