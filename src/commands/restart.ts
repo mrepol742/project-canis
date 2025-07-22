@@ -1,6 +1,7 @@
 import { Message } from "whatsapp-web.js";
 import fs from "fs/promises";
 import log from "../components/utils/log";
+import logService from "../components/services/log";
 
 export const info = {
   command: "restart",
@@ -22,5 +23,6 @@ export default async function (msg: Message) {
   await fs.writeFile(tempPath, JSON.stringify(msg));
 
   log.info("restart", "exiting...");
+  await logService(msg, "restart", "Bot is restarting...");
   process.exit(0);
 }

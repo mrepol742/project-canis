@@ -2,6 +2,7 @@ import { Message } from "whatsapp-web.js";
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
+import logService from "../components/services/log";
 
 export const info = {
   command: "zsh",
@@ -31,7 +32,17 @@ export default async function (msg: Message) {
     if (response.length > 4000) {
       response = response.slice(0, 4000) + "\n\n[Output truncated]";
     }
-    await msg.reply("```" + response + "```");
+
+    const text = `
+    \`\`\`
+    ${response}
+    \`\`\
+    `;
+    await Promise.all([
+      msg.reply(text),
+      logService(msg, query, response),
+      log.warn("zsh", `Executed command: ${query}`),
+    ]);
   } catch (err: any) {
     await msg.reply("Error executing command:\n" + (err.stderr || err.message));
   }

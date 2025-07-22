@@ -1,5 +1,7 @@
 import { Message } from "whatsapp-web.js";
 import { client } from "../components/client";
+import log from "../components/utils/log";
+import logService from "../components/services/log";
 
 export const info = {
   command: "wa",
@@ -33,9 +35,17 @@ export default async function (msg: Message) {
   }
   if (query === "status") {
     client.setStatus(quotedMsg.body);
-    await msg.reply("Status updated successfully.");
+    await Promise.all([
+      msg.reply("Status updated successfully."),
+      logService(msg, "status", quotedMsg.body),
+      log.info("wa", `Status updated to: ${quotedMsg.body}`),
+    ]);
     return;
   }
   client.setDisplayName(quotedMsg.body);
-  await msg.reply("Name updated successfully.");
+  await Promise.all([
+    msg.reply("Name updated successfully."),
+    logService(msg, "name", quotedMsg.body),
+    log.info("wa", `Name updated to: ${quotedMsg.body}`),
+  ]);
 }
