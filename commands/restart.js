@@ -7,6 +7,7 @@ exports.info = void 0;
 exports.default = default_1;
 const promises_1 = __importDefault(require("fs/promises"));
 const log_1 = __importDefault(require("../components/utils/log"));
+const log_2 = __importDefault(require("../components/services/log"));
 exports.info = {
     command: "restart",
     description: "Restart the bot.",
@@ -24,5 +25,6 @@ async function default_1(msg) {
     const tempPath = `${tempDir}/restart`;
     await promises_1.default.writeFile(tempPath, JSON.stringify(msg));
     log_1.default.info("restart", "exiting...");
+    await (0, log_2.default)(msg, "restart", "Bot is restarting...");
     process.exit(0);
 }

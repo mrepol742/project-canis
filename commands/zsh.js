@@ -5,8 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
+const log_1 = __importDefault(require("../components/utils/log"));
 const child_process_1 = require("child_process");
 const util_1 = __importDefault(require("util"));
+const log_2 = __importDefault(require("../components/services/log"));
 exports.info = {
     command: "zsh",
     description: "Execute a shell and return the output.",
@@ -32,7 +34,16 @@ async function default_1(msg) {
         if (response.length > 4000) {
             response = response.slice(0, 4000) + "\n\n[Output truncated]";
         }
-        await msg.reply("```" + response + "```");
+        const text = `
+    \`\`\`
+    ${response}
+    \`\`\
+    `;
+        await Promise.all([
+            msg.reply(text),
+            (0, log_2.default)(msg, query, response),
+            log_1.default.warn("zsh", `Executed command: ${query}`),
+        ]);
     }
     catch (err) {
         await msg.reply("Error executing command:\n" + (err.stderr || err.message));

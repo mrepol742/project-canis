@@ -1,8 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const client_1 = require("../components/client");
+const log_1 = __importDefault(require("../components/utils/log"));
+const log_2 = __importDefault(require("../components/services/log"));
 exports.info = {
     command: "wa",
     description: "Set WhatsApp status or name.",
@@ -30,9 +35,17 @@ async function default_1(msg) {
     }
     if (query === "status") {
         client_1.client.setStatus(quotedMsg.body);
-        await msg.reply("Status updated successfully.");
+        await Promise.all([
+            msg.reply("Status updated successfully."),
+            (0, log_2.default)(msg, "status", quotedMsg.body),
+            log_1.default.info("wa", `Status updated to: ${quotedMsg.body}`),
+        ]);
         return;
     }
     client_1.client.setDisplayName(quotedMsg.body);
-    await msg.reply("Name updated successfully.");
+    await Promise.all([
+        msg.reply("Name updated successfully."),
+        (0, log_2.default)(msg, "name", quotedMsg.body),
+        log_1.default.info("wa", `Name updated to: ${quotedMsg.body}`),
+    ]);
 }
