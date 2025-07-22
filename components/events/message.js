@@ -18,8 +18,7 @@ const debug = process.env.DEBUG === "true";
 async function message(msg) {
     if (msg.timestamp < Date.now() / 1000 - 10)
         return;
-    if (msg.hasQuotedMsg ||
-        msg.isForwarded ||
+    if (msg.isForwarded ||
         msg.isGif ||
         msg.isStatus ||
         msg.broadcast)

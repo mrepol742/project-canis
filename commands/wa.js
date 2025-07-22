@@ -24,6 +24,10 @@ async function default_1(msg) {
         return;
     }
     const quotedMsg = await msg.getQuotedMessage();
+    if (!quotedMsg.body) {
+        await msg.reply("Please reply to a message with the new status or name.");
+        return;
+    }
     if (query === "status") {
         client_1.client.setStatus(quotedMsg.body);
         await msg.reply("Status updated successfully.");

@@ -8,6 +8,7 @@ exports.getUserbyLid = getUserbyLid;
 exports.isBlocked = isBlocked;
 exports.getUserCount = getUserCount;
 exports.getBlockUserCount = getBlockUserCount;
+exports.getUsers = getUsers;
 const prisma_1 = require("../prisma");
 const log_1 = __importDefault(require("../../components/utils/log"));
 async function findOrCreateUser(msg) {
@@ -96,5 +97,29 @@ async function getBlockUserCount() {
     catch (error) {
         console.error("Failed to get block user count:", error);
         return 0;
+    }
+}
+async function getUsers() {
+    try {
+        const users = await prisma_1.prisma.user.groupBy({
+            by: ["number", "name"],
+            _sum: {
+                commandCount: true,
+            },
+            orderBy: {
+                _sum: {
+                    commandCount: "desc",
+                },
+            },
+        });
+        return users.map((u) => ({
+            name: u.name,
+            number: u.number,
+            commandCount: u._sum.commandCount,
+        }));
+    }
+    catch (error) {
+        log_1.default.error("Database", `Failed to get users.`, error);
+        return [];
     }
 }

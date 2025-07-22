@@ -16,14 +16,14 @@ async function default_1(msg) {
         await msg.reply("Please mention a user to block.");
         return;
     }
-    if (/^--rem$/.test(msg.body)) {
+    if (/^block\s--rem/.test(msg.body)) {
         for (const userId of msg.mentionedIds) {
             const lid = userId.split("@")[0];
             await prisma_1.prisma.block.delete({
                 where: { lid },
             });
         }
-        await msg.react("✅");
+        await msg.react("❌");
         return;
     }
     for (const userId of msg.mentionedIds) {
