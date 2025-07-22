@@ -1,7 +1,6 @@
 import { prisma } from "../prisma";
 import log from "../../components/utils/log";
 import { Message } from "whatsapp-web.js";
-import { info } from "console";
 
 export async function findOrCreateUser(msg: Message): Promise<boolean> {
   try {

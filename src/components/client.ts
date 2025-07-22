@@ -41,7 +41,7 @@ client.on("message_reaction", async (react: Reaction) =>
 client.on("message_create", async (msg: Message) => messageEvent(msg));
 client.on(
   "message_edit",
-  async (msg: Message, newBody: String, prevBody: String) =>
+  async (msg: Message, newBody: string, prevBody: string) =>
     messageEdit(msg, newBody, prevBody)
 );
 client.on(
@@ -50,7 +50,7 @@ client.on(
 );
 client.on("group_join", async (notif: GroupNotification) => groupJoin(notif));
 client.on("group_leave", async (notif: GroupNotification) => groupLeave(notif));
-client.on("auth_failure", (msg: String) =>
+client.on("auth_failure", (msg: string) =>
   log.error("Auth", "Authentication failed. Please try again.")
 );
 
