@@ -9,8 +9,7 @@ export default async function react(client: Client, react: Reaction) {
   // ignore react if it is older than 10 seconds
   if (react.timestamp < Date.now() / 1000 - 10) return;
 
-  const senderId = react.msgId.remote.split("@")[0];
-
+  const senderId = react.senderId.split("@")[0];
   const isBlockedUser = await isBlocked(senderId);
   if (isBlockedUser) {
     return;

@@ -7,7 +7,6 @@ import {
 import log from "../utils/log";
 import { commands } from "../../index";
 import rateLimiter from "../utils/rateLimiter";
-import { isRateLimitError, getRateLimitInfo } from "../utils/rateLimit";
 import sleep from "../utils/sleep";
 import { findOrCreateUser, isBlocked } from "../services/user";
 import { client } from "../client";
@@ -149,13 +148,43 @@ export default async function message(msg: Message) {
         return Promise.resolve();
       })(),
     ]);
-  } catch (error) {
-    if (isRateLimitError(error)) {
-      const rateLimitInfo = getRateLimitInfo(error);
-      log.warn(key, "Rate limit exceeded", rateLimitInfo);
-    } else {
-      log.error(key, "Error occurred while processing the request:", error);
+  } catch (error: any) {
+    if (error.response) {
+      const { status, headers } = error.response;
+      const statusMessages: Record<number, string> = {
+        429: "Rate limit exceeded",
+        524: "timed out",
+        500: "Internal server error",
+        404: "Not found",
+        403: "Forbidden",
+        400: "Bad request",
+        503: "Service unavailable",
+        408: "Request timeout",
+        401: "Unauthorized",
+        422: "Unprocessable entity",
+        504: "Gateway timeout",
+        502: "Bad gateway",
+        301: "Moved permanently",
+      };
+
+      if (statusMessages[status]) {
+        const logFn = status === 500 ? log.error : log.warn;
+        logFn(key, statusMessages[status], { status, headers });
+        await msg.reply(
+          `Fetching to ${key} provider ${statusMessages[
+            status
+          ].toLowerCase()}. Please try again later.`
+        );
+        return;
+      }
     }
-    msg.reply("An error occurred while processing your request.");
+    log.error(
+      key,
+      "Unexpected error occurred while processing the request:",
+      error
+    );
+    await msg.reply(
+      `An unexpected error occurred while processing your request for "${key}". Please try again later.`
+    );
   }
 }
