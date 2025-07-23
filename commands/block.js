@@ -35,5 +35,4 @@ async function default_1(msg) {
         });
     }
     await msg.react("✅");
-    return;
 }

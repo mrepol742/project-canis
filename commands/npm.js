@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/utils/log"));
 exports.info = {
     command: "npm",
     description: "Search for npm package information.",
@@ -25,35 +24,34 @@ async function default_1(msg) {
         await msg.reply("Please provide a single package name without spaces.");
         return;
     }
-    try {
-        const response = await axios_1.default.get(`https://registry.npmjs.org/${encodeURIComponent(query)}`);
-        const data = response.data;
-        if (data.error)
-            return await msg.reply(`No package found for "${query}".`);
-        const latestVersion = data["dist-tags"]?.latest;
-        const versionData = latestVersion ? data.versions[latestVersion] : null;
-        if (!versionData) {
-            await msg.reply(`No data found for package "${query}".`);
-            return;
-        }
-        const name = data.name || "-";
-        const version = versionData.version || "-";
-        const description = versionData.description || "-";
-        const author = versionData.author?.name || "-";
-        const homepage = versionData.homepage || "-";
-        const repository = versionData.repository?.url || "-";
-        const license = versionData.license || "-";
-        const lastPublished = data.time?.[latestVersion] || "-";
-        let formattedPublished = "-";
-        if (lastPublished && lastPublished !== "-") {
-            const date = new Date(lastPublished);
-            formattedPublished = date.toLocaleString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-            });
-        }
-        const repo = `
+    const response = await axios_1.default.get(`https://registry.npmjs.org/${encodeURIComponent(query)}`);
+    const data = response.data;
+    if (data.error)
+        return await msg.reply(`No package found for "${query}".`);
+    const latestVersion = data["dist-tags"]?.latest;
+    const versionData = latestVersion ? data.versions[latestVersion] : null;
+    if (!versionData) {
+        await msg.reply(`No data found for package "${query}".`);
+        return;
+    }
+    const name = data.name || "-";
+    const version = versionData.version || "-";
+    const description = versionData.description || "-";
+    const author = versionData.author?.name || "-";
+    const homepage = versionData.homepage || "-";
+    const repository = versionData.repository?.url || "-";
+    const license = versionData.license || "-";
+    const lastPublished = data.time?.[latestVersion] || "-";
+    let formattedPublished = "-";
+    if (lastPublished && lastPublished !== "-") {
+        const date = new Date(lastPublished);
+        formattedPublished = date.toLocaleString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+        });
+    }
+    const repo = `
     \`${name}* (v${version})\`
     ${description}
 
@@ -63,14 +61,5 @@ async function default_1(msg) {
     Repository: ${repository}
     Last Published: ${formattedPublished}
     `;
-        await msg.reply(repo);
-    }
-    catch (error) {
-        if (error.response && error.response.status === 404) {
-            await msg.reply(`No package found for "${query}".`);
-            return;
-        }
-        log_1.default.error("npm", `Error fetching data: ${error.message}`);
-        await msg.reply(`Error fetching data for "${query}". Please try again later.`);
-    }
+    await msg.reply(repo);
 }

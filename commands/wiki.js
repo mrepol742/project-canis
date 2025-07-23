@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/utils/log"));
 exports.info = {
     command: "wiki",
     description: "Search Wikipedia for a summary of a topic.",
@@ -21,23 +20,16 @@ async function default_1(msg) {
         await msg.reply("Please provide a search query.");
         return;
     }
-    await axios_1.default
-        .get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`)
-        .then(async (response) => {
-        const data = response.data;
-        const title = data.title || query;
-        const description = data.description ? `(${data.description})` : "";
-        const extract = data.extract || "No summary available.";
-        const text = `
+    const response = await axios_1.default.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+    const data = response.data;
+    const title = data.title || query;
+    const description = data.description ? `(${data.description})` : "";
+    const extract = data.extract || "No summary available.";
+    const text = `
       \`${title}\`
       ${description}
 
       ${extract}
       `;
-        await msg.reply(text);
-    })
-        .catch(async (error) => {
-        log_1.default.error("wiki", `Error fetching data: ${error.message}`);
-        await msg.reply(`Error fetching data for "${query}". Please try again later.`);
-    });
+    await msg.reply(text);
 }

@@ -66,20 +66,21 @@ const mathSansMap = {
     0: "𝟢",
 };
 function Font(text) {
-    return text
-        .split(" ")
-        .map(function (char) {
-        if (/^(http|https):\/\//.test(char)) {
-            return char;
+    const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+    let result = "";
+    let lastIndex = 0;
+    text.replace(urlRegex, (url, index) => {
+        for (let i = lastIndex; i < index; i++) {
+            const char = text[i];
+            result += mathSansMap[char] || char;
         }
-        if (/^(https?:\/\/)?(?:www\.)?([a-zA-Z0-9-]+\.){1,}[a-zA-Z]{2,}(?:\/[^\s]*)?$/.test(char))
-            return char;
-        return char
-            .split("")
-            .map(function (char) {
-            return mathSansMap[char] || char;
-        })
-            .join("");
-    })
-        .join(" ");
+        result += url;
+        lastIndex = index + url.length;
+        return url;
+    });
+    for (let i = lastIndex; i < text.length; i++) {
+        const char = text[i];
+        result += mathSansMap[char] || char;
+    }
+    return result;
 }

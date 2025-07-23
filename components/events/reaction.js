@@ -14,7 +14,7 @@ async function react(client, react) {
         return;
     if (react.timestamp < Date.now() / 1000 - 10)
         return;
-    const senderId = react.msgId.remote.split("@")[0];
+    const senderId = react.senderId.split("@")[0];
     const isBlockedUser = await (0, user_1.isBlocked)(senderId);
     if (isBlockedUser) {
         return;

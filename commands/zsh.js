@@ -24,28 +24,23 @@ async function default_1(msg) {
         return;
     }
     const execPromise = util_1.default.promisify(child_process_1.exec);
-    try {
-        const { stdout, stderr } = await execPromise(query, {
-            timeout: 10000,
-            maxBuffer: 1024 * 1024,
-            shell: process.env.SHELL || "/bin/zsh",
-        });
-        let response = stdout || stderr || "No output.";
-        if (response.length > 4000) {
-            response = response.slice(0, 4000) + "\n\n[Output truncated]";
-        }
-        const text = `
+    const { stdout, stderr } = await execPromise(query, {
+        timeout: 10000,
+        maxBuffer: 1024 * 1024,
+        shell: process.env.SHELL || "/bin/zsh",
+    });
+    let response = stdout || stderr || "No output.";
+    if (response.length > 4000) {
+        response = response.slice(0, 4000) + "\n\n[Output truncated]";
+    }
+    const text = `
     \`\`\`
     ${response}
     \`\`\
     `;
-        await Promise.all([
-            msg.reply(text),
-            (0, log_2.default)(msg, query, response),
-            log_1.default.warn("zsh", `Executed command: ${query}`),
-        ]);
-    }
-    catch (err) {
-        await msg.reply("Error executing command:\n" + (err.stderr || err.message));
-    }
+    await Promise.all([
+        msg.reply(text),
+        (0, log_2.default)(msg, query, response),
+        log_1.default.warn("zsh", `Executed command: ${query}`),
+    ]);
 }

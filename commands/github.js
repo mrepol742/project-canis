@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/utils/log"));
 exports.info = {
     command: "github",
     description: "Fetch GitHub user information.",
@@ -25,11 +24,9 @@ async function default_1(msg) {
         await msg.reply("Please provide a single username without spaces.");
         return;
     }
-    await axios_1.default
-        .get(`https://api.github.com/users/${query}`)
-        .then(async (response) => {
-        const user = response.data;
-        const info = `
+    const response = await axios_1.default.get(`https://api.github.com/users/${query}`);
+    const user = response.data;
+    const info = `
       \`${user.name || user.login}\
       ${user.bio || ""}
   
@@ -39,19 +36,9 @@ async function default_1(msg) {
       Gists: ${user.public_gists}
       Repo: ${user.public_repos}
       X: ${user.twitter_username
-            ? `https://twitter.com/${user.twitter_username}`
-            : "N/A"}
+        ? `https://twitter.com/${user.twitter_username}`
+        : "N/A"}
       Link: ${user.blog || "N/A"}
   `;
-        await msg.reply(info);
-    })
-        .catch(async (error) => {
-        if (error.response && error.response.status === 404) {
-            await msg.reply(`No user found for "${query}".`);
-            return;
-        }
-        log_1.default.error("github", `Error fetching data: ${error.message}`);
-        await msg.reply(`Error fetching data for "${query}". Please try again later.`);
-        return;
-    });
+    await msg.reply(info);
 }

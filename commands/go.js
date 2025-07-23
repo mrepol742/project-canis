@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/utils/log"));
 exports.info = {
     command: "go",
     description: "Search with duckduckgo.",
@@ -21,8 +20,7 @@ async function default_1(msg) {
         await msg.reply("Please provide a search query.");
         return;
     }
-    await axios_1.default
-        .get("https://api.duckduckgo.com/", {
+    const response = await axios_1.default.get("https://api.duckduckgo.com/", {
         params: {
             q: query,
             format: "json",
@@ -33,26 +31,19 @@ async function default_1(msg) {
         headers: {
             "User-Agent": "Mozilla/5.0",
         },
-    })
-        .then(async (response) => {
-        const data = response.data;
-        if (data.AbstractText) {
-            await msg.reply(`${data.AbstractText}\n\n${data.AbstractURL}`);
+    });
+    const data = response.data;
+    if (data.AbstractText) {
+        await msg.reply(`${data.AbstractText}\n\n${data.AbstractURL}`);
+        return;
+    }
+    if (Array.isArray(data.RelatedTopics) && data.RelatedTopics.length > 0) {
+        const firstTopic = data.RelatedTopics.find((t) => typeof t.Text === "string" && t.FirstURL) || data.RelatedTopics[0];
+        if (firstTopic && firstTopic.Text && firstTopic.FirstURL) {
+            await msg.reply(`${firstTopic.Text}\n${firstTopic.FirstURL}`);
             return;
         }
-        if (Array.isArray(data.RelatedTopics) && data.RelatedTopics.length > 0) {
-            const firstTopic = data.RelatedTopics.find((t) => typeof t.Text === "string" && t.FirstURL) || data.RelatedTopics[0];
-            if (firstTopic && firstTopic.Text && firstTopic.FirstURL) {
-                await msg.reply(`${firstTopic.Text}\n${firstTopic.FirstURL}`);
-                return;
-            }
-        }
-        const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-        await msg.reply(`Why dont you duckduck it yourself? Heres the link: \n${searchUrl}`);
-    })
-        .catch(async (error) => {
-        log_1.default.error("go", `Error fetching data: ${error.message}`);
-        await msg.reply(`Error fetching data for "${query}". Please try again later.`);
-        return;
-    });
+    }
+    const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+    await msg.reply(`Why dont you duckduck it yourself? Heres the link: \n${searchUrl}`);
 }

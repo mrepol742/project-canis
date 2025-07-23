@@ -7,7 +7,6 @@ exports.default = message;
 const log_1 = __importDefault(require("../utils/log"));
 const index_1 = require("../../index");
 const rateLimiter_1 = __importDefault(require("../utils/rateLimiter"));
-const rateLimit_1 = require("../utils/rateLimit");
 const sleep_1 = __importDefault(require("../utils/sleep"));
 const user_1 = require("../services/user");
 const client_1 = require("../client");
@@ -52,7 +51,7 @@ async function message(msg) {
         return;
     }
     if (!msg.fromMe) {
-        const rate = (0, rateLimiter_1.default)(msg.from);
+        const rate = await (0, rateLimiter_1.default)(msg.from);
         if (rate === null)
             return;
         if (!rate) {
@@ -102,13 +101,36 @@ async function message(msg) {
         ]);
     }
     catch (error) {
-        if ((0, rateLimit_1.isRateLimitError)(error)) {
-            const rateLimitInfo = (0, rateLimit_1.getRateLimitInfo)(error);
-            log_1.default.warn(key, "Rate limit exceeded", rateLimitInfo);
+        if (error.response) {
+            const { status, headers } = error.response;
+            const statusMessages = {
+                429: "Rate limit exceeded",
+                524: "timed out",
+                500: "Internal server error",
+                404: "Not found",
+                403: "Forbidden",
+                400: "Bad request",
+                503: "Service unavailable",
+                408: "Request timeout",
+                401: "Unauthorized",
+                422: "Unprocessable entity",
+                504: "Gateway timeout",
+                502: "Bad gateway",
+                301: "Moved permanently",
+            };
+            if (statusMessages[status]) {
+                const logFn = status === 500 ? log_1.default.error : log_1.default.warn;
+                logFn(key, statusMessages[status], { status, headers });
+                const text = `
+        \`Status ${status}:\`
+
+          Error Fetching to ${key} provider got ${statusMessages[status]}
+        `;
+                await msg.reply(text);
+                return;
+            }
         }
-        else {
-            log_1.default.error(key, "Error occurred while processing the request:", error);
-        }
-        msg.reply("An error occurred while processing your request.");
+        log_1.default.error(key, "Unexpected error occurred while processing the request:", error);
+        await msg.reply(`An unexpected error occurred while processing your request for "${key}". Please try again later.`);
     }
 }

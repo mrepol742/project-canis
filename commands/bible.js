@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/utils/log"));
 exports.info = {
     command: "bible",
     description: "Fetch a Bible verse or the verse of the day.",
@@ -31,8 +30,7 @@ async function default_1(msg) {
     else {
         parameter = query.replace("--verse ", "").trim();
     }
-    await axios_1.default
-        .get(`https://labs.bible.org/api/`, {
+    const response = await axios_1.default.get(`https://labs.bible.org/api/`, {
         params: {
             passage: parameter,
             type: "json",
@@ -40,24 +38,17 @@ async function default_1(msg) {
         headers: {
             "User-Agent": "Mozilla/5.0",
         },
-    })
-        .then(async (response) => {
-        const data = response.data;
-        if (!Array.isArray(data) || data.length === 0) {
-            await msg.reply("No verse found for your query.");
-            return;
-        }
-        const v = data[0];
-        const verses = `
+    });
+    const data = response.data;
+    if (!Array.isArray(data) || data.length === 0) {
+        await msg.reply("No verse found for your query.");
+        return;
+    }
+    const v = data[0];
+    const verses = `
 *${v.bookname} ${v.chapter}:${v.verse}*
 
 ${v.text.trim()}
 `;
-        await msg.reply(verses);
-    })
-        .catch(async (error) => {
-        log_1.default.error("bible", `Error fetching data: ${error.message}`);
-        await msg.reply(`Error fetching data. Please try again later.`);
-        return;
-    });
+    await msg.reply(verses);
 }

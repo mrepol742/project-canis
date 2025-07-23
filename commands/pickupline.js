@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
-const log_1 = __importDefault(require("../components/utils/log"));
-const font_1 = __importDefault(require("../components/utils/font"));
 exports.info = {
     command: "pickupline",
     description: "Fetch a random pick-up line.",
@@ -19,13 +17,6 @@ exports.info = {
 async function default_1(msg) {
     if (!/^pickupline$/i.test(msg.body))
         return;
-    await axios_1.default
-        .get(`https://api.popcat.xyz/pickuplines`)
-        .then(async (response) => {
-        await msg.reply((0, font_1.default)(response.data.pickupline));
-    })
-        .catch(async (error) => {
-        log_1.default.error("pickupline", `Error fetching data: ${error.message}`);
-        await msg.reply(`Error fetching data. Please try again later.`);
-    });
+    const response = await axios_1.default.get(`https://api.popcat.xyz/pickuplines`);
+    await msg.reply(response.data.pickupline);
 }
