@@ -1,34 +1,69 @@
-const rateLimitMap: Map<string, { timestamps: number[]; notified: boolean }> = new Map();
+import redis from "../redis";
+import log from "./log";
+
 const LIMIT = 3;
-const WINDOW_MS = 60000;
+const BASE_WINDOW_MS = 60 * 1000;
+const PENALTY_INCREMENT_MS = 60 * 1000;
 
-/**
- * Returns:
- *   true  - allowed
- *   false - rate limited, but not yet notified (should notify)
- *   null  - rate limited, already notified (do not notify again)
- */
-export default function rateLimiter(number: string): true | false | null {
+function getKey(number: string) {
+  return `rate:${number}`;
+}
+
+export default async function rateLimiter(
+  number: string
+): Promise<boolean | null> {
   const now = Date.now();
-  const entry = rateLimitMap.get(number) || { timestamps: [], notified: false };
+  const key = getKey(number);
 
-  // Remove older timestamps
-  entry.timestamps = entry.timestamps.filter((ts) => now - ts < WINDOW_MS);
+  // Get user entry from Redis
+  const entryRaw = await redis.get(key);
+  let entry = entryRaw
+    ? JSON.parse(entryRaw)
+    : {
+        timestamps: [],
+        notified: false,
+        penaltyCount: 0,
+        penaltyUntil: 0,
+      };
 
-  if (entry.timestamps.length >= LIMIT) {
-    if (entry.notified) {
-      rateLimitMap.set(number, entry);
-      return null;
-    } else {
-      entry.notified = true;
-      rateLimitMap.set(number, entry);
-      return false; // Notified for the first time
-    }
+  // Penalty check
+  if (entry.penaltyUntil > now) {
+    log.info(
+      "RateLimiter",
+      `User ${number} is under penalty until ${new Date(
+        entry.penaltyUntil
+      ).toLocaleTimeString()}`
+    );
+    if (!entry.notified) return null;
+    entry.notified = true;
+    await redis.set(key, JSON.stringify(entry));
+    return false;
   }
 
-  // Allowed, reset notified flag
+  // Remove old timestamps
+  entry.timestamps = entry.timestamps.filter(
+    (ts: number) => now - ts < BASE_WINDOW_MS
+  );
+
+  if (entry.timestamps.length >= LIMIT) {
+    entry.penaltyCount += 1;
+    entry.penaltyUntil =
+      now + BASE_WINDOW_MS + (entry.penaltyCount - 1) * PENALTY_INCREMENT_MS;
+    entry.notified = false;
+    entry.timestamps = [];
+    log.warn(
+      "RateLimiter",
+      `User ${number} exceeded limit. Penalty until ${new Date(
+        entry.penaltyUntil
+      ).toLocaleTimeString()}`
+    );
+    await redis.set(key, JSON.stringify(entry));
+    return false;
+  }
+
+  // Allowed
   entry.timestamps.push(now);
   entry.notified = false;
-  rateLimitMap.set(number, entry);
+  await redis.set(key, JSON.stringify(entry));
   return true;
 }

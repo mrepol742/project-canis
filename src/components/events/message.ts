@@ -79,7 +79,7 @@ export default async function message(msg: Message) {
    * Rate limit commands to prevent abuse.
    */
   if (!msg.fromMe) {
-    const rate = rateLimiter(msg.from);
+    const rate = await rateLimiter(msg.from);
     if (rate === null) return;
     if (!rate) {
       msg.reply("Please wait a minute or so.");
@@ -170,11 +170,12 @@ export default async function message(msg: Message) {
       if (statusMessages[status]) {
         const logFn = status === 500 ? log.error : log.warn;
         logFn(key, statusMessages[status], { status, headers });
-        await msg.reply(
-          `Fetching to ${key} provider ${statusMessages[
-            status
-          ].toLowerCase()}. Please try again later.`
-        );
+        const text = `
+        \`Status ${status}:\`
+
+          Error Fetching to ${key} provider got ${statusMessages[status]}
+        `;
+        await msg.reply(text);
         return;
       }
     }

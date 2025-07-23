@@ -64,24 +64,29 @@ const mathSansMap: Record<string, string> = {
 };
 
 export default function Font(text: string) {
-  return text
-    .split(" ")
-    .map(function (char) {
-      if (/^(http|https):\/\//.test(char)) {
-        return char;
-      }
-      if (
-        /^(https?:\/\/)?(?:www\.)?([a-zA-Z0-9-]+\.){1,}[a-zA-Z]{2,}(?:\/[^\s]*)?$/.test(
-          char
-        )
-      )
-        return char;
-      return char
-        .split("")
-        .map(function (char) {
-          return mathSansMap[char] || char;
-        })
-        .join("");
-    })
-    .join(" ");
+  // Regex to match URLs
+  const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+  let result = "";
+  let lastIndex = 0;
+
+  // Find all URLs and skip conversion for them
+  text.replace(urlRegex, (url, index) => {
+    // Convert text before URL
+    for (let i = lastIndex; i < index; i++) {
+      const char = text[i];
+      result += mathSansMap[char] || char;
+    }
+    // Add URL as is
+    result += url;
+    lastIndex = index + url.length;
+    return url;
+  });
+
+  // Convert remaining text after last URL
+  for (let i = lastIndex; i < text.length; i++) {
+    const char = text[i];
+    result += mathSansMap[char] || char;
+  }
+
+  return result;
 }
