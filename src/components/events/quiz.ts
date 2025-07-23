@@ -41,6 +41,7 @@ export default async function (
       await Promise.all([
         msg.reply(done[Math.floor(Math.random() * done.length)]),
         setQuizAttemptAnswered(msg, quoted),
+        quoted.delete(true, true),
       ]);
       return true;
     }
