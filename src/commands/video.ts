@@ -37,14 +37,24 @@ export default async function (msg: Message) {
     return;
   }
 
-  const title = video.title.toString();
-  await msg.reply(`Download in progress... "${title}"`);
+  // Only allow videos shorter than 10 minutes (600 seconds)
+  if (video.length && video.length.seconds > 600) {
+    await msg.reply("Sorry, only videos shorter than 10 minutes can be downloaded.");
+    return;
+  }
+  
+  await msg.react("👍");
 
   const stream = await yt.download(video.video_id, {
     type: "video+audio",
     quality: "best",
     format: "mp4",
   });
+
+  if (!stream) {
+    await msg.reply("Failed to download the video stream.");
+    return;
+  }
 
   const tempDir = "./.temp";
   await fs.promises.mkdir(tempDir, { recursive: true });
@@ -63,11 +73,11 @@ export default async function (msg: Message) {
   const media = new MessageMedia(
     "audio/mpeg",
     audioBuffer.toString("base64"),
-    `${title}.mp4`
+    `${video.title}.mp4`
   );
 
   await msg.reply(media, msg.from, {
-    caption: `${title}`,
+    caption: `${video.title}`,
   });
   await fs.promises.unlink(tempPath);
   await fs.promises.unlink(tempPath + ".mp4");

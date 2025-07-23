@@ -32,17 +32,13 @@ export default async function (msg: Message) {
     networkInterfaces,
     userCount,
     blockUserCount,
-    whatsAppVersion,
-    whatsAppState,
   ] = await Promise.all([
     si.graphics(),
     si.osInfo(),
     si.shell(),
     si.networkInterfaces(),
     getUserCount(),
-    getBlockUserCount(),
-    client.getWWebVersion(),
-    client.getState()
+    getBlockUserCount()
   ]);
 
   const statsMessage = `
@@ -56,18 +52,10 @@ export default async function (msg: Message) {
     1024 ** 3
   ).toFixed(2)} GB
       VRam: ${gpuInfo.controllers.map((c) => c.vram).join(", ")} MB
-      Load Avg: ${os
-        .loadavg()
-        .map((n) => n.toFixed(2))
-        .join(", ")}
-      Process: #${process.pid} ${process.title}
       Shell: ${shell}
       Network: ${networkInterfaces
         .map((iface) => `${iface.iface} ${iface.speed} Mbps`)
         .join(", ")}
-      Node.js: ${process.version}
-      WA: ${whatsAppVersion}
-      WA State: ${whatsAppState}
       Commands: ${Object.keys(commands).length}
       Users: ${userCount}
       Blocked Users: ${blockUserCount}

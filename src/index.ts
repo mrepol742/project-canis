@@ -17,8 +17,8 @@ const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
 const autoReload = process.env.AUTO_RELOAD === "true";
 const commandsPath = path.join(__dirname, "commands");
 
-log.info("Bot", `Welcome to ${botName}!`);
-log.info("Bot", `Command prefix: ${commandPrefix}`);
+log.info("Bot", `Initiating ${botName}...`);
+log.info("Bot", `prefix: ${commandPrefix}`);
 
 const commands: Record<
   string,
@@ -33,11 +33,11 @@ const commands: Record<
   }
 > = {};
 
-fs.readdirSync(commandsPath).forEach((file) => Loader(file));
+fs.readdirSync(commandsPath).forEach((file: string) => Loader(file));
 
 // Watch for changes
 if (autoReload)
-  fs.watch(commandsPath, (eventType, filename) => {
+  fs.watch(commandsPath, (eventType: string, filename: string | null) => {
     if (filename && /\.js$|\.ts$/.test(filename)) {
       try {
         Loader(filename);

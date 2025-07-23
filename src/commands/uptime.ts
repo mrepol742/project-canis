@@ -1,7 +1,7 @@
 import { Message } from "whatsapp-web.js";
-import log from "../components/utils/log";
 import os from "os";
-import si from "systeminformation";
+import timestamp from "../components/utils/timestamp";
+import { client } from "../components/client";
 
 export const info = {
   command: "uptime",
@@ -15,12 +15,20 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^uptime\b/i.test(msg.body)) return;
 
-  const uptimeMinutes = Math.floor(process.uptime() / 60);
+  const waStatus = await client.getState();
+  const waVersion = await client.getWWebVersion();
+
   const statsMessage = `
-      \`${uptimeMinutes} minutes\`
+      \`${timestamp(process.uptime())}\`
       
       ID: #${process.pid}
-      Platform: ${os.platform()} ${os.arch()}
+      LA: ${os
+        .loadavg()
+        .map((n) => n.toFixed(2))
+        .join(", ")}
+      Status: ${waStatus}
+      Version: ${waVersion}
+      Node.js: ${process.version}
       `;
 
   await msg.reply(statsMessage);

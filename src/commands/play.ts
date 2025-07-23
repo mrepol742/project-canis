@@ -36,13 +36,26 @@ export default async function play(msg: Message) {
     return;
   }
 
-  await msg.reply(`Download in progress... "${audio.title}"`);
+  // Only allow audios shorter than 10 minutes (600 seconds)
+  if (audio.length && audio.length.seconds > 600) {
+    await msg.reply(
+      "Sorry, only videos shorter than 10 minutes can be downloaded."
+    );
+    return;
+  }
+
+  await msg.react("👍");
 
   const stream = await yt.download(audio.id, {
     type: "video+audio",
     quality: "best",
     format: "mp4",
   });
+
+  if (!stream) {
+    await msg.reply("Failed to download the audio stream.");
+    return;
+  }
 
   const tempDir = "./.temp";
   await fs.mkdirSync(tempDir, { recursive: true });

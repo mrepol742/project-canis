@@ -3,9 +3,6 @@ import fs from "fs";
 import path from "path";
 import { commands } from "../../index";
 
-export const command = "load";
-export const role = "admin";
-
 const commandsPath = path.join(__dirname, "..", "..", "commands");
 
 export default function (file: string, customPath?: string) {
