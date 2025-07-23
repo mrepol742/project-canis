@@ -16,7 +16,7 @@ const ready_1 = __importDefault(require("./events/ready"));
 const revoke_1 = __importDefault(require("./events/revoke"));
 const client = new whatsapp_web_js_1.Client({
     puppeteer: {
-        executablePath: "/opt/google/chrome/google-chrome",
+        executablePath: process.env.PUPPETEER_EXEC_PATH || "/opt/google/chrome/google-chrome",
     },
     authStrategy: new whatsapp_web_js_1.LocalAuth(),
 });

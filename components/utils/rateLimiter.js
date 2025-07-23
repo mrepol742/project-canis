@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = rateLimiter;
+exports.default = default_1;
 const redis_1 = __importDefault(require("../redis"));
 const log_1 = __importDefault(require("./log"));
 const LIMIT = 3;
@@ -12,7 +12,7 @@ const PENALTY_INCREMENT_MS = 60 * 1000;
 function getKey(number) {
     return `rate:${number}`;
 }
-async function rateLimiter(number) {
+async function default_1(number) {
     const now = Date.now();
     const key = getKey(number);
     const entryRaw = await redis_1.default.get(key);

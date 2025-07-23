@@ -7,15 +7,15 @@ exports.info = void 0;
 exports.default = default_1;
 const axios_1 = __importDefault(require("axios"));
 exports.info = {
-    command: "go",
+    command: "duckduckgo",
     description: "Search with duckduckgo.",
-    usage: "go <query>",
-    example: "go weather today",
+    usage: "duckduckgo <query>",
+    example: "duckduckgo weather today",
     role: "user",
     cooldown: 5000,
 };
 async function default_1(msg) {
-    const query = msg.body.replace(/^go\b\s*/i, "").trim();
+    const query = msg.body.replace(/^duckduckgo\b\s*/i, "").trim();
     if (query.length === 0) {
         await msg.reply("Please provide a search query.");
         return;

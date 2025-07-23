@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = message;
+exports.default = default_1;
 const log_1 = __importDefault(require("../utils/log"));
 const index_1 = require("../../index");
 const rateLimiter_1 = __importDefault(require("../utils/rateLimiter"));
@@ -15,7 +15,7 @@ const quiz_1 = __importDefault(require("./quiz"));
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
-async function message(msg) {
+async function default_1(msg) {
     if (msg.timestamp < Date.now() / 1000 - 10)
         return;
     if (msg.isForwarded ||

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.wyr = exports.quiz = exports.joke = exports.dyk = exports.cat = exports.ball = void 0;
+exports.greetings = exports.wyr = exports.quiz = exports.joke = exports.dyk = exports.cat = exports.ball = void 0;
 const fs_1 = __importDefault(require("fs"));
 const log_1 = __importDefault(require("./log"));
 const path_1 = __importDefault(require("path"));
@@ -16,6 +16,8 @@ function safeReadJSON(filePath) {
         return [];
     }
 }
+const greetings = safeReadJSON("../../data/greetings.json");
+exports.greetings = greetings;
 const ball = safeReadJSON("../../data/8ball.json");
 exports.ball = ball;
 const cat = safeReadJSON("../../data/cat.json");

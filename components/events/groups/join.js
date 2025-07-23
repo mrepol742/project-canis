@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = join;
+exports.default = default_1;
 const log_1 = __importDefault(require("../../utils/log"));
 const sleep_1 = __importDefault(require("../../utils/sleep"));
-async function join(notif) {
+async function default_1(notif) {
     try {
         const group = await notif.getChat();
         const recipients = await notif.getRecipients();

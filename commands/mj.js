@@ -7,7 +7,7 @@ exports.info = void 0;
 exports.default = default_1;
 const log_1 = __importDefault(require("../components/utils/log"));
 const package_json_1 = require("../../package.json");
-const greetings_1 = require("../components/ai/response/greetings");
+const data_1 = require("../components/utils/data");
 const agentHandler_1 = __importDefault(require("../components/ai/agentHandler"));
 exports.info = {
     command: "mj",
@@ -20,7 +20,7 @@ exports.info = {
 async function default_1(msg) {
     const query = msg.body.replace(/^mj\b\s*/i, "").trim();
     if (query.length === 0) {
-        await msg.reply(greetings_1.greetings[Math.floor(Math.random() * greetings_1.greetingsLength)]);
+        await msg.reply(data_1.greetings[Math.floor(Math.random() * data_1.greetings.length)]);
         return;
     }
     const prompt = `Your name is Mj, the most powerful AI Agent in the world that was created by ${package_json_1.author.name}. ` +

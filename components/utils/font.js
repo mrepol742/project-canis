@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Font;
+exports.default = default_1;
 const mathSansMap = {
     a: "𝖺",
     b: "𝖻",
@@ -65,7 +65,7 @@ const mathSansMap = {
     9: "𝟫",
     0: "𝟢",
 };
-function Font(text) {
+function default_1(text) {
     const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
     let result = "";
     let lastIndex = 0;

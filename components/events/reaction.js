@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = react;
+exports.default = default_1;
 const log_1 = __importDefault(require("../utils/log"));
 const sleep_1 = __importDefault(require("../utils/sleep"));
 const user_1 = require("../services/user");
-async function react(client, react) {
+async function default_1(client, react) {
     if (react.msgId.fromMe || react.id.fromMe)
         return;
     if (!react.reaction?.trim())
