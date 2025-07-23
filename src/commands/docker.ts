@@ -25,33 +25,34 @@ export default async function (msg: Message) {
     return;
   }
 
-  await axios
-    .get(`https://hub.docker.com/v2/repositories/${query}`)
-    .then(async (response) => {
-      if (response.data.count === 0 || response.data.message) {
-        await msg.reply(`No repositories found for "${query}".`);
-        return;
-      }
-      if (!query.includes("/")) {
-        // The response is a list of repositories for the user
-        const repos = response.data.results;
-        if (!repos || repos.length === 0) {
-          await msg.reply(`No repositories found for user "${query}".`);
-          return;
-        }
-        let reply = `*${query}*\n\n`;
-        reply += repos
-          .map(
-            (repo: any) =>
-              `\`${repo.name}\`
+  const response = await axios.get(
+    `https://hub.docker.com/v2/repositories/${query}`
+  );
+
+  if (response.data.count === 0 || response.data.message) {
+    await msg.reply(`No repositories found for "${query}".`);
+    return;
+  }
+  if (!query.includes("/")) {
+    // The response is a list of repositories for the user
+    const repos = response.data.results;
+    if (!repos || repos.length === 0) {
+      await msg.reply(`No repositories found for user "${query}".`);
+      return;
+    }
+    let reply = `*${query}*\n\n`;
+    reply += repos
+      .map(
+        (repo: any) =>
+          `\`${repo.name}\`
               \nStars: ${repo.star_count} Pulls: ${repo.pull_count}`
-          )
-          .join("\n\n");
-        await msg.reply(reply);
-        return;
-      }
-      const repo = response.data;
-      const info = `
+      )
+      .join("\n\n");
+    await msg.reply(reply);
+    return;
+  }
+  const repo = response.data;
+  const info = `
       \`${repo.name}\`
       ${repo.description || ""}
 
@@ -60,17 +61,5 @@ export default async function (msg: Message) {
       Last Updated: ${new Date(repo.last_updated).toLocaleDateString()}
       Link: https://hub.docker.com/r/${repo.namespace}/${repo.name}
       `;
-      await msg.reply(info);
-    })
-    .catch(async (error) => {
-      if (error.response && error.response.status === 404) {
-        await msg.reply(`No hub/containers found for "${query}".`);
-        return;
-      }
-      log.error("docker", `Error fetching data: ${error.message}`);
-      await msg.reply(
-        `Error fetching data for "${query}". Please try again later.`
-      );
-      return;
-    });
+  await msg.reply(info);
 }

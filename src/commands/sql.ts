@@ -19,13 +19,6 @@ export default async function (msg: Message) {
     return;
   }
 
-  try {
-    const result = await prisma.$queryRawUnsafe(query);
-    await msg.reply(JSON.stringify(result, null, 2));
-  } catch (error: any) {
-    log.error("sql", `Error querying data: ${error.message}`);
-    await msg.reply(
-      `Error querying data for "${query}". Please try again later.`
-    );
-  }
+  const result = await prisma.$queryRawUnsafe(query);
+  await msg.reply(JSON.stringify(result, null, 2));
 }

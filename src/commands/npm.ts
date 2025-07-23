@@ -25,44 +25,43 @@ export default async function (msg: Message) {
     return;
   }
 
-  try {
-    const response = await axios.get(
-      `https://registry.npmjs.org/${encodeURIComponent(query)}`
-    );
-    const data = response.data;
+  const response = await axios.get(
+    `https://registry.npmjs.org/${encodeURIComponent(query)}`
+  );
 
-    if (data.error) return await msg.reply(`No package found for "${query}".`);
+  const data = response.data;
+  if (data.error) return await msg.reply(`No package found for "${query}".`);
 
-    // Get latest version
-    const latestVersion = data["dist-tags"]?.latest;
-    const versionData = latestVersion ? data.versions[latestVersion] : null;
+  // Get latest version
+  const latestVersion = data["dist-tags"]?.latest;
+  const versionData = latestVersion ? data.versions[latestVersion] : null;
 
-    if (!versionData) {
-      await msg.reply(`No data found for package "${query}".`);
-      return;
-    }
+  if (!versionData) {
+    await msg.reply(`No data found for package "${query}".`);
+    return;
+  }
 
-    const name = data.name || "-";
-    const version = versionData.version || "-";
-    const description = versionData.description || "-";
-    const author = versionData.author?.name || "-";
-    const homepage = versionData.homepage || "-";
-    const repository = versionData.repository?.url || "-";
-    const license = versionData.license || "-";
-    const lastPublished = data.time?.[latestVersion] || "-";
+  const name = data.name || "-";
+  const version = versionData.version || "-";
+  const description = versionData.description || "-";
+  const author = versionData.author?.name || "-";
+  const homepage = versionData.homepage || "-";
+  const repository = versionData.repository?.url || "-";
+  const license = versionData.license || "-";
+  const lastPublished = data.time?.[latestVersion] || "-";
 
-    // Format lastPublished date nicely, e.g., "June 13 2002"
-    let formattedPublished = "-";
-    if (lastPublished && lastPublished !== "-") {
-      const date = new Date(lastPublished);
-      formattedPublished = date.toLocaleString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      });
-    }
+  // Format lastPublished date nicely, e.g., "June 13 2002"
+  let formattedPublished = "-";
+  if (lastPublished && lastPublished !== "-") {
+    const date = new Date(lastPublished);
+    formattedPublished = date.toLocaleString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
 
-    const repo = `
+  const repo = `
     \`${name}* (v${version})\`
     ${description}
 
@@ -73,15 +72,5 @@ export default async function (msg: Message) {
     Last Published: ${formattedPublished}
     `;
 
-    await msg.reply(repo);
-  } catch (error: any) {
-    if (error.response && error.response.status === 404) {
-      await msg.reply(`No package found for "${query}".`);
-      return;
-    }
-    log.error("npm", `Error fetching data: ${error.message}`);
-    await msg.reply(
-      `Error fetching data for "${query}". Please try again later.`
-    );
-  }
+  await msg.reply(repo);
 }

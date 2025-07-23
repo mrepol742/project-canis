@@ -18,15 +18,16 @@ export default async function (msg: Message) {
     return;
   }
 
-  await axios
-    .get(`https://huggingface.co/api/models?search=${query}`)
-    .then(async (response) => {
-      if (response.data.length === 0) {
-        await msg.reply(`No models found for "${query}".`);
-        return;
-      }
-      const models = response.data[0];
-      const info = `
+  const response = await axios.get(
+    `https://huggingface.co/api/models?search=${query}`
+  );
+
+  if (response.data.length === 0) {
+    await msg.reply(`No models found for "${query}".`);
+    return;
+  }
+  const models = response.data[0];
+  const info = `
       \`${models.modelId}\`
       ${models.tags.splice(0, 5).join(", ") || "N/A"}
 
@@ -38,17 +39,5 @@ export default async function (msg: Message) {
       Private: ${models.private ? "Yes" : "No"}
       Model URL: https://huggingface.co/${models.modelId}
       `;
-      await msg.reply(info);
-    })
-    .catch(async (error) => {
-      if (error.response && error.response.status === 404) {
-        await msg.reply(`No models found for "${query}".`);
-        return;
-      }
-      log.error("huggingface", `Error fetching data: ${error.message}`);
-      await msg.reply(
-        `Error fetching data for "${query}". Please try again later.`
-      );
-      return;
-    });
+  await msg.reply(info);
 }

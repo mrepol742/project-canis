@@ -18,15 +18,14 @@ export default async function (msg: Message) {
     return;
   }
 
-  await axios
-    .get(`https://api.github.com/repos/${query}`)
-    .then(async (response) => {
-      if (response.data.message) {
-        await msg.reply(`No repository found for "${query}".`);
-        return;
-      }
-      const repo = response.data;
-      const info = `
+  const response = await axios.get(`https://api.github.com/repos/${query}`);
+
+  if (response.data.message) {
+    await msg.reply(`No repository found for "${query}".`);
+    return;
+  }
+  const repo = response.data;
+  const info = `
       \`${repo.name}\`
       ${repo.description.substring(0, 100) || "No description available."}
 
@@ -42,17 +41,5 @@ export default async function (msg: Message) {
       Created At: ${new Date(repo.created_at).toLocaleDateString()}
       Updated At: ${new Date(repo.updated_at).toLocaleDateString()}
       `;
-      await msg.reply(info);
-    })
-    .catch(async (error) => {
-      if (error.response && error.response.status === 404) {
-        await msg.reply(`No repository found for "${query}".`);
-        return;
-      }
-      log.error("repo", `Error fetching data: ${error.message}`);
-      await msg.reply(
-        `Error fetching data for "${query}". Please try again later.`
-      );
-      return;
-    });
+  await msg.reply(info);
 }

@@ -43,5 +43,4 @@ export default async function (msg: Message) {
   }
 
   await msg.react("✅");
-  return;
 }

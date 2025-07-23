@@ -17,13 +17,7 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^pickupline$/i.test(msg.body)) return;
 
-  await axios
-    .get(`https://api.popcat.xyz/pickuplines`)
-    .then(async (response) => {
-      await msg.reply(Font(response.data.pickupline));
-    })
-    .catch(async (error) => {
-      log.error("pickupline", `Error fetching data: ${error.message}`);
-      await msg.reply(`Error fetching data. Please try again later.`);
-    });
+  const response = await axios.get(`https://api.popcat.xyz/pickuplines`);
+  
+  await msg.reply(response.data.pickupline);
 }

@@ -15,31 +15,19 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^meme$/i.test(msg.body)) return;
 
-  await axios
-    .get("https://api.popcat.xyz/meme")
-    .then(async (response) => {
-      await axios
-        .get(response.data.content.image, {
-          responseType: "arraybuffer",
-        })
-        .then(async (response) => {
-          const tempDir = "./.temp";
-          await fs.mkdir(tempDir, { recursive: true });
+  const result = await axios.get("https://api.popcat.xyz/meme");
 
-          const tempPath = `${tempDir}/meme_${Date.now()}.png`;
-          await fs.writeFile(tempPath, response.data);
+  const response = await axios.get(result.data.content.image, {
+    responseType: "arraybuffer",
+  });
 
-          const media = MessageMedia.fromFilePath(tempPath);
-          await msg.reply(media);
-          await fs.unlink(tempPath);
-        })
-        .catch(async (error) => {
-          log.error("meme", `Error fetching image: ${error.message}`);
-          await msg.reply("Error fetching image. Please try again later.");
-        });
-    })
-    .catch(async (error) => {
-      log.error("meme", `Error fetching data: ${error.message}`);
-      await msg.reply("Error fetching data. Please try again later.");
-    });
+  const tempDir = "./.temp";
+  await fs.mkdir(tempDir, { recursive: true });
+
+  const tempPath = `${tempDir}/meme_${Date.now()}.png`;
+  await fs.writeFile(tempPath, response.data);
+
+  const media = MessageMedia.fromFilePath(tempPath);
+  await msg.reply(media);
+  await fs.unlink(tempPath);
 }

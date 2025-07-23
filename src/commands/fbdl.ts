@@ -27,37 +27,25 @@ export default async function (msg: Message) {
     return;
   }
 
-  getFbVideoInfo(query)
-    .then(async (result) => {
-      if (!result.url)
-        return await msg.reply("No video found at the provided URL.");
+  const result = await getFbVideoInfo(query);
+  if (!result.url)
+    return await msg.reply("No video found at the provided URL.");
 
-      await axios
-        .get(result.hd, { responseType: "arraybuffer" })
-        .then(async (response) => {
-          const tempDir = "./.temp";
-          await fs.mkdirSync(tempDir, { recursive: true });
+  const response = await axios.get(result.hd, { responseType: "arraybuffer" });
 
-          const tempPath = `${tempDir}/fbdl_${Date.now()}.mp4`;
-          await fs.writeFileSync(tempPath, response.data);
+  const tempDir = "./.temp";
+  await fs.mkdirSync(tempDir, { recursive: true });
 
-          const audioBuffer = fs.readFileSync(tempPath);
-          const media = new MessageMedia(
-            "audio/mpeg",
-            audioBuffer.toString("base64"),
-            `${result.title}.mp4`
-          );
+  const tempPath = `${tempDir}/fbdl_${Date.now()}.mp4`;
+  await fs.writeFileSync(tempPath, response.data);
 
-          await msg.reply(media, msg.from);
-          await fs.promises.unlink(tempPath);
-        })
-        .catch(async (error) => {
-          log.error("fbdl", `Error downloading video: ${error.message}`);
-          await msg.reply("Error downloading video. Please try again later.");
-        });
-    })
-    .catch(async (err) => {
-      log.error("fbdl", `Error fetching video info: ${err.message}`);
-      await msg.reply("Error fetching video info. Please try again later.");
-    });
+  const audioBuffer = fs.readFileSync(tempPath);
+  const media = new MessageMedia(
+    "audio/mpeg",
+    audioBuffer.toString("base64"),
+    `${result.title}.mp4`
+  );
+
+  await msg.reply(media, msg.from);
+  await fs.promises.unlink(tempPath);
 }

@@ -25,11 +25,10 @@ export default async function (msg: Message) {
     return;
   }
 
-  await axios
-    .get(`https://api.github.com/users/${query}`)
-    .then(async (response) => {
-      const user = response.data;
-      const info = `
+  const response = await axios.get(`https://api.github.com/users/${query}`);
+
+  const user = response.data;
+  const info = `
       \`${user.name || user.login}\
       ${user.bio || ""}
   
@@ -46,17 +45,5 @@ export default async function (msg: Message) {
       Link: ${user.blog || "N/A"}
   `;
 
-      await msg.reply(info);
-    })
-    .catch(async (error) => {
-      if (error.response && error.response.status === 404) {
-        await msg.reply(`No user found for "${query}".`);
-        return;
-      }
-      log.error("github", `Error fetching data: ${error.message}`);
-      await msg.reply(
-        `Error fetching data for "${query}". Please try again later.`
-      );
-      return;
-    });
+  await msg.reply(info);
 }

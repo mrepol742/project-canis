@@ -20,26 +20,20 @@ export default async function (msg: Message) {
     return;
   }
 
-  await axios
-    .get(
-      `https://api.popcat.xyz/unforgivable?text=${encodeURIComponent(query)}`,
-      {
-        responseType: "arraybuffer",
-      }
-    )
-    .then(async (response) => {
-      const tempDir = "./.temp";
-      await fs.mkdir(tempDir, { recursive: true });
+  const response = await axios.get(
+    `https://api.popcat.xyz/unforgivable?text=${encodeURIComponent(query)}`,
+    {
+      responseType: "arraybuffer",
+    }
+  );
 
-      const tempPath = `${tempDir}/${Date.now()}.png`;
-      await fs.writeFile(tempPath, response.data);
+  const tempDir = "./.temp";
+  await fs.mkdir(tempDir, { recursive: true });
 
-      const media = MessageMedia.fromFilePath(tempPath);
-      await msg.reply(media);
-      await fs.unlink(tempPath);
-    })
-    .catch(async (error) => {
-      log.error("god", `Error fetching image: ${error.message}`);
-      await msg.reply("Error fetching image. Please try again later.");
-    });
+  const tempPath = `${tempDir}/${Date.now()}.png`;
+  await fs.writeFile(tempPath, response.data);
+
+  const media = MessageMedia.fromFilePath(tempPath);
+  await msg.reply(media);
+  await fs.unlink(tempPath);
 }

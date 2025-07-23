@@ -19,29 +19,25 @@ export default async function (msg: Message) {
     await msg.reply("Please provide a text.");
     return;
   }
-    
-  await axios
-    .get(
-      `https://api.qrserver.com/v1/create-qr-code/?150x150&data=${encodeURIComponent(query)}`,
-      {
-        responseType: "arraybuffer",
-      }
-    )
-    .then(async (response) => {
-      const tempDir = "./.temp";
-      await fs.mkdir(tempDir, { recursive: true });
 
-      const tempPath = `${tempDir}/${Date.now()}.png`;
-      await fs.writeFile(tempPath, response.data);
+  const response = await axios.get(
+    `https://api.qrserver.com/v1/create-qr-code/?150x150&data=${encodeURIComponent(
+      query
+    )}`,
+    {
+      responseType: "arraybuffer",
+    }
+  );
 
-      const media = MessageMedia.fromFilePath(tempPath);
-      await msg.reply(media, msg.from, {
-        caption: query,
-      });
-      await fs.unlink(tempPath);
-    })
-    .catch(async (error) => {
-      log.error("qrcode", `Error fetching image: ${error.message}`);
-      await msg.reply("Error fetching image. Please try again later.");
-    });
+  const tempDir = "./.temp";
+  await fs.mkdir(tempDir, { recursive: true });
+
+  const tempPath = `${tempDir}/${Date.now()}.png`;
+  await fs.writeFile(tempPath, response.data);
+
+  const media = MessageMedia.fromFilePath(tempPath);
+  await msg.reply(media, msg.from, {
+    caption: query,
+  });
+  await fs.unlink(tempPath);
 }

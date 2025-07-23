@@ -22,28 +22,24 @@ export default async function (msg: Message) {
 
   const execPromise = util.promisify(exec);
 
-  try {
-    const { stdout, stderr } = await execPromise(query, {
-      timeout: 10000,
-      maxBuffer: 1024 * 1024,
-      shell: process.env.SHELL || "/bin/zsh",
-    });
-    let response = stdout || stderr || "No output.";
-    if (response.length > 4000) {
-      response = response.slice(0, 4000) + "\n\n[Output truncated]";
-    }
+  const { stdout, stderr } = await execPromise(query, {
+    timeout: 10000,
+    maxBuffer: 1024 * 1024,
+    shell: process.env.SHELL || "/bin/zsh",
+  });
+  let response = stdout || stderr || "No output.";
+  if (response.length > 4000) {
+    response = response.slice(0, 4000) + "\n\n[Output truncated]";
+  }
 
-    const text = `
+  const text = `
     \`\`\`
     ${response}
     \`\`\
     `;
-    await Promise.all([
-      msg.reply(text),
-      logService(msg, query, response),
-      log.warn("zsh", `Executed command: ${query}`),
-    ]);
-  } catch (err: any) {
-    await msg.reply("Error executing command:\n" + (err.stderr || err.message));
-  }
+  await Promise.all([
+    msg.reply(text),
+    logService(msg, query, response),
+    log.warn("zsh", `Executed command: ${query}`),
+  ]);
 }

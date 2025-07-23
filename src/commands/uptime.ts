@@ -19,7 +19,8 @@ export default async function (msg: Message) {
   const statsMessage = `
       \`${uptimeMinutes} minutes\`
       
-      Process ID:#${process.pid}
+      ID: #${process.pid}
+      Platform: ${os.platform()} ${os.arch()}
       `;
 
   await msg.reply(statsMessage);

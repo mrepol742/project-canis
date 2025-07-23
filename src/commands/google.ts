@@ -15,7 +15,7 @@ export const info = {
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^google\b\s*/i, "").trim();
-  if (query.length !== 0) return
+  if (query.length === 0) return
 
   await msg.reply(`https://letmegooglethat.com/?q=${encodeURIComponent(query)}`);
 }

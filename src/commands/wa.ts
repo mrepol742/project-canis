@@ -42,6 +42,7 @@ export default async function (msg: Message) {
     ]);
     return;
   }
+  
   client.setDisplayName(quotedMsg.body);
   await Promise.all([
     msg.reply("Name updated successfully."),
