@@ -9,9 +9,7 @@ function getKey(number: string) {
   return `rate:${number}`;
 }
 
-export default async function rateLimiter(
-  number: string
-): Promise<boolean | null> {
+export default async function (number: string): Promise<boolean | null> {
   const now = Date.now();
   const key = getKey(number);
 

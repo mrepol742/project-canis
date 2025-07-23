@@ -17,7 +17,7 @@ import revoke from "./events/revoke";
 
 const client = new Client({
   puppeteer: {
-    executablePath: "/opt/google/chrome/google-chrome",
+    executablePath: process.env.PUPPETEER_EXEC_PATH || "/opt/google/chrome/google-chrome",
   },
   authStrategy: new LocalAuth(),
 });

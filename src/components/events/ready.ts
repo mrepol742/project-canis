@@ -4,7 +4,7 @@ import path from "path";
 import { client } from "../client";
 import sleep from "../utils/sleep";
 
-export default async function ready() {
+export default async function () {
   log.info("Client", "WhatsApp client is ready!");
 
   await sleep(5000); // Give some time for the client to stabilize

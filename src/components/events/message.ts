@@ -17,7 +17,7 @@ const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
 
-export default async function message(msg: Message) {
+export default async function (msg: Message) {
   // ignore message if it is older than 10 seconds
   if (msg.timestamp < Date.now() / 1000 - 10) return;
 

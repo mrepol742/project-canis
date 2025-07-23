@@ -8,7 +8,7 @@ export const role = "admin";
 
 const commandsPath = path.join(__dirname, "..", "..", "commands");
 
-export default function Loader(file: string, customPath?: string) {
+export default function (file: string, customPath?: string) {
   if (/\.js$|\.ts$/.test(file)) {
     const filePath = path.join(customPath || commandsPath, file);
     delete require.cache[require.resolve(filePath)];

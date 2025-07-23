@@ -2,7 +2,7 @@ import { GroupNotification } from "whatsapp-web.js";
 import log from "../../utils/log";
 import sleep from "../../utils/sleep";
 
-export default async function join(notif: GroupNotification) {
+export default async function (notif: GroupNotification) {
   try {
     const group = await notif.getChat();
     const recipients = await notif.getRecipients();

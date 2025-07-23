@@ -63,7 +63,7 @@ const mathSansMap: Record<string, string> = {
   0: "𝟢",
 };
 
-export default function Font(text: string) {
+export default function (text: string) {
   // Regex to match URLs
   const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
   let result = "";

@@ -1,10 +1,7 @@
 import { Message } from "whatsapp-web.js";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
-import {
-  greetings,
-  greetingsLength,
-} from "../components/ai/response/greetings";
+import { greetings } from "../components/utils/data";
 
 export const info = {
   command: "chad",
@@ -18,7 +15,7 @@ export const info = {
 export default async function (msg: Message) {
   const query = msg.body.replace(/^chad\b\s*/i, "").trim();
   if (query.length === 0) {
-    await msg.reply(greetings[Math.floor(Math.random() * greetingsLength)]);
+    await msg.reply(greetings[Math.floor(Math.random() * greetings.length)]);
     return;
   }
 

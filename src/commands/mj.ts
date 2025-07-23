@@ -2,10 +2,7 @@ import { Message } from "whatsapp-web.js";
 import log from "../components/utils/log";
 import Font from "../components/utils/font";
 import { author } from "../../package.json";
-import {
-  greetings,
-  greetingsLength,
-} from "../components/ai/response/greetings";
+import { greetings } from "../components/utils/data";
 import agentHandler from "../components/ai/agentHandler";
 import { client } from "../components/client";
 
@@ -21,7 +18,7 @@ export const info = {
 export default async function (msg: Message) {
   const query = msg.body.replace(/^mj\b\s*/i, "").trim();
   if (query.length === 0) {
-    await msg.reply(greetings[Math.floor(Math.random() * greetingsLength)]);
+    await msg.reply(greetings[Math.floor(Math.random() * greetings.length)]);
     return;
   }
 

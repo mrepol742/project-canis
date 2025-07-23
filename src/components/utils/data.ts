@@ -11,6 +11,7 @@ function safeReadJSON(filePath: string) {
   }
 }
 
+const greetings = safeReadJSON("../../data/greetings.json");
 const ball = safeReadJSON("../../data/8ball.json");
 const cat = safeReadJSON("../../data/cat.json");
 const dyk = safeReadJSON("../../data/dyk.json");
@@ -18,4 +19,4 @@ const joke = safeReadJSON("../../data/joke.json");
 const quiz = safeReadJSON("../../data/quiz.json");
 const wyr = safeReadJSON("../../data/wyr.json");
 
-export { ball, cat, dyk, joke, quiz, wyr };
+export { ball, cat, dyk, joke, quiz, wyr, greetings };

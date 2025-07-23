@@ -3,7 +3,7 @@ import log from "../utils/log";
 import sleep from "../utils/sleep";
 import { isBlocked } from "../services/user";
 
-export default async function react(client: Client, react: Reaction) {
+export default async function (client: Client, react: Reaction) {
   if (react.msgId.fromMe || react.id.fromMe) return;
   if (!react.reaction?.trim()) return;
   // ignore react if it is older than 10 seconds
