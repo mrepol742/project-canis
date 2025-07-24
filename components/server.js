@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
 const log_1 = __importDefault(require("./utils/log"));
 const port = process.env.PORT || 3000;
-http_1.default
-    .createServer((req, res) => {
+const server = http_1.default.createServer((req, res) => {
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end("Bot is running\n");
-})
-    .listen(port, () => {
+});
+server.listen(port, () => {
     log_1.default.info("Server", `HTTP server started on port ${port}`);
 });
+exports.default = server;

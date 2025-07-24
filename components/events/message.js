@@ -89,11 +89,17 @@ async function default_1(msg) {
     }
     try {
         await Promise.all([
+            (async () => {
+                if (msg.fromMe)
+                    return;
+                const chat = await msg.getChat();
+                chat.sendStateTyping();
+            })(),
             handler.exec(msg),
             (async () => {
                 const user = await (0, user_1.findOrCreateUser)(msg);
                 if (user) {
-                    await (0, sleep_1.default)(2000);
+                    await (0, sleep_1.default)(5000);
                     await msg.react("✅");
                 }
                 return Promise.resolve();
