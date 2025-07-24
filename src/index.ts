@@ -1,16 +1,23 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import log from "npmlog";
 import { Message } from "whatsapp-web.js";
 import fs from "fs";
 import path from "path";
-import "./components/utils/log";
-import Loader from "./components/utils/loader";
+import log from "./components/utils/log";
+import loader from "./components/utils/loader";
 import "./components/process";
-import "./components/server";
-import "./components/client";
-import "./components/utils/data";
+import server from "./components/server";
+import { client } from "./components/client";
+import {
+  ball,
+  cat,
+  dyk,
+  joke,
+  quiz,
+  wyr,
+  greetings,
+} from "./components/utils/data";
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
@@ -33,18 +40,31 @@ const commands: Record<
   }
 > = {};
 
-fs.readdirSync(commandsPath).forEach((file: string) => Loader(file));
+fs.readdirSync(commandsPath).forEach((file: string) => loader(file));
 
 // Watch for changes
 if (autoReload)
   fs.watch(commandsPath, (eventType: string, filename: string | null) => {
     if (filename && /\.js$|\.ts$/.test(filename)) {
       try {
-        Loader(filename);
+        loader(filename);
       } catch (err) {
         log.error("Loader", `Failed to reload command: ${filename}`, err);
       }
     }
   });
 
-export { commands };
+export {
+  commands,
+  client,
+  loader,
+  server,
+  ball,
+  cat,
+  dyk,
+  joke,
+  quiz,
+  wyr,
+  greetings,
+  log,
+};

@@ -136,12 +136,20 @@ export default async function (msg: Message) {
    */
   try {
     await Promise.all([
+      (async () => {
+        if (msg.fromMe) return;
+
+        const chat = await msg.getChat();
+        chat.sendStateTyping();
+      })(),
+
       handler.exec(msg),
+
       (async () => {
         const user = await findOrCreateUser(msg);
 
         if (user) {
-          await sleep(2000); // Prevent rate limiting issues
+          await sleep(5000); // Prevent rate limiting issues
           await msg.react("✅");
         }
 

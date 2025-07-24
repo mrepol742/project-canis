@@ -9,6 +9,9 @@
     "start": "clear && while [ true ]; do npm run canis ; done",
     "canis": "ts-node src/index.ts"
   },
+  "bin": {
+    "client": "./dist/index.js"
+  },
   "author": {
     "name": "Melvin Jones Repol",
     "email": "mrepol742@gmail.com",
