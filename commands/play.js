@@ -35,12 +35,20 @@ async function play(msg) {
         await msg.reply("Unable to find resources for the given query.");
         return;
     }
-    await msg.reply(`Download in progress... "${audio.title}"`);
+    if (audio.length && audio.length.seconds > 600) {
+        await msg.reply("Sorry, only videos shorter than 10 minutes can be downloaded.");
+        return;
+    }
+    await msg.react("👍");
     const stream = await yt.download(audio.id, {
         type: "video+audio",
         quality: "best",
         format: "mp4",
     });
+    if (!stream) {
+        await msg.reply("Failed to download the audio stream.");
+        return;
+    }
     const tempDir = "./.temp";
     await fs_1.default.mkdirSync(tempDir, { recursive: true });
     const tempPath = `${tempDir}/${audio.id}.mp4`;

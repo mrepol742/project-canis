@@ -30,6 +30,7 @@ async function default_1(msg, quoted) {
             await Promise.all([
                 msg.reply(done[Math.floor(Math.random() * done.length)]),
                 (0, quiz_1.setQuizAttemptAnswered)(msg, quoted),
+                quoted.delete(true, true),
             ]);
             return true;
         }

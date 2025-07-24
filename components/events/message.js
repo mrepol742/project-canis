@@ -122,9 +122,10 @@ async function default_1(msg) {
                 const logFn = status === 500 ? log_1.default.error : log_1.default.warn;
                 logFn(key, statusMessages[status], { status, headers });
                 const text = `
-        \`Status ${status}:\`
+        \`${statusMessages[status]}\`
 
-          Error Fetching to ${key} provider got ${statusMessages[status]}
+          Error fetching data for "${key}" command the
+          provider returned a ${status} status code.
         `;
                 await msg.reply(text);
                 return;

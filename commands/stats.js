@@ -8,7 +8,6 @@ exports.default = default_1;
 const os_1 = __importDefault(require("os"));
 const systeminformation_1 = __importDefault(require("systeminformation"));
 const user_1 = require("../components/services/user");
-const client_1 = require("../components/client");
 const index_1 = require("../index");
 exports.info = {
     command: "stats",
@@ -28,15 +27,13 @@ async function default_1(msg) {
         usedMemory: os_1.default.totalmem() - os_1.default.freemem(),
         totalMemory: os_1.default.totalmem(),
     };
-    const [gpuInfo, osInfo, shell, networkInterfaces, userCount, blockUserCount, whatsAppVersion, whatsAppState,] = await Promise.all([
+    const [gpuInfo, osInfo, shell, networkInterfaces, userCount, blockUserCount,] = await Promise.all([
         systeminformation_1.default.graphics(),
         systeminformation_1.default.osInfo(),
         systeminformation_1.default.shell(),
         systeminformation_1.default.networkInterfaces(),
         (0, user_1.getUserCount)(),
-        (0, user_1.getBlockUserCount)(),
-        client_1.client.getWWebVersion(),
-        client_1.client.getState()
+        (0, user_1.getBlockUserCount)()
     ]);
     const statsMessage = `
       \`System Monitor\`
@@ -47,18 +44,10 @@ async function default_1(msg) {
       RAM: ${(stats.usedMemory / 1024 ** 3).toFixed(2)} GB / ${(stats.totalMemory /
         1024 ** 3).toFixed(2)} GB
       VRam: ${gpuInfo.controllers.map((c) => c.vram).join(", ")} MB
-      Load Avg: ${os_1.default
-        .loadavg()
-        .map((n) => n.toFixed(2))
-        .join(", ")}
-      Process: #${process.pid} ${process.title}
       Shell: ${shell}
       Network: ${networkInterfaces
         .map((iface) => `${iface.iface} ${iface.speed} Mbps`)
         .join(", ")}
-      Node.js: ${process.version}
-      WA: ${whatsAppVersion}
-      WA State: ${whatsAppState}
       Commands: ${Object.keys(index_1.commands).length}
       Users: ${userCount}
       Blocked Users: ${blockUserCount}

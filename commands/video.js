@@ -36,13 +36,20 @@ async function default_1(msg) {
         await msg.reply("Unable to find resources for the given query.");
         return;
     }
-    const title = video.title.toString();
-    await msg.reply(`Download in progress... "${title}"`);
+    if (video.length && video.length.seconds > 600) {
+        await msg.reply("Sorry, only videos shorter than 10 minutes can be downloaded.");
+        return;
+    }
+    await msg.react("👍");
     const stream = await yt.download(video.video_id, {
         type: "video+audio",
         quality: "best",
         format: "mp4",
     });
+    if (!stream) {
+        await msg.reply("Failed to download the video stream.");
+        return;
+    }
     const tempDir = "./.temp";
     await fs_1.default.promises.mkdir(tempDir, { recursive: true });
     const tempPath = path_1.default.join(tempDir, `${video.video_id}.mp4`);
@@ -52,9 +59,9 @@ async function default_1(msg) {
     }
     await execPromise(`ffmpeg -y -i "${tempPath}" -c:v copy -c:a copy "${tempPath}.mp4"`);
     const audioBuffer = fs_1.default.readFileSync(tempPath + ".mp4");
-    const media = new whatsapp_web_js_1.MessageMedia("audio/mpeg", audioBuffer.toString("base64"), `${title}.mp4`);
+    const media = new whatsapp_web_js_1.MessageMedia("audio/mpeg", audioBuffer.toString("base64"), `${video.title}.mp4`);
     await msg.reply(media, msg.from, {
-        caption: `${title}`,
+        caption: `${video.title}`,
     });
     await fs_1.default.promises.unlink(tempPath);
     await fs_1.default.promises.unlink(tempPath + ".mp4");
