@@ -1,9 +1,9 @@
 import redis from "../redis";
 import log from "./log";
 
-const LIMIT = 3;
-const BASE_WINDOW_MS = 60 * 1000;
-const PENALTY_INCREMENT_MS = 10 * 1000;
+const LIMIT = 5;
+const BASE_WINDOW_MS = 30 * 1000;
+const PENALTY_INCREMENT_MS = 5 * 1000;
 
 function getKey(number: string) {
   return `rate:${number}`;
