@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = default_1;
-function default_1(timestamp) {
-    const localTimestamp = new Date(timestamp).getTime();
-    const now = Date.now();
-    let seconds = Math.floor((now - localTimestamp) / 1000);
+function default_1(uptimeSeconds) {
+    let seconds = Math.floor(uptimeSeconds);
     const units = [
         { label: "yr", seconds: 31536000 },
         { label: "mo", seconds: 2592000 },

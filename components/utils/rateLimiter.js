@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = default_1;
 const redis_1 = __importDefault(require("../redis"));
 const log_1 = __importDefault(require("./log"));
-const LIMIT = 3;
-const BASE_WINDOW_MS = 60 * 1000;
-const PENALTY_INCREMENT_MS = 10 * 1000;
+const LIMIT = 5;
+const BASE_WINDOW_MS = 30 * 1000;
+const PENALTY_INCREMENT_MS = 5 * 1000;
 function getKey(number) {
     return `rate:${number}`;
 }

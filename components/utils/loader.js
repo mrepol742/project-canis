@@ -11,9 +11,12 @@ const commandsPath = path_1.default.join(__dirname, "..", "..", "commands");
 function default_1(file, customPath) {
     if (/\.js$|\.ts$/.test(file)) {
         const filePath = path_1.default.join(customPath || commandsPath, file);
-        delete require.cache[require.resolve(filePath)];
+        if (require.cache[require.resolve(filePath)])
+            delete require.cache[require.resolve(filePath)];
         const commandModule = require(filePath);
-        if (typeof commandModule.default === "function") {
+        if (typeof commandModule.default === "function" &&
+            commandModule.info &&
+            commandModule.info.command) {
             index_1.commands[commandModule.info.command] = {
                 command: commandModule.info.command,
                 description: commandModule.info.description || "No description",
