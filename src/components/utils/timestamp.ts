@@ -1,7 +1,5 @@
-export default function (timestamp: number): string {
-  const localTimestamp = new Date(timestamp).getTime();
-  const now = Date.now();
-  let seconds = Math.floor((now - localTimestamp) / 1000);
+export default function (uptimeSeconds: number): string {
+  let seconds = Math.floor(uptimeSeconds);
 
   const units = [
     { label: "yr", seconds: 31536000 },
