@@ -14,7 +14,7 @@ export default async function (
   if (msg.fromMe) return;
   // const isGroup = !!msg.author;
   // const user = await getUserbyLid(msg.from) || "Your";
-  await addMessage(msg, prevBody, "edit");
+  if (prevBody) await addMessage(msg, prevBody, "edit");
   // await msg.reply(
   //   `${isGroup ? user : "Your"} message was edited from "${prevBody}".`
   // );
