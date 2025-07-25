@@ -8,10 +8,17 @@ const commandsPath = path.join(__dirname, "..", "..", "commands");
 export default function (file: string, customPath?: string) {
   if (/\.js$|\.ts$/.test(file)) {
     const filePath = path.join(customPath || commandsPath, file);
-    delete require.cache[require.resolve(filePath)];
+
+    if (require.cache[require.resolve(filePath)])
+      delete require.cache[require.resolve(filePath)];
+
     const commandModule = require(filePath);
 
-    if (typeof commandModule.default === "function") {
+    if (
+      typeof commandModule.default === "function" &&
+      commandModule.info &&
+      commandModule.info.command
+    ) {
       commands[commandModule.info.command] = {
         command: commandModule.info.command,
         description: commandModule.info.description || "No description",
