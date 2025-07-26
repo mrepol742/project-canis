@@ -2,6 +2,7 @@ import { openrouter, generateText } from "./openRouter";
 import { groq } from "./groq";
 import { gemini } from "./gemini";
 import { openai } from "./openAi";
+import ollama from "ollama";
 import redis from "../redis";
 
 const aiProvider = process.env.AI_PROVIDER || "groq";
@@ -21,6 +22,7 @@ const groqModel =
   process.env.GROQ_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
 const geminiModel = process.env.GEMINI_MODEL || "gemini-2.0-flash-001";
 const openAiModel = process.env.OPENAI_MODEL || "gpt-4o";
+const ollamaModel = process.env.OLLAMA_MODEL || "llama3.1";
 
 function getCacheKey(prompt: string) {
   return `ai:prompt:${Buffer.from(prompt).toString("base64")}`;
@@ -77,11 +79,20 @@ export default async function (prompt: string, model?: string) {
   } else if (aiProvider === "openai") {
     const chatCompletion = await openai.chat.completions.create({
       model: model || openAiModel,
-      messages: [
-        { role: "user", content: prompt },
-      ],
+      messages: [{ role: "user", content: prompt }],
     });
     result = chatCompletion.choices[0].message.content;
+
+    /*
+     * Ollama
+     * https://github.com/ollama/ollama/tree/main/docs
+     */
+  } else if (aiProvider === "ollama") {
+    const response = await ollama.chat({
+      model: model || ollamaModel,
+      messages: [{ role: "user", content: prompt }],
+    });
+    result = response.message.content || null;
 
     /*
      * Error handling for unsupported AI providers
