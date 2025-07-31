@@ -104,3 +104,7 @@ Configure your preferred provider in the `.env` file.
    cd dist
    npm run start
    ```
+
+## Telegram Version
+
+A Telegram version of Project Canis is available at [project-canis-tg](https://github.com/mrepol742/project-canis-tg).
