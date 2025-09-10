@@ -43,7 +43,31 @@ const log_1 = __importDefault(require("../log"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const index_1 = require("../../../index");
+const child_process_1 = require("child_process");
+const util_1 = __importDefault(require("util"));
+const execPromise = util_1.default.promisify(child_process_1.exec);
 const commandsPath = path_1.default.join(__dirname, "..", "..", "..", "commands");
+async function ensureDependencies(dependencies) {
+    for (const dep of dependencies) {
+        try {
+            require.resolve(dep.name);
+            log_1.default.info("Loader", `Dependency already installed: ${dep.name}`);
+        }
+        catch {
+            log_1.default.info("Loader", `Installing missing dependency: ${dep.name}@${dep.version}`);
+            try {
+                const { stdout, stderr } = await execPromise(`npm install ${dep.name}@${dep.version}`);
+                if (stdout)
+                    log_1.default.info("npm", stdout);
+                if (stderr)
+                    log_1.default.error("npm", stderr);
+            }
+            catch (err) {
+                log_1.default.error("Loader", `Failed to install ${dep.name}@${dep.version}`, err);
+            }
+        }
+    }
+}
 async function loader(file, customPath) {
     if (/\.js$|\.ts$/.test(file)) {
         const filePath = path_1.default.join(customPath || commandsPath, file);
@@ -55,6 +79,9 @@ async function loader(file, customPath) {
         if (typeof commandModule.default === "function" &&
             commandModule.info &&
             commandModule.info.command) {
+            if (Array.isArray(commandModule.info.dependencies)) {
+                await ensureDependencies(commandModule.info.dependencies);
+            }
             index_1.commands[commandModule.info.command] = {
                 command: commandModule.info.command,
                 description: commandModule.info.description || "No description",
@@ -73,5 +100,5 @@ async function mapCommands() {
     await Promise.all(files.map((file) => loader(file)));
 }
 function mapCommandsBackground() {
-    mapCommands().catch(err => log_1.default.error("MapCommandLoader", err));
+    mapCommands().catch((err) => log_1.default.error("MapCommandLoader", err));
 }
