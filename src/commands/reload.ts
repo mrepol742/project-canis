@@ -4,7 +4,7 @@ import log from "../components/utils/log";
 import fs from "fs";
 import path from "path";
 import { commands } from "../index";
-import Loader from "../components/utils/loader";
+import Loader from "../components/utils/cmd/loader";
 
 export const info = {
   command: "reload",

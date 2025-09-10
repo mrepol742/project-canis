@@ -1,11 +1,11 @@
-import log from "./log";
-import fs from "fs";
+import log from "../log";
+import { promises as fs } from "fs";
 import path from "path";
-import { commands } from "../../index";
+import { commands } from "../../../index";
 
-const commandsPath = path.join(__dirname, "..", "..", "commands");
+const commandsPath = path.join(__dirname, "..", "..", "..", "commands");
 
-export default function (file: string, customPath?: string) {
+export default function loader(file: string, customPath?: string) {
   if (/\.js$|\.ts$/.test(file)) {
     const filePath = path.join(customPath || commandsPath, file);
 
@@ -31,4 +31,10 @@ export default function (file: string, customPath?: string) {
       log.info("Loader", `Loaded command: ${commandModule.info.command}`);
     }
   }
+}
+
+export async function mapCommands() {
+  const files = await fs.readdir(commandsPath);
+
+  Promise.all(files.map((file) => loader(file)));
 }
