@@ -64,6 +64,9 @@ const autoReload = process.env.AUTO_RELOAD === "true";
 const commandsPath = path_1.default.join(__dirname, "commands");
 log_1.default.info("Bot", `Initiating ${botName}...`);
 log_1.default.info("Bot", `prefix: ${commandPrefix}`);
+if (!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL is not set in the environment variables.\n This is required for the bot to function properly.");
+}
 const commands = {};
 exports.commands = commands;
 (0, loader_1.mapCommands)();

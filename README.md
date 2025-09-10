@@ -22,37 +22,48 @@ Canis supports multiple AI providers out of the box:
 - [Gemini (Google)](https://ai.google.dev/gemini)
 - [Ollama](https://ollama.com/)
 
-Configure your preferred provider in the `.env` file.
-
 ## Prerequisites
 
 - Node.js (>=24)
-- WhatsApp
+- MySQL
+
+  You can changed the db provider in `prisma/schema.prisma`
+
+- Redis/Valkey
+- WhatsApp Account
 
 ## Getting started
 
-1. **Clone repo**  
+1. **Clone repo**
 
-   ```bash
+   ```sh
    git clone https://github.com/mrepol742/project-canis.git
    cd project-canis
 
+   ```
+
 2. **Install dependencies**
 
-   ```
+   ```sh
    npm install
    ```
 
 3. **Setup environment variables**
 
-   ```
+   ```sh
    cp .env.example .env
+   # Configure your AI Provider, models and other necessary preferences.
    ```
-   Edit .env with your WhatsApp credentials, DB connection, and other keys.
 
-4. **Run**
-   
+4. **Run Migration**
+
+   ```sh
+   npx prisma migrate dev
    ```
+
+5. **Start bot**
+
+   ```sh
    npm run start
    ```
 
@@ -65,13 +76,13 @@ Configure your preferred provider in the `.env` file.
    ```
 
 2. **Run with Docker Compose**
-  
+
    ```
    docker-compose up -d
    ```
 
 3. **Run with expose port**
-  
+
    ```
    docker run -d -p 3000:3000 project-canis
    ```
@@ -79,12 +90,13 @@ Configure your preferred provider in the `.env` file.
 #### PM2
 
 1. **Build**
+
    ```
    npm run build
    ```
 
 2. **Start**
- 
+
    ```
    cd dist
    pm2 start ecosystem.config.js
