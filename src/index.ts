@@ -27,6 +27,12 @@ const commandsPath = path.join(__dirname, "commands");
 log.info("Bot", `Initiating ${botName}...`);
 log.info("Bot", `prefix: ${commandPrefix}`);
 
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    "DATABASE_URL is not set in the environment variables.\n This is required for the bot to function properly."
+  );
+}
+
 const commands: Record<
   string,
   {
