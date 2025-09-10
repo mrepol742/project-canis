@@ -4,7 +4,7 @@ dotenv.config();
 import { Message } from "whatsapp-web.js";
 import path from "path";
 import log from "./components/utils/log";
-import loader, { mapCommands } from "./components/utils/cmd/loader";
+import loader, { mapCommandsBackground } from "./components/utils/cmd/loader";
 import watcher from "./components/utils/cmd/watcher";
 import "./components/process";
 import server from "./components/server";
@@ -29,7 +29,7 @@ log.info("Bot", `prefix: ${commandPrefix}`);
 
 if (!process.env.DATABASE_URL) {
   throw new Error(
-    "DATABASE_URL is not set in the environment variables.\n This is required for the bot to function properly."
+    "DATABASE_URL is not set in the environment variables.\n This is required for the bot to function properly.",
   );
 }
 
@@ -46,7 +46,7 @@ const commands: Record<
   }
 > = {};
 
-mapCommands();
+mapCommandsBackground();
 
 // Watch for changes
 if (autoReload) watcher(commandsPath);

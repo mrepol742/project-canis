@@ -5,14 +5,16 @@ import { commands } from "../../../index";
 
 const commandsPath = path.join(__dirname, "..", "..", "..", "commands");
 
-export default function loader(file: string, customPath?: string) {
+export default async function loader(file: string, customPath?: string) {
   if (/\.js$|\.ts$/.test(file)) {
     const filePath = path.join(customPath || commandsPath, file);
 
-    if (require.cache[require.resolve(filePath)])
-      delete require.cache[require.resolve(filePath)];
+    const resolvedPath = path.resolve(filePath);
+    if (require.cache[resolvedPath]) {
+      delete require.cache[resolvedPath];
+    }
 
-    const commandModule = require(filePath);
+    const commandModule = await import(filePath);
 
     if (
       typeof commandModule.default === "function" &&
@@ -35,6 +37,9 @@ export default function loader(file: string, customPath?: string) {
 
 export async function mapCommands() {
   const files = await fs.readdir(commandsPath);
+  await Promise.all(files.map((file) => loader(file)));
+}
 
-  Promise.all(files.map((file) => loader(file)));
+export function mapCommandsBackground() {
+  mapCommands().catch(err => log.error("MapCommandLoader", err));
 }
