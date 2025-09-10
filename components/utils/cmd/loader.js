@@ -3,12 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = default_1;
-const log_1 = __importDefault(require("./log"));
+exports.default = loader;
+exports.mapCommands = mapCommands;
+const log_1 = __importDefault(require("../log"));
+const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
-const index_1 = require("../../index");
-const commandsPath = path_1.default.join(__dirname, "..", "..", "commands");
-function default_1(file, customPath) {
+const index_1 = require("../../../index");
+const commandsPath = path_1.default.join(__dirname, "..", "..", "..", "commands");
+function loader(file, customPath) {
     if (/\.js$|\.ts$/.test(file)) {
         const filePath = path_1.default.join(customPath || commandsPath, file);
         if (require.cache[require.resolve(filePath)])
@@ -29,4 +31,8 @@ function default_1(file, customPath) {
             log_1.default.info("Loader", `Loaded command: ${commandModule.info.command}`);
         }
     }
+}
+async function mapCommands() {
+    const files = await fs_1.promises.readdir(commandsPath);
+    Promise.all(files.map((file) => loader(file)));
 }

@@ -8,7 +8,7 @@ exports.default = default_1;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const index_1 = require("../index");
-const loader_1 = __importDefault(require("../components/utils/loader"));
+const loader_1 = __importDefault(require("../components/utils/cmd/loader"));
 exports.info = {
     command: "reload",
     description: "Reload a specific command or all commands.",
