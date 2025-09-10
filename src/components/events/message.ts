@@ -69,7 +69,7 @@ export default async function (msg: Message) {
    * Block users from running commands.
    */
   const isBlockedUser = await isBlocked(
-    msg.author ? msg.author.split("@")[0] : senderId
+    msg.author ? msg.author.split("@")[0] : senderId,
   );
   if (isBlockedUser) {
     return;
@@ -80,8 +80,8 @@ export default async function (msg: Message) {
    */
   if (!msg.fromMe) {
     const rate = await rateLimiter(msg.from);
-    if (rate === null) return;
-    if (!rate) {
+    if (rate) return;
+    if (rate === null) {
       msg.reply("Please wait a minute or so.");
       return;
     }
@@ -103,7 +103,7 @@ export default async function (msg: Message) {
   msg.reply = async (
     content: MessageContent,
     chatId?: string,
-    options?: MessageSendOptions
+    options?: MessageSendOptions,
   ): Promise<Message> => {
     let messageBody = typeof content === "string" ? Font(content) : content;
 
@@ -115,13 +115,13 @@ export default async function (msg: Message) {
 
   if (
     /^(--?help|\bhelp\b|-h)$/i.test(
-      msg.body.trim().replace(handler.command, "").trim()
+      msg.body.trim().replace(handler.command, "").trim(),
     )
   ) {
     const response = `
     \`${handler.command}\`
     ${handler.description || "No description"}
-    
+
     *Usage:* ${handler.usage || "No usage"}
     *Example:* ${handler.example || "No example"}
     *Role:* ${handler.role || "user"}
@@ -191,10 +191,10 @@ export default async function (msg: Message) {
     log.error(
       key,
       "Unexpected error occurred while processing the request:",
-      error
+      error,
     );
     await msg.reply(
-      `An unexpected error occurred while processing your request for "${key}". Please try again later.`
+      `An unexpected error occurred while processing your request for "${key}". Please try again later.`,
     );
   }
 }

@@ -3,65 +3,56 @@ import log from "./log";
 
 const LIMIT = 5;
 const BASE_WINDOW_MS = 30 * 1000;
-const PENALTY_INCREMENT_MS = 5 * 1000;
+const PENALTY_INCREMENT_MS = 10 * 1000;
 
 function getKey(number: string) {
   return `rate:${number}`;
 }
 
-export default async function (number: string): Promise<boolean | null> {
+export default async function rateLimiter(
+  number: string,
+): Promise<boolean | null> {
   const now = Date.now();
   const key = getKey(number);
 
-  // Get user entry from Redis
   const entryRaw = await redis.get(key);
   let entry = entryRaw
     ? JSON.parse(entryRaw)
     : {
-        timestamps: [],
-        notified: false,
+        timestamps: [] as number[],
         penaltyCount: 0,
         penaltyUntil: 0,
       };
 
-  // Penalty check
-  if (entry.penaltyUntil > now) {
-    log.info(
-      "RateLimiter",
-      `User ${number} is under penalty until ${new Date(
-        entry.penaltyUntil
-      ).toLocaleTimeString()}`
+  const isStillBlocked = entry.penaltyUntil > now;
+
+  if (!isStillBlocked) {
+    entry.timestamps = entry.timestamps.filter(
+      (ts: number) => now - ts < BASE_WINDOW_MS,
     );
-    if (!entry.notified) return null;
-    entry.notified = true;
-    await redis.set(key, JSON.stringify(entry));
-    return false;
   }
 
-  // Remove old timestamps
-  entry.timestamps = entry.timestamps.filter(
-    (ts: number) => now - ts < BASE_WINDOW_MS
-  );
-
-  if (entry.timestamps.length >= LIMIT) {
+  if (isStillBlocked || entry.timestamps.length >= LIMIT) {
     entry.penaltyCount += 1;
+
     entry.penaltyUntil =
-      now + BASE_WINDOW_MS + (entry.penaltyCount - 1) * PENALTY_INCREMENT_MS;
-    entry.notified = false;
+      Math.max(entry.penaltyUntil, now) +
+      entry.penaltyCount * PENALTY_INCREMENT_MS +
+      BASE_WINDOW_MS;
+
     entry.timestamps = [];
+
     log.warn(
       "RateLimiter",
-      `User ${number} exceeded limit. Penalty until ${new Date(
-        entry.penaltyUntil
-      ).toLocaleTimeString()}`
+      `User ${number} blocked until ${new Date(entry.penaltyUntil).toLocaleTimeString()}`,
     );
+
     await redis.set(key, JSON.stringify(entry));
-    return false;
+    if (entry.penaltyCount === 1) return null;
+    return true;
   }
 
-  // Allowed
   entry.timestamps.push(now);
-  entry.notified = false;
   await redis.set(key, JSON.stringify(entry));
-  return true;
+  return false;
 }
