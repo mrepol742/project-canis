@@ -11,7 +11,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-    if (!/^test$/i.test(msg.body)) return;
-    
-    await msg.reply("This is a test response.");
+  if (!/^test$/i.test(msg.body)) return;
+
+  await msg.reply("This is a test response.");
 }

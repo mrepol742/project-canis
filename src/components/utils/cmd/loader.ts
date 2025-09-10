@@ -2,8 +2,40 @@ import log from "../log";
 import { promises as fs } from "fs";
 import path from "path";
 import { commands } from "../../../index";
+import { exec } from "child_process";
+import util from "util";
+const execPromise = util.promisify(exec);
 
 const commandsPath = path.join(__dirname, "..", "..", "..", "commands");
+
+async function ensureDependencies(
+  dependencies: { name: string; version: string }[],
+) {
+  for (const dep of dependencies) {
+    try {
+      require.resolve(dep.name);
+      log.info("Loader", `Dependency already installed: ${dep.name}`);
+    } catch {
+      log.info(
+        "Loader",
+        `Installing missing dependency: ${dep.name}@${dep.version}`,
+      );
+      try {
+        const { stdout, stderr } = await execPromise(
+          `npm install ${dep.name}@${dep.version}`,
+        );
+        if (stdout) log.info("npm", stdout);
+        if (stderr) log.error("npm", stderr);
+      } catch (err) {
+        log.error(
+          "Loader",
+          `Failed to install ${dep.name}@${dep.version}`,
+          err,
+        );
+      }
+    }
+  }
+}
 
 export default async function loader(file: string, customPath?: string) {
   if (/\.js$|\.ts$/.test(file)) {
@@ -21,6 +53,10 @@ export default async function loader(file: string, customPath?: string) {
       commandModule.info &&
       commandModule.info.command
     ) {
+      if (Array.isArray(commandModule.info.dependencies)) {
+        await ensureDependencies(commandModule.info.dependencies);
+      }
+
       commands[commandModule.info.command] = {
         command: commandModule.info.command,
         description: commandModule.info.description || "No description",
@@ -41,5 +77,5 @@ export async function mapCommands() {
 }
 
 export function mapCommandsBackground() {
-  mapCommands().catch(err => log.error("MapCommandLoader", err));
+  mapCommands().catch((err) => log.error("MapCommandLoader", err));
 }
