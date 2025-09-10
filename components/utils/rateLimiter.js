@@ -3,16 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = default_1;
+exports.default = rateLimiter;
 const redis_1 = __importDefault(require("../redis"));
 const log_1 = __importDefault(require("./log"));
 const LIMIT = 5;
 const BASE_WINDOW_MS = 30 * 1000;
-const PENALTY_INCREMENT_MS = 5 * 1000;
+const PENALTY_INCREMENT_MS = 10 * 1000;
 function getKey(number) {
     return `rate:${number}`;
 }
-async function default_1(number) {
+async function rateLimiter(number) {
     const now = Date.now();
     const key = getKey(number);
     const entryRaw = await redis_1.default.get(key);
@@ -20,31 +20,27 @@ async function default_1(number) {
         ? JSON.parse(entryRaw)
         : {
             timestamps: [],
-            notified: false,
             penaltyCount: 0,
             penaltyUntil: 0,
         };
-    if (entry.penaltyUntil > now) {
-        log_1.default.info("RateLimiter", `User ${number} is under penalty until ${new Date(entry.penaltyUntil).toLocaleTimeString()}`);
-        if (!entry.notified)
-            return null;
-        entry.notified = true;
-        await redis_1.default.set(key, JSON.stringify(entry));
-        return false;
+    const isStillBlocked = entry.penaltyUntil > now;
+    if (!isStillBlocked) {
+        entry.timestamps = entry.timestamps.filter((ts) => now - ts < BASE_WINDOW_MS);
     }
-    entry.timestamps = entry.timestamps.filter((ts) => now - ts < BASE_WINDOW_MS);
-    if (entry.timestamps.length >= LIMIT) {
+    if (isStillBlocked || entry.timestamps.length >= LIMIT) {
         entry.penaltyCount += 1;
         entry.penaltyUntil =
-            now + BASE_WINDOW_MS + (entry.penaltyCount - 1) * PENALTY_INCREMENT_MS;
-        entry.notified = false;
+            Math.max(entry.penaltyUntil, now) +
+                entry.penaltyCount * PENALTY_INCREMENT_MS +
+                BASE_WINDOW_MS;
         entry.timestamps = [];
-        log_1.default.warn("RateLimiter", `User ${number} exceeded limit. Penalty until ${new Date(entry.penaltyUntil).toLocaleTimeString()}`);
+        log_1.default.warn("RateLimiter", `User ${number} blocked until ${new Date(entry.penaltyUntil).toLocaleTimeString()}`);
         await redis_1.default.set(key, JSON.stringify(entry));
-        return false;
+        if (entry.penaltyCount === 1)
+            return null;
+        return true;
     }
     entry.timestamps.push(now);
-    entry.notified = false;
     await redis_1.default.set(key, JSON.stringify(entry));
-    return true;
+    return false;
 }

@@ -52,9 +52,9 @@ async function default_1(msg) {
     }
     if (!msg.fromMe) {
         const rate = await (0, rateLimiter_1.default)(msg.from);
-        if (rate === null)
+        if (rate)
             return;
-        if (!rate) {
+        if (rate === null) {
             msg.reply("Please wait a minute or so.");
             return;
         }
@@ -78,7 +78,7 @@ async function default_1(msg) {
         const response = `
     \`${handler.command}\`
     ${handler.description || "No description"}
-    
+
     *Usage:* ${handler.usage || "No usage"}
     *Example:* ${handler.example || "No example"}
     *Role:* ${handler.role || "user"}

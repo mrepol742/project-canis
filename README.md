@@ -4,12 +4,12 @@
 
 A scalable, modular WhatsApp chatbot built in TypeScript. It leverages modern best practices, lean architecture, Prisma ORM, Dockerization, and environment-based configuration to deliver a robust, flexible successor to Project Orion.
 
-> ⚠️ **Warning:**  
+> ⚠️ **Warning:**
 > This repository is for educational and entertainment purposes only.
 > Canis and Orion are not affiliated with Meta (WhatsApp/Facebook).
 > Use at your own risk, your WhatsApp account may be subject to suspension or bans.
 
-> ⚠️ **Warning:**  
+> ⚠️ **Warning:**
 > Spaghetting code ahead
 
 ## Supported AI Providers
@@ -31,6 +31,7 @@ Canis supports multiple AI providers out of the box:
 
 - Redis/Valkey
 - WhatsApp Account
+- Chrome browser
 
 ## Getting started
 
