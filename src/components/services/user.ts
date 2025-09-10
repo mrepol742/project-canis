@@ -23,23 +23,28 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
       return false;
     }
 
-    const contact = await msg.getContact();
-    const countryCode = await contact.getCountryCode();
-    const about = await contact.getAbout();
-    const name = contact.pushname || contact.name || "Unknown";
+    try {
+      const contact = await msg.getContact();
+      const countryCode = await contact.getCountryCode();
+      const about = await contact.getAbout();
+      const name = contact.pushname || contact.name || "Unknown";
 
-    user = await prisma.user.create({
-      data: {
-        lid,
-        name,
-        number: contact.number,
-        countryCode,
-        type: contact.isBusiness ? "business" : "private",
-        mode: msg.author ? "group" : "private",
-        about: about,
-        commandCount: 1,
-      },
-    });
+      user = await prisma.user.create({
+        data: {
+          lid,
+          name,
+          number: contact.number,
+          countryCode,
+          type: contact.isBusiness ? "business" : "private",
+          mode: msg.author ? "group" : "private",
+          about: about,
+          commandCount: 1,
+        },
+      });
+    } catch (err) {
+      log.error("Database", `Could not fetch contact for JID: ${jid}`);
+      return false;
+    }
   } catch (error) {
     log.error("Database", `Failed to find or create user.`, error);
   }
