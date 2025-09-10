@@ -69,6 +69,6 @@ if (!process.env.DATABASE_URL) {
 }
 const commands = {};
 exports.commands = commands;
-(0, loader_1.mapCommands)();
+(0, loader_1.mapCommandsBackground)();
 if (autoReload)
     (0, watcher_1.default)(commandsPath);
