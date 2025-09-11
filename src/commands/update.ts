@@ -24,7 +24,7 @@ export default async function (msg: Message) {
     if (stdout) log.info("Update", `git pull stdout:\n${stdout}`);
     if (stderr) log.warn("Update", `git pull stderr:\n${stderr}`);
 
-    await msg.reply("Repository updated successfully!");
+    await msg.reply(stdout || stderr);
   } catch (error: any) {
     log.error("Update", `git pull failed: ${error.message}`);
     await msg.reply("Failed to update repository. Check logs.");
