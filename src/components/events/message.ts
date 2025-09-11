@@ -79,7 +79,7 @@ export default async function (msg: Message) {
    * Rate limit commands to prevent abuse.
    */
   if (!msg.fromMe) {
-    const rate = await rateLimiter(msg.from);
+    const rate = await rateLimiter(msg);
     if (rate) return;
     if (rate === null) {
       msg.reply("Please wait a minute or so.");

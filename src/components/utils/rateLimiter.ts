@@ -1,5 +1,7 @@
+import { Message } from "whatsapp-web.js";
 import redis from "../redis";
 import log from "./log";
+import { prisma } from "../prisma";
 
 const LIMIT = 5;
 const BASE_WINDOW_MS = 30 * 1000;
@@ -10,8 +12,9 @@ function getKey(number: string) {
 }
 
 export default async function rateLimiter(
-  number: string,
+  msg: Message,
 ): Promise<boolean | null> {
+  const number = msg.from;
   const now = Date.now();
   const key = getKey(number);
 
@@ -47,7 +50,19 @@ export default async function rateLimiter(
       `User ${number} blocked until ${new Date(entry.penaltyUntil).toLocaleTimeString()}`,
     );
 
-    await redis.set(key, JSON.stringify(entry));
+    await Promise.all([
+      redis.set(key, JSON.stringify(entry)),
+      prisma.user.update({
+        where: {
+          lid: msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0],
+        },
+        data: {
+          quizAnswered: {
+            decrement: 10,
+          },
+        },
+      }),
+    ]);
     if (entry.penaltyCount === 1) return null;
     return true;
   }

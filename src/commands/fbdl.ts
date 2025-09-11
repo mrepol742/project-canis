@@ -31,19 +31,21 @@ export default async function (msg: Message) {
   if (!result.url)
     return await msg.reply("No video found at the provided URL.");
 
-  const response = await axios.get(result.hd, { responseType: "arraybuffer" });
+  const response = await axios.get(result.hd || result.sd, {
+    responseType: "arraybuffer",
+  });
 
   const tempDir = "./.temp";
-  await fs.mkdirSync(tempDir, { recursive: true });
+  fs.mkdirSync(tempDir, { recursive: true });
 
   const tempPath = `${tempDir}/fbdl_${Date.now()}.mp4`;
-  await fs.writeFileSync(tempPath, response.data);
+  fs.writeFileSync(tempPath, response.data);
 
   const audioBuffer = fs.readFileSync(tempPath);
   const media = new MessageMedia(
     "audio/mpeg",
     audioBuffer.toString("base64"),
-    `${result.title}.mp4`
+    `${result.title}.mp4`,
   );
 
   await msg.reply(media, msg.from);
