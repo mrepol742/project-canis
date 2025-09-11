@@ -35,10 +35,14 @@ Canis supports multiple AI providers out of the box:
 
 ## Getting started
 
+0. **Fork repo**
+
+   Click [https://github.com/mrepol742/project-canis/fork](https://github.com/mrepol742/project-canis/fork) to fork this repo.
+
 1. **Clone repo**
 
    ```sh
-   git clone https://github.com/mrepol742/project-canis.git
+   git clone https://github.com/<your-username>/project-canis.git
    cd project-canis
 
    ```
