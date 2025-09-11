@@ -5,8 +5,8 @@ exports.default = default_1;
 const prisma_1 = require("../components/prisma");
 exports.info = {
     command: "block",
-    description: "Block or unblock users from sending messages.",
-    usage: "block <@user> [--rem]",
+    description: "Block users from the bot.",
+    usage: "block <@user>",
     example: "block @user123",
     role: "admin",
     cooldown: 5000,
@@ -16,16 +16,7 @@ async function default_1(msg) {
         await msg.reply("Please mention a user to block.");
         return;
     }
-    if (/^block\s--rem/.test(msg.body)) {
-        for (const userId of msg.mentionedIds) {
-            const lid = userId.split("@")[0];
-            await prisma_1.prisma.block.delete({
-                where: { lid },
-            });
-        }
-        await msg.react("❌");
-        return;
-    }
+    await msg.react("🔄");
     for (const userId of msg.mentionedIds) {
         const lid = userId.split("@")[0];
         await prisma_1.prisma.block.upsert({
