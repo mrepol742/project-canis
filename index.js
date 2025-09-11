@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.log = exports.greetings = exports.wyr = exports.quiz = exports.joke = exports.dyk = exports.cat = exports.ball = exports.server = exports.loader = exports.client = exports.commands = void 0;
+exports.log = exports.greetings = exports.wyr = exports.quiz = exports.joke = exports.dyk = exports.cat = exports.ball = exports.server = exports.loader = exports.client = exports.commandDirs = exports.commands = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const path_1 = __importDefault(require("path"));
@@ -61,7 +61,9 @@ Object.defineProperty(exports, "greetings", { enumerable: true, get: function ()
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
 const autoReload = process.env.AUTO_RELOAD === "true";
-const commandsPath = path_1.default.join(__dirname, "commands");
+const basePath = path_1.default.join(__dirname, "commands");
+const commandDirs = [basePath, path_1.default.join(basePath, "private")];
+exports.commandDirs = commandDirs;
 log_1.default.info("Bot", `Initiating ${botName}...`);
 log_1.default.info("Bot", `prefix: ${commandPrefix}`);
 if (!process.env.DATABASE_URL) {
@@ -71,4 +73,4 @@ const commands = {};
 exports.commands = commands;
 (0, loader_1.mapCommandsBackground)();
 if (autoReload)
-    (0, watcher_1.default)(commandsPath);
+    (0, watcher_1.default)();

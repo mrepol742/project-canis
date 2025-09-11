@@ -39,7 +39,7 @@ async function play(msg) {
         await msg.reply("Sorry, only videos shorter than 10 minutes can be downloaded.");
         return;
     }
-    await msg.react("👍");
+    await msg.react("✅");
     const stream = await yt.download(audio.id, {
         type: "video+audio",
         quality: "best",

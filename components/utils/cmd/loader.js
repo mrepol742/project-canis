@@ -46,7 +46,6 @@ const index_1 = require("../../../index");
 const child_process_1 = require("child_process");
 const util_1 = __importDefault(require("util"));
 const execPromise = util_1.default.promisify(child_process_1.exec);
-const commandsPath = path_1.default.join(__dirname, "..", "..", "..", "commands");
 async function ensureDependencies(dependencies) {
     for (const dep of dependencies) {
         try {
@@ -70,7 +69,7 @@ async function ensureDependencies(dependencies) {
 }
 async function loader(file, customPath) {
     if (/\.js$|\.ts$/.test(file)) {
-        const filePath = path_1.default.join(customPath || commandsPath, file);
+        const filePath = path_1.default.join(customPath, file);
         const resolvedPath = path_1.default.resolve(filePath);
         if (require.cache[resolvedPath]) {
             delete require.cache[resolvedPath];
@@ -96,8 +95,10 @@ async function loader(file, customPath) {
     }
 }
 async function mapCommands() {
-    const files = await fs_1.promises.readdir(commandsPath);
-    await Promise.all(files.map((file) => loader(file)));
+    for (const dir of index_1.commandDirs) {
+        const files = await fs_1.promises.readdir(dir);
+        await Promise.all(files.map((file) => loader(file, dir)));
+    }
 }
 function mapCommandsBackground() {
     mapCommands().catch((err) => log_1.default.error("MapCommandLoader", err));

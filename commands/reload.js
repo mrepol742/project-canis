@@ -24,14 +24,20 @@ async function default_1(msg) {
             await msg.reply(`Command "${query}" not found.`);
             return;
         }
-        const commandsPath = path_1.default.join(__dirname, "..", "commands");
+        const basePath = path_1.default.join(__dirname, "..", "commands");
+        const commandDirs = [
+            basePath,
+            path_1.default.join(basePath, "private"),
+        ];
         const possibleExtensions = [".ts", ".js"];
         let found = false;
         for (const ext of possibleExtensions) {
-            const filePath = path_1.default.join(commandsPath, `${query}${ext}`);
-            if (fs_1.default.existsSync(filePath)) {
-                (0, loader_1.default)(`${query}${ext}`);
-                found = true;
+            for (const dir of commandDirs) {
+                const filePath = path_1.default.join(dir, `${query}${ext}`);
+                if (fs_1.default.existsSync(filePath)) {
+                    (0, loader_1.default)(`${query}${ext}`, dir);
+                    found = true;
+                }
             }
         }
         if (!found)
@@ -49,20 +55,28 @@ async function default_1(msg) {
     let count = 0;
     const newCommands = [];
     const removeCommands = [];
-    const commandsPath = path_1.default.join(__dirname, "..", "commands");
-    fs_1.default.readdirSync(commandsPath).forEach((file) => {
-        if (/\.js$|\.ts$/.test(file)) {
-            const commandName = file.replace(/\.(js|ts)$/, "");
-            if (!index_1.commands[commandName]) {
-                newCommands.push(commandName);
+    const basePath = path_1.default.join(__dirname, "..", "commands");
+    const commandDirs = [
+        basePath,
+        path_1.default.join(basePath, "private"),
+    ];
+    for (const dir of commandDirs) {
+        const files = fs_1.default.readdirSync(dir);
+        for (const file of files) {
+            if (/\.js$|\.ts$/.test(file)) {
+                const filePath = path_1.default.join(dir, file);
+                const commandName = file.replace(/\.(js|ts)$/, "");
+                if (!index_1.commands[commandName]) {
+                    newCommands.push(commandName);
+                }
+                else {
+                    removeCommands.push(commandName);
+                }
+                await (0, loader_1.default)(filePath, dir);
+                count++;
             }
-            else {
-                removeCommands.push(commandName);
-            }
-            (0, loader_1.default)(file);
-            count++;
         }
-    });
+    }
     let text = `
   \`Reloaded\`
   ${count} commands

@@ -22,18 +22,10 @@ async function default_1(msg) {
         return;
     }
     await msg.react("🔄");
-    for (const userId of msg.mentionedIds) {
-        const lid = userId.split("@")[0];
-        await prisma_1.prisma.block.delete({
-            where: { lid },
-        });
-        const key = (0, rateLimiter_1.getKey)(userId);
-        const entryRaw = await redis_1.default.get(key);
-        await redis_1.default.set(key, JSON.stringify({
-            timestamps: [],
-            penaltyCount: 0,
-            penaltyUntil: 0,
-        }));
-    }
+    const lids = msg.mentionedIds.map((id) => id.split("@")[0]);
+    await prisma_1.prisma.block.deleteMany({
+        where: { lid: { in: lids } },
+    });
+    await Promise.all(msg.mentionedIds.map((userId) => redis_1.default.set((0, rateLimiter_1.getKey)(userId), JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 }))));
     await msg.react("✅");
 }
