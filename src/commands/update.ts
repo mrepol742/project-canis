@@ -18,17 +18,15 @@ export const info = {
 const execPromise = util.promisify(exec);
 
 export default async function (msg: Message) {
-  await msg.react("🔄");
-
   try {
     const { stdout, stderr } = await execPromise("git pull");
 
     if (stdout) log.info("Update", `git pull stdout:\n${stdout}`);
     if (stderr) log.warn("Update", `git pull stderr:\n${stderr}`);
 
-    await msg.reply("✅ Repository updated successfully!");
+    await msg.reply("Repository updated successfully!");
   } catch (error: any) {
     log.error("Update", `git pull failed: ${error.message}`);
-    await msg.reply("❌ Failed to update repository. Check logs.");
+    await msg.reply("Failed to update repository. Check logs.");
   }
 }

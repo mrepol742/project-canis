@@ -23,25 +23,20 @@ export default async function (msg: Message) {
 
   await msg.react("🔄");
 
-  for (const userId of msg.mentionedIds) {
-    const lid = userId.split("@")[0];
+  const lids = msg.mentionedIds.map((id) => id.split("@")[0]);
 
-    await prisma.block.delete({
-      where: { lid },
-    });
+  await prisma.block.deleteMany({
+    where: { lid: { in: lids } },
+  });
 
-    const key = getKey(userId);
-    const entryRaw = await redis.get(key);
-
-    await redis.set(
-      key,
-      JSON.stringify({
-        timestamps: [] as number[],
-        penaltyCount: 0,
-        penaltyUntil: 0,
-      }),
-    );
-  }
+  await Promise.all(
+    msg.mentionedIds.map((userId) =>
+      redis.set(
+        getKey(userId),
+        JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 })
+      )
+    )
+  );
 
   await msg.react("✅");
 }
