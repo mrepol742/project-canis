@@ -6,13 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = rateLimiter;
 const redis_1 = __importDefault(require("../redis"));
 const log_1 = __importDefault(require("./log"));
+const prisma_1 = require("../prisma");
 const LIMIT = 5;
 const BASE_WINDOW_MS = 30 * 1000;
 const PENALTY_INCREMENT_MS = 10 * 1000;
 function getKey(number) {
     return `rate:${number}`;
 }
-async function rateLimiter(number) {
+async function rateLimiter(msg) {
+    const number = msg.from;
     const now = Date.now();
     const key = getKey(number);
     const entryRaw = await redis_1.default.get(key);
@@ -35,7 +37,19 @@ async function rateLimiter(number) {
                 BASE_WINDOW_MS;
         entry.timestamps = [];
         log_1.default.warn("RateLimiter", `User ${number} blocked until ${new Date(entry.penaltyUntil).toLocaleTimeString()}`);
-        await redis_1.default.set(key, JSON.stringify(entry));
+        await Promise.all([
+            redis_1.default.set(key, JSON.stringify(entry)),
+            prisma_1.prisma.user.update({
+                where: {
+                    lid: msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0],
+                },
+                data: {
+                    quizAnswered: {
+                        decrement: 10,
+                    },
+                },
+            }),
+        ]);
         if (entry.penaltyCount === 1)
             return null;
         return true;

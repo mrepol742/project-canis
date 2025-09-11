@@ -31,11 +31,13 @@ async function default_1(msg) {
     const result = await (0, fb_downloader_scrapper_1.getFbVideoInfo)(query);
     if (!result.url)
         return await msg.reply("No video found at the provided URL.");
-    const response = await axios_1.default.get(result.hd, { responseType: "arraybuffer" });
+    const response = await axios_1.default.get(result.hd || result.sd, {
+        responseType: "arraybuffer",
+    });
     const tempDir = "./.temp";
-    await fs_1.default.mkdirSync(tempDir, { recursive: true });
+    fs_1.default.mkdirSync(tempDir, { recursive: true });
     const tempPath = `${tempDir}/fbdl_${Date.now()}.mp4`;
-    await fs_1.default.writeFileSync(tempPath, response.data);
+    fs_1.default.writeFileSync(tempPath, response.data);
     const audioBuffer = fs_1.default.readFileSync(tempPath);
     const media = new whatsapp_web_js_1.MessageMedia("audio/mpeg", audioBuffer.toString("base64"), `${result.title}.mp4`);
     await msg.reply(media, msg.from);

@@ -51,7 +51,7 @@ async function default_1(msg) {
         return;
     }
     if (!msg.fromMe) {
-        const rate = await (0, rateLimiter_1.default)(msg.from);
+        const rate = await (0, rateLimiter_1.default)(msg);
         if (rate)
             return;
         if (rate === null) {
