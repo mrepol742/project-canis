@@ -1,4 +1,5 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import { MessageMedia } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import axios from "axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
@@ -25,7 +26,7 @@ export default async function (msg: Message) {
       responseType: "arraybuffer",
     }
   );
-  
+
   const tempDir = "./.temp";
   await fs.mkdir(tempDir, { recursive: true });
 

@@ -1,4 +1,4 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import axios from "axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
@@ -18,6 +18,6 @@ export default async function (msg: Message) {
   if (!/^pickupline$/i.test(msg.body)) return;
 
   const response = await axios.get(`https://api.popcat.xyz/pickuplines`);
-  
+
   await msg.reply(response.data.pickupline);
 }

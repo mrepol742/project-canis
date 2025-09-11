@@ -1,4 +1,5 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import { MessageMedia } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import puppeteer from "puppeteer";
 import fs from "fs/promises";
 

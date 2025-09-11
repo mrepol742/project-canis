@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import fs from "fs/promises";
 import log from "../components/utils/log";
 import logService from "../components/services/log";

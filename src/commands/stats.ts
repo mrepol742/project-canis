@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import log from "../components/utils/log";
 import os from "os";
 import si from "systeminformation";

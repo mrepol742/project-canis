@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import { client } from "../components/client";
 
 export const info = {
@@ -12,7 +12,7 @@ export const info = {
 
 export default async function (msg: Message) {
   if (!/^unsend$/i.test(msg.body)) return;
-  
+
   if (!msg.hasQuotedMsg) {
     await msg.reply("Please reply the message you want to unsend.");
     return;

@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import { getUserbyLid } from "../components/services/user";
 
 export const info = {

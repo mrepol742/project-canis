@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import log from "../components/utils/log";
 
 export const info = {
@@ -12,6 +12,6 @@ export const info = {
 
 export default function (msg: Message) {
   if (!/^ping$/i.test(msg.body)) return;
-  
+
   msg.reply("pong");
 }

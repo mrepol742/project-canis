@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import log from "../components/utils/log";
 import { commands } from "../index";
 
@@ -59,7 +59,7 @@ export default async function (msg: Message) {
     const response = `
     \`${matchCommands.command}\`
     ${matchCommands.description || "No description"}
-    
+
     *Usage:* ${matchCommands.usage || "No usage"}
     *Example:* ${matchCommands.example || "No example"}
     *Role:* ${matchCommands.role || "user"}

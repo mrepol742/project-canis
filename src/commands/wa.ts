@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import { client } from "../components/client";
 import log from "../components/utils/log";
 import logService from "../components/services/log";
@@ -42,7 +42,7 @@ export default async function (msg: Message) {
     ]);
     return;
   }
-  
+
   client.setDisplayName(quotedMsg.body);
   await Promise.all([
     msg.reply("Name updated successfully."),

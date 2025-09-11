@@ -1,4 +1,5 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import { MessageMedia } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import fs from "fs";
 import { exec } from "child_process";
 // fallback import for compatibility

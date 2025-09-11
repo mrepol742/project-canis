@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import log from "../components/utils/log";
 
 export const info = {
@@ -12,7 +12,7 @@ export const info = {
 
 export default async function (msg: Message) {
     if (!/^legal$/i.test(msg.body)) return;
-    
+
     const text = `
     \`Legal Commands\`
 

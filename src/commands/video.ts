@@ -1,4 +1,5 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import { MessageMedia } from "whatsapp-web.js";
+import { Message } from "../../types/message";
 import fs from "fs";
 import path from "path";
 // fallback import for compatibility
@@ -39,10 +40,12 @@ export default async function (msg: Message) {
 
   // Only allow videos shorter than 10 minutes (600 seconds)
   if (video.length && video.length.seconds > 600) {
-    await msg.reply("Sorry, only videos shorter than 10 minutes can be downloaded.");
+    await msg.reply(
+      "Sorry, only videos shorter than 10 minutes can be downloaded.",
+    );
     return;
   }
-  
+
   await msg.react("👍");
 
   const stream = await yt.download(video.video_id, {
@@ -66,14 +69,14 @@ export default async function (msg: Message) {
   }
 
   await execPromise(
-    `ffmpeg -y -i "${tempPath}" -c:v copy -c:a copy "${tempPath}.mp4"`
+    `ffmpeg -y -i "${tempPath}" -c:v copy -c:a copy "${tempPath}.mp4"`,
   );
 
   const audioBuffer = fs.readFileSync(tempPath + ".mp4");
   const media = new MessageMedia(
     "audio/mpeg",
     audioBuffer.toString("base64"),
-    `${video.title}.mp4`
+    `${video.title}.mp4`,
   );
 
   await msg.reply(media, msg.from, {

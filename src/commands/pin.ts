@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import log from "../components/utils/log";
 
 export const info = {
@@ -12,7 +12,7 @@ export const info = {
 
 export default async function (msg: Message) {
     if (!/^pin$/i.test(msg.body)) return;
-    
+
     if (!msg.hasQuotedMsg) {
         await msg.reply("Please reply to the message you want to pin.");
         return;

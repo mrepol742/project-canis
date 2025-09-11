@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import os from "os";
 import timestamp from "../components/utils/timestamp";
 import { client } from "../components/client";
@@ -20,7 +20,7 @@ export default async function (msg: Message) {
 
   const statsMessage = `
       \`${timestamp(process.uptime())}\`
-      
+
       ID: #${process.pid}
       LA: ${os
         .loadavg()

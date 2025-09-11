@@ -1,4 +1,4 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import axios from "axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
@@ -31,7 +31,7 @@ export default async function (msg: Message) {
   const info = `
       \`${user.name || user.login}\
       ${user.bio || ""}
-  
+
       Place: ${user.location || "N/A"}
       Followers: ${user.followers}
       Following: ${user.following}

@@ -1,4 +1,5 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import { MessageMedia } from "whatsapp-web.js";
+import { Message } from "../../types/message"
 import log from "../components/utils/log";
 import * as GoogleTTS from "google-tts-api";
 import fs from "fs";

@@ -1,4 +1,5 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import { MessageMedia } from "whatsapp-web.js";
+import { Message } from "../../types/message";
 import axios from "axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
@@ -21,7 +22,7 @@ export default async function (msg: Message) {
     .map((s) => s.trim());
   if (args.length < 2 || !args[0] || !args[1]) {
     await msg.reply(
-      "Please provide two texts separated by '|'. Example: pooh text1 | text2"
+      "Please provide two texts separated by '|'. Example: pooh text1 | text2",
     );
     return;
   }
@@ -29,11 +30,11 @@ export default async function (msg: Message) {
 
   const response = await axios.get(
     `https://api.popcat.xyz/pooh?text1=${encodeURIComponent(
-      text1
+      text1,
     )}&text2=${encodeURIComponent(text2)}`,
     {
       responseType: "arraybuffer",
-    }
+    },
   );
 
   const tempDir = "./.temp";
