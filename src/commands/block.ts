@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
@@ -6,8 +6,8 @@ import { prisma } from "../components/prisma";
 
 export const info = {
   command: "block",
-  description: "Block or unblock users from sending messages.",
-  usage: "block <@user> [--rem]",
+  description: "Block users from the bot.",
+  usage: "block <@user>",
   example: "block @user123",
   role: "admin",
   cooldown: 5000,
@@ -19,18 +19,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  if (/^block\s--rem/.test(msg.body)) {
-    for (const userId of msg.mentionedIds) {
-      const lid = userId.split("@")[0];
-
-      await prisma.block.delete({
-        where: { lid },
-      });
-    }
-
-    await msg.react("❌");
-    return;
-  }
+  await msg.react("🔄");
 
   for (const userId of msg.mentionedIds) {
     const lid = userId.split("@")[0];
