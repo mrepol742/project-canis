@@ -1,12 +1,10 @@
 import log from "../log";
 import { promises as fs } from "fs";
 import path from "path";
-import { commands } from "../../../index";
+import { commands, commandDirs } from "../../../index";
 import { exec } from "child_process";
 import util from "util";
 const execPromise = util.promisify(exec);
-
-const commandsPath = path.join(__dirname, "..", "..", "..", "commands");
 
 async function ensureDependencies(
   dependencies: { name: string; version: string }[],
@@ -37,9 +35,9 @@ async function ensureDependencies(
   }
 }
 
-export default async function loader(file: string, customPath?: string) {
+export default async function loader(file: string, customPath: string) {
   if (/\.js$|\.ts$/.test(file)) {
-    const filePath = path.join(customPath || commandsPath, file);
+    const filePath = path.join(customPath, file);
 
     const resolvedPath = path.resolve(filePath);
     if (require.cache[resolvedPath]) {
@@ -72,8 +70,10 @@ export default async function loader(file: string, customPath?: string) {
 }
 
 export async function mapCommands() {
-  const files = await fs.readdir(commandsPath);
-  await Promise.all(files.map((file) => loader(file)));
+  for (const dir of commandDirs) {
+    const files = await fs.readdir(dir);
+    await Promise.all(files.map((file) => loader(file, dir)));
+  }
 }
 
 export function mapCommandsBackground() {

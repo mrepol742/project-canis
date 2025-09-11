@@ -24,15 +24,23 @@ export default async function (msg: Message) {
       return;
     }
 
-    const commandsPath = path.join(__dirname, "..", "commands");
+    const basePath = path.join(__dirname, "..", "commands");
+
+    const commandDirs = [
+      basePath,
+      path.join(basePath, "private"),
+    ];
+
     const possibleExtensions = [".ts", ".js"];
     let found = false;
 
     for (const ext of possibleExtensions) {
-      const filePath = path.join(commandsPath, `${query}${ext}`);
-      if (fs.existsSync(filePath)) {
-        Loader(`${query}${ext}`);
-        found = true;
+      for (const dir of commandDirs) {
+        const filePath = path.join(dir, `${query}${ext}`);
+        if (fs.existsSync(filePath)) {
+          Loader(`${query}${ext}`, dir);
+          found = true;
+        }
       }
     }
 
@@ -57,20 +65,31 @@ export default async function (msg: Message) {
   let count = 0;
   const newCommands: string[] = [];
   const removeCommands: string[] = [];
-  const commandsPath = path.join(__dirname, "..", "commands");
+  const basePath = path.join(__dirname, "..", "commands");
 
-  fs.readdirSync(commandsPath).forEach((file) => {
-    if (/\.js$|\.ts$/.test(file)) {
-      const commandName = file.replace(/\.(js|ts)$/, "");
-      if (!commands[commandName]) {
-        newCommands.push(commandName);
-      } else {
-        removeCommands.push(commandName);
+  const commandDirs = [
+    basePath,
+    path.join(basePath, "private"),
+  ];
+
+  for (const dir of commandDirs) {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+      if (/\.js$|\.ts$/.test(file)) {
+        const filePath = path.join(dir, file);
+        const commandName = file.replace(/\.(js|ts)$/, "");
+
+        if (!commands[commandName]) {
+          newCommands.push(commandName);
+        } else {
+          removeCommands.push(commandName);
+        }
+
+        await Loader(filePath, dir);
+        count++;
       }
-      Loader(file);
-      count++;
     }
-  });
+  }
 
   let text = `
   \`Reloaded\`

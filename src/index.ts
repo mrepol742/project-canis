@@ -22,7 +22,8 @@ import {
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
 const autoReload = process.env.AUTO_RELOAD === "true";
-const commandsPath = path.join(__dirname, "commands");
+const basePath = path.join(__dirname, "commands");
+const commandDirs = [basePath, path.join(basePath, "private")];
 
 log.info("Bot", `Initiating ${botName}...`);
 log.info("Bot", `prefix: ${commandPrefix}`);
@@ -49,10 +50,11 @@ const commands: Record<
 mapCommandsBackground();
 
 // Watch for changes
-if (autoReload) watcher(commandsPath);
+if (autoReload) watcher();
 
 export {
   commands,
+  commandDirs,
   client,
   loader,
   server,
