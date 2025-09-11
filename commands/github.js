@@ -29,7 +29,7 @@ async function default_1(msg) {
     const info = `
       \`${user.name || user.login}\
       ${user.bio || ""}
-  
+
       Place: ${user.location || "N/A"}
       Followers: ${user.followers}
       Following: ${user.following}

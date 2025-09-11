@@ -15,9 +15,9 @@ async function default_1(msg) {
         return;
     const text = `
   \`DCMA\`
-    This bot is intended for educational and entertainment purposes only. 
-    The owner of this bot does not claim ownership of any content shared through it. 
-    If you believe that your content has been used without permission, 
+    This bot is intended for educational and entertainment purposes only.
+    The owner of this bot does not claim ownership of any content shared through it.
+    If you believe that your content has been used without permission,
     please contact us to resolve the issue.
     `;
     await msg.reply(text);

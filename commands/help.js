@@ -40,7 +40,7 @@ async function default_1(msg) {
         const response = `
     \`${matchCommands.command}\`
     ${matchCommands.description || "No description"}
-    
+
     *Usage:* ${matchCommands.usage || "No usage"}
     *Example:* ${matchCommands.example || "No example"}
     *Role:* ${matchCommands.role || "user"}

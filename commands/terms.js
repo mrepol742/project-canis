@@ -15,8 +15,8 @@ async function default_1(msg) {
         return;
     const text = `
   \`Terms of Service\`
-    By using this bot, you agree to the following terms: 
-    
+    By using this bot, you agree to the following terms:
+
     - You will not use the bot for any illegal activities.
     - You will not spam or abuse the bot.
     - You will respect the privacy of other users.

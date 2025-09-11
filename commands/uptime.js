@@ -23,7 +23,7 @@ async function default_1(msg) {
     const waVersion = await client_1.client.getWWebVersion();
     const statsMessage = `
       \`${(0, timestamp_1.default)(process.uptime())}\`
-      
+
       ID: #${process.pid}
       LA: ${os_1.default
         .loadavg()
