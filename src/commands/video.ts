@@ -46,7 +46,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.react("👍");
+  await msg.react("✅");
 
   const stream = await yt.download(video.video_id, {
     type: "video+audio",
