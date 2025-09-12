@@ -38,12 +38,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = loader;
 exports.mapCommands = mapCommands;
-exports.mapCommandsBackground = mapCommandsBackground;
 const log_1 = __importDefault(require("../log"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const index_1 = require("../../../index");
 const child_process_1 = require("child_process");
+const cli_progress_1 = __importDefault(require("cli-progress"));
 const util_1 = __importDefault(require("util"));
 const execPromise = util_1.default.promisify(child_process_1.exec);
 async function ensureDependencies(dependencies) {
@@ -90,16 +90,38 @@ async function loader(file, customPath) {
                 cooldown: commandModule.info.cooldown || 5000,
                 exec: commandModule.default,
             };
-            log_1.default.info("Loader", `Loaded command: ${commandModule.info.command}`);
         }
     }
 }
 async function mapCommands() {
+    let allFiles = [];
     for (const dir of index_1.commandDirs) {
         const files = await fs_1.promises.readdir(dir);
-        await Promise.all(files.map((file) => loader(file, dir)));
+        const tuples = files.map((f) => [f, dir]);
+        allFiles = [...allFiles, ...tuples];
     }
-}
-function mapCommandsBackground() {
-    mapCommands().catch((err) => log_1.default.error("MapCommandLoader", err));
+    const total = allFiles.length;
+    if (total === 0) {
+        log_1.default.info("Loader", "No commands found.");
+        return;
+    }
+    const bar = new cli_progress_1.default.SingleBar({
+        format: "Loading Commands | {bar} | {value}/{total} {command}",
+        barCompleteChar: "█",
+        barIncompleteChar: "-",
+        hideCursor: true,
+    }, cli_progress_1.default.Presets.shades_classic);
+    bar.start(total, 0, { command: "" });
+    for (const [file, dir] of allFiles) {
+        try {
+            await loader(file, dir);
+            bar.increment({ command: file });
+        }
+        catch (err) {
+            log_1.default.error("Loader", `Failed to load ${file}`, err);
+            bar.increment({ command: file });
+        }
+    }
+    bar.stop();
+    log_1.default.info("Loader", "All commands loaded.");
 }

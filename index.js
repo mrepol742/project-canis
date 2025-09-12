@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.log = exports.greetings = exports.wyr = exports.quiz = exports.joke = exports.dyk = exports.cat = exports.ball = exports.server = exports.loader = exports.client = exports.commandDirs = exports.commands = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+const requirements_1 = require("./components/utils/requirements");
 const path_1 = __importDefault(require("path"));
 const log_1 = __importDefault(require("./components/utils/log"));
 exports.log = log_1.default;
@@ -58,6 +59,7 @@ Object.defineProperty(exports, "joke", { enumerable: true, get: function () { re
 Object.defineProperty(exports, "quiz", { enumerable: true, get: function () { return data_1.quiz; } });
 Object.defineProperty(exports, "wyr", { enumerable: true, get: function () { return data_1.wyr; } });
 Object.defineProperty(exports, "greetings", { enumerable: true, get: function () { return data_1.greetings; } });
+(0, requirements_1.checkRequirements)();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
 const autoReload = process.env.AUTO_RELOAD === "true";
@@ -71,6 +73,6 @@ if (!process.env.DATABASE_URL) {
 }
 const commands = {};
 exports.commands = commands;
-(0, loader_1.mapCommandsBackground)();
+(0, loader_1.mapCommands)().catch((err) => log_1.default.error("MapCommandLoader", err));
 if (autoReload)
     (0, watcher_1.default)();
