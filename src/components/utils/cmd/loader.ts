@@ -3,6 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { commands, commandDirs } from "../../../index";
 import { exec } from "child_process";
+import cliProgress from "cli-progress";
 import util from "util";
 const execPromise = util.promisify(exec);
 
@@ -64,18 +65,48 @@ export default async function loader(file: string, customPath: string) {
         cooldown: commandModule.info.cooldown || 5000,
         exec: commandModule.default,
       };
-      log.info("Loader", `Loaded command: ${commandModule.info.command}`);
     }
   }
 }
 
 export async function mapCommands() {
+  let allFiles: [string, string][] = [];
+
   for (const dir of commandDirs) {
     const files = await fs.readdir(dir);
-    await Promise.all(files.map((file) => loader(file, dir)));
-  }
-}
 
-export function mapCommandsBackground() {
-  mapCommands().catch((err) => log.error("MapCommandLoader", err));
+    const tuples: [string, string][] = files.map((f) => [f, dir] as [string, string]);
+    allFiles = [...allFiles, ...tuples];
+  }
+
+  const total = allFiles.length;
+  if (total === 0) {
+    log.info("Loader", "No commands found.");
+    return;
+  }
+
+  const bar = new cliProgress.SingleBar(
+    {
+      format: "Loading Commands | {bar} | {value}/{total} {command}",
+      barCompleteChar: "█",
+      barIncompleteChar: "-",
+      hideCursor: true,
+    },
+    cliProgress.Presets.shades_classic,
+  );
+
+  bar.start(total, 0, { command: "" });
+
+  for (const [file, dir] of allFiles) {
+    try {
+      await loader(file, dir);
+      bar.increment({ command: file });
+    } catch (err) {
+      log.error("Loader", `Failed to load ${file}`, err);
+      bar.increment({ command: file });
+    }
+  }
+
+  bar.stop();
+  log.info("Loader", "All commands loaded.");
 }

@@ -2,9 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { Message } from "whatsapp-web.js";
+import fs from "fs";
 import path from "path";
 import log from "./components/utils/log";
-import loader, { mapCommandsBackground } from "./components/utils/cmd/loader";
+import loader, { mapCommands } from "./components/utils/cmd/loader";
 import watcher from "./components/utils/cmd/watcher";
 import "./components/process";
 import server from "./components/server";
@@ -47,7 +48,7 @@ const commands: Record<
   }
 > = {};
 
-mapCommandsBackground();
+mapCommands().catch((err) => log.error("MapCommandLoader", err));
 
 // Watch for changes
 if (autoReload) watcher();

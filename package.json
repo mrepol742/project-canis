@@ -32,6 +32,7 @@
     "@prisma/client": "^6.12.0",
     "ai": "^4.3.19",
     "axios": "^1.10.0",
+    "cli-progress": "^3.12.0",
     "dotenv": "^17.2.0",
     "fb-downloader-scrapper": "^3.0.1",
     "google-tts-api": "^2.0.2",
@@ -46,6 +47,7 @@
     "youtubei.js": "^15.0.0"
   },
   "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
     "@types/dotenv": "^6.1.1",
     "@types/node": "^24.0.14",
     "@types/npmlog": "^7.0.0",
