@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import { checkRequirements } from "./components/utils/requirements";
 import { Message } from "whatsapp-web.js";
 import fs from "fs";
 import path from "path";
@@ -19,6 +20,8 @@ import {
   wyr,
   greetings,
 } from "./components/utils/data";
+
+checkRequirements();
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
