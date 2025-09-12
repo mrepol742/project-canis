@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
 const index_1 = require("../index");
 const loader_1 = __importDefault(require("../components/utils/cmd/loader"));
 exports.info = {
@@ -24,20 +23,12 @@ async function default_1(msg) {
             await msg.reply(`Command "${query}" not found.`);
             return;
         }
-        const basePath = path_1.default.join(__dirname, "..", "commands");
-        const commandDirs = [
-            basePath,
-            path_1.default.join(basePath, "private"),
-        ];
         const possibleExtensions = [".ts", ".js"];
         let found = false;
         for (const ext of possibleExtensions) {
-            for (const dir of commandDirs) {
-                const filePath = path_1.default.join(dir, `${query}${ext}`);
-                if (fs_1.default.existsSync(filePath)) {
-                    (0, loader_1.default)(`${query}${ext}`, dir);
-                    found = true;
-                }
+            for (const dir of index_1.commandDirs) {
+                (0, loader_1.default)(`${query}${ext}`, dir);
+                found = true;
             }
         }
         if (!found)
@@ -55,16 +46,10 @@ async function default_1(msg) {
     let count = 0;
     const newCommands = [];
     const removeCommands = [];
-    const basePath = path_1.default.join(__dirname, "..", "commands");
-    const commandDirs = [
-        basePath,
-        path_1.default.join(basePath, "private"),
-    ];
-    for (const dir of commandDirs) {
+    for (const dir of index_1.commandDirs) {
         const files = fs_1.default.readdirSync(dir);
         for (const file of files) {
             if (/\.js$|\.ts$/.test(file)) {
-                const filePath = path_1.default.join(dir, file);
                 const commandName = file.replace(/\.(js|ts)$/, "");
                 if (!index_1.commands[commandName]) {
                     newCommands.push(commandName);
@@ -72,7 +57,7 @@ async function default_1(msg) {
                 else {
                     removeCommands.push(commandName);
                 }
-                await (0, loader_1.default)(filePath, dir);
+                await (0, loader_1.default)(file, dir);
                 count++;
             }
         }

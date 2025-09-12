@@ -32,6 +32,7 @@ Canis supports multiple AI providers out of the box:
 - Redis/Valkey
 - WhatsApp Account
 - Chrome browser
+- FFMPEG
 
 ## Getting started
 

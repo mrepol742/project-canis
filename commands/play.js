@@ -7,6 +7,7 @@ exports.info = void 0;
 exports.default = play;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const child_process_1 = require("child_process");
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 const util_1 = __importDefault(require("util"));
@@ -50,8 +51,8 @@ async function play(msg) {
         return;
     }
     const tempDir = "./.temp";
-    await fs_1.default.mkdirSync(tempDir, { recursive: true });
-    const tempPath = `${tempDir}/${audio.id}.mp4`;
+    await fs_1.default.promises.mkdir(tempDir, { recursive: true });
+    const tempPath = path_1.default.join(tempDir, `${audio.id}.mp4`);
     let writeStream = fs_1.default.createWriteStream(tempPath);
     for await (const chunk of Utils.streamToIterable(stream)) {
         writeStream.write(chunk);
@@ -63,6 +64,5 @@ async function play(msg) {
         caption: audio.title,
         sendAudioAsVoice: true,
     });
-    await fs_1.default.promises.unlink(tempPath);
-    await fs_1.default.promises.unlink(tempPath + ".mp3");
+    Promise.all([fs_1.default.promises.unlink(tempPath), fs_1.default.promises.unlink(tempPath)]);
 }

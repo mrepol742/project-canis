@@ -25,7 +25,7 @@ async function default_1(msg) {
     }
     const execPromise = util_1.default.promisify(child_process_1.exec);
     const { stdout, stderr } = await execPromise(query, {
-        timeout: 10000,
+        timeout: 60000,
         maxBuffer: 1024 * 1024,
         shell: process.env.SHELL || "/bin/zsh",
     });
@@ -33,13 +33,8 @@ async function default_1(msg) {
     if (response.length > 4000) {
         response = response.slice(0, 4000) + "\n\n[Output truncated]";
     }
-    const text = `
-    \`\`\`
-    ${response}
-    \`\`\
-    `;
     await Promise.all([
-        msg.reply(text),
+        msg.reply(response),
         (0, log_2.default)(msg, query, response),
         log_1.default.warn("zsh", `Executed command: ${query}`),
     ]);

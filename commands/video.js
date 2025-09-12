@@ -63,6 +63,5 @@ async function default_1(msg) {
     await msg.reply(media, msg.from, {
         caption: `${video.title}`,
     });
-    await fs_1.default.promises.unlink(tempPath);
-    await fs_1.default.promises.unlink(tempPath + ".mp4");
+    Promise.all([fs_1.default.promises.unlink(tempPath), fs_1.default.promises.unlink(tempPath)]);
 }

@@ -25,6 +25,9 @@ async function default_1(msg) {
        \`dcma\`
        Display the DCMA policy of the bot.
 
+       \`license\`
+       Display the License of the bot.
+
        \`contact\`
        mrepol742@gmail.com
     `;
