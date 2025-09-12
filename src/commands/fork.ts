@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 
 export const info = {
   command: "fork",
@@ -12,7 +12,18 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^fork$/i.test(msg.body)) return;
 
-  await msg.reply(
-    "Fork this bot at https://github.com/mrepol742/project-canis or contribute to the project by submitting issues or pull requests."
-  );
+  const text = `
+  \`Canis for WhatsApp\`
+    mrepol742/project-canis
+
+  \`Canis for Telegram\`
+    mrepol742/project-canis-ts
+
+    This bot is not affiliated, endorsed, partner, or connected to Meta.
+    Use it at your own RISK.
+
+    Type \`Legal\` for more information.
+    `;
+
+  await msg.reply(text);
 }

@@ -1,9 +1,9 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import axios from "axios";
 import log from "../components/utils/log";
 import fs from "fs";
 import path from "path";
-import { commands } from "../index";
+import { commands, commandDirs } from "../index";
 import Loader from "../components/utils/cmd/loader";
 
 export const info = {
@@ -24,23 +24,13 @@ export default async function (msg: Message) {
       return;
     }
 
-    const basePath = path.join(__dirname, "..", "commands");
-
-    const commandDirs = [
-      basePath,
-      path.join(basePath, "private"),
-    ];
-
     const possibleExtensions = [".ts", ".js"];
     let found = false;
 
     for (const ext of possibleExtensions) {
       for (const dir of commandDirs) {
-        const filePath = path.join(dir, `${query}${ext}`);
-        if (fs.existsSync(filePath)) {
-          Loader(`${query}${ext}`, dir);
-          found = true;
-        }
+        Loader(`${query}${ext}`, dir);
+        found = true;
       }
     }
 
@@ -49,14 +39,14 @@ export default async function (msg: Message) {
         `
     \`Failed to load\`
     ${query}
-    `
+    `,
       );
     if (found)
       await msg.reply(
         `
       \`Successfully reloaded\`
       ${query}
-      `
+      `,
       );
     return;
   }
@@ -65,18 +55,11 @@ export default async function (msg: Message) {
   let count = 0;
   const newCommands: string[] = [];
   const removeCommands: string[] = [];
-  const basePath = path.join(__dirname, "..", "commands");
-
-  const commandDirs = [
-    basePath,
-    path.join(basePath, "private"),
-  ];
 
   for (const dir of commandDirs) {
     const files = fs.readdirSync(dir);
     for (const file of files) {
       if (/\.js$|\.ts$/.test(file)) {
-        const filePath = path.join(dir, file);
         const commandName = file.replace(/\.(js|ts)$/, "");
 
         if (!commands[commandName]) {
@@ -85,7 +68,7 @@ export default async function (msg: Message) {
           removeCommands.push(commandName);
         }
 
-        await Loader(filePath, dir);
+        await Loader(file, dir);
         count++;
       }
     }

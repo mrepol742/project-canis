@@ -1,6 +1,7 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import fs from "fs";
+import path from "path";
 import { exec } from "child_process";
 // fallback import for compatibility
 // youtubei.js currently does not support ESM directly
@@ -40,7 +41,7 @@ export default async function play(msg: Message) {
   // Only allow audios shorter than 10 minutes (600 seconds)
   if (audio.length && audio.length.seconds > 600) {
     await msg.reply(
-      "Sorry, only videos shorter than 10 minutes can be downloaded."
+      "Sorry, only videos shorter than 10 minutes can be downloaded.",
     );
     return;
   }
@@ -59,9 +60,8 @@ export default async function play(msg: Message) {
   }
 
   const tempDir = "./.temp";
-  await fs.mkdirSync(tempDir, { recursive: true });
-
-  const tempPath = `${tempDir}/${audio.id}.mp4`;
+  await fs.promises.mkdir(tempDir, { recursive: true });
+  const tempPath = path.join(tempDir, `${audio.id}.mp4`);
   let writeStream = fs.createWriteStream(tempPath);
 
   for await (const chunk of Utils.streamToIterable(stream)) {
@@ -69,14 +69,14 @@ export default async function play(msg: Message) {
   }
 
   await execPromise(
-    `ffmpeg -y -i "${tempPath}" -vn -ar 44100 -ac 2 -b:a 192k "${tempPath}.mp3"`
+    `ffmpeg -y -i "${tempPath}" -vn -ar 44100 -ac 2 -b:a 192k "${tempPath}.mp3"`,
   );
 
   const audioBuffer = fs.readFileSync(tempPath + ".mp3");
   const media = new MessageMedia(
     "audio/mpeg",
     audioBuffer.toString("base64"),
-    `${audio.title}.mp3`
+    `${audio.title}.mp3`,
   );
 
   await msg.reply(media, msg.from, {
@@ -84,6 +84,5 @@ export default async function play(msg: Message) {
     sendAudioAsVoice: true,
   });
 
-  await fs.promises.unlink(tempPath);
-  await fs.promises.unlink(tempPath + ".mp3");
+  Promise.all([fs.promises.unlink(tempPath), fs.promises.unlink(tempPath)]);
 }
