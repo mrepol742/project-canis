@@ -11,22 +11,18 @@ export const info = {
   description: "Pull changes from the remote repository.",
   usage: "update",
   example: "update",
-  role: "admin",
+  role: "user",
   cooldown: 5000,
 };
 
 const execPromise = util.promisify(exec);
 
 export default async function (msg: Message) {
-  try {
-    const { stdout, stderr } = await execPromise("git pull");
+  if (!/^update/i.test(msg.body)) return;
+  const { stdout, stderr } = await execPromise("git pull");
 
-    if (stdout) log.info("Update", `git pull stdout:\n${stdout}`);
-    if (stderr) log.warn("Update", `git pull stderr:\n${stderr}`);
+  if (stdout) log.info("Update", `git pull stdout:\n${stdout}`);
+  if (stderr) log.warn("Update", `git pull stderr:\n${stderr}`);
 
-    await msg.reply(stdout || stderr);
-  } catch (error: any) {
-    log.error("Update", `git pull failed: ${error.message}`);
-    await msg.reply("Failed to update repository. Check logs.");
-  }
+  await msg.reply(stdout || stderr);
 }
