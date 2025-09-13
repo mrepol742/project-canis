@@ -20,7 +20,10 @@ import {
   wyr,
   greetings,
 } from "./components/utils/data";
+import { MemoryMonitor } from "./components/utils/memMonitor";
 
+const monitor = new MemoryMonitor({ interval: 30000 });
+monitor.start();
 checkRequirements();
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
