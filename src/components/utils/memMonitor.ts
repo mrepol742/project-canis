@@ -17,6 +17,11 @@ export class MemoryMonitor {
   private thresholdMB: number;
   private history: MemoryStats[];
   private timer?: NodeJS.Timeout;
+  private autoRestart: boolean = process.env.PROJECT_AUTO_RESTART === "true";
+  private maxMemory: number = parseInt(
+    process.env.PROJECT_MAX_MEMORY || "1024",
+    10
+  ); // Default to 1GB
 
   constructor({
     interval = 60000,
@@ -47,12 +52,16 @@ export class MemoryMonitor {
 
       // Oh shit!
       if (this.history.length > 5) {
-        const lastFive = this.history.slice(-5).map((h) => h.usedMB && h.usedMB > this.thresholdMB);
+        const lastFive = this.history
+          .slice(-5)
+          .map((h) => h.usedMB && h.usedMB > this.thresholdMB);
         if (lastFive.every((val, i, arr) => i === 0 || val > arr[i - 1])) {
           log.warn(
             "MemoryMonitor",
             `Potential memory leak detected: ${used.toFixed(2)} MB`
           );
+          if (this.autoRestart && used > this.maxMemory)
+            process.exit(1)
         }
       }
     }, this.interval);
