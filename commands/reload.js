@@ -13,7 +13,7 @@ exports.info = {
     description: "Reload a specific command or all commands.",
     usage: "reload [command]",
     example: "reload ai",
-    role: "admin",
+    role: "user",
     cooldown: 5000,
 };
 async function default_1(msg) {

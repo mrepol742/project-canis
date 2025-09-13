@@ -13,21 +13,17 @@ exports.info = {
     description: "Pull changes from the remote repository.",
     usage: "update",
     example: "update",
-    role: "admin",
+    role: "user",
     cooldown: 5000,
 };
 const execPromise = util_1.default.promisify(child_process_1.exec);
 async function default_1(msg) {
-    try {
-        const { stdout, stderr } = await execPromise("git pull");
-        if (stdout)
-            log_1.default.info("Update", `git pull stdout:\n${stdout}`);
-        if (stderr)
-            log_1.default.warn("Update", `git pull stderr:\n${stderr}`);
-        await msg.reply(stdout || stderr);
-    }
-    catch (error) {
-        log_1.default.error("Update", `git pull failed: ${error.message}`);
-        await msg.reply("Failed to update repository. Check logs.");
-    }
+    if (!/^update/i.test(msg.body))
+        return;
+    const { stdout, stderr } = await execPromise("git pull");
+    if (stdout)
+        log_1.default.info("Update", `git pull stdout:\n${stdout}`);
+    if (stderr)
+        log_1.default.warn("Update", `git pull stderr:\n${stderr}`);
+    await msg.reply(stdout || stderr);
 }
