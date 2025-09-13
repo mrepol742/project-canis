@@ -59,6 +59,9 @@ Object.defineProperty(exports, "joke", { enumerable: true, get: function () { re
 Object.defineProperty(exports, "quiz", { enumerable: true, get: function () { return data_1.quiz; } });
 Object.defineProperty(exports, "wyr", { enumerable: true, get: function () { return data_1.wyr; } });
 Object.defineProperty(exports, "greetings", { enumerable: true, get: function () { return data_1.greetings; } });
+const memMonitor_1 = require("./components/utils/memMonitor");
+const monitor = new memMonitor_1.MemoryMonitor({ interval: 30000 });
+monitor.start();
 (0, requirements_1.checkRequirements)();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
