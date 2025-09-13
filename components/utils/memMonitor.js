@@ -27,7 +27,7 @@ class MemoryMonitor {
             if (this.history.length > 5) {
                 const lastFive = this.history.slice(-5).map((h) => h.usedMB);
                 if (lastFive.every((val, i, arr) => i === 0 || val > arr[i - 1])) {
-                    log_1.default.warn("MemoryMonitor", "Potential memory leak heap consistently increasing");
+                    log_1.default.warn("MemoryMonitor", `Potential memory leak detected: ${used.toFixed(2)} MB`);
                 }
             }
         }, this.interval);
