@@ -9,9 +9,10 @@ import { addMessage } from "../services/message";
 export default async function (
   msg: Message,
   _newBody: string,
-  prevBody: string
+  prevBody: string,
 ) {
-  if (msg.fromMe) return;
+  if (msg.fromMe || msg.timestamp < Date.now() / 1000 - 10) return;
+
   // const isGroup = !!msg.author;
   // const user = await getUserbyLid(msg.from) || "Your";
   if (prevBody) await addMessage(msg, prevBody, "edit");

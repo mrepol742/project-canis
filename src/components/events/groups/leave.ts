@@ -4,6 +4,7 @@ import sleep from "../../utils/sleep";
 
 export default async function (notif: GroupNotification) {
   try {
+    if (notif.timestamp < Date.now() / 1000 - 10) return;
     const group = await notif.getChat();
     const recipients = await notif.getRecipients();
 
