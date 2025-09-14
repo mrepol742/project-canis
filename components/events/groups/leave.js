@@ -8,6 +8,8 @@ const log_1 = __importDefault(require("../../utils/log"));
 const sleep_1 = __importDefault(require("../../utils/sleep"));
 async function default_1(notif) {
     try {
+        if (notif.timestamp < Date.now() / 1000 - 10)
+            return;
         const group = await notif.getChat();
         const recipients = await notif.getRecipients();
         for (const contact of recipients) {
