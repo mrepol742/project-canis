@@ -41,7 +41,7 @@ exports.default = default_1;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const GoogleTTS = __importStar(require("google-tts-api"));
 const fs_1 = __importDefault(require("fs"));
-const axios_1 = __importDefault(require("axios"));
+const axios_1 = __importDefault(require("../components/axios"));
 exports.info = {
     command: "say",
     description: "Convert text to speech and send it as an audio message.",

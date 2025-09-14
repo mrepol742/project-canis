@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
-const axios_1 = __importDefault(require("axios"));
+const axios_1 = __importDefault(require("../components/axios"));
 const promises_1 = __importDefault(require("fs/promises"));
 exports.info = {
     command: "alert",

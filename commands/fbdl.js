@@ -7,7 +7,7 @@ exports.info = void 0;
 exports.default = default_1;
 const whatsapp_web_js_1 = require("whatsapp-web.js");
 const fb_downloader_scrapper_1 = require("fb-downloader-scrapper");
-const axios_1 = __importDefault(require("axios"));
+const axios_1 = __importDefault(require("../components/axios"));
 const fs_1 = __importDefault(require("fs"));
 exports.info = {
     command: "fbdl",
