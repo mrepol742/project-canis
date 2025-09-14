@@ -1,8 +1,22 @@
 import axios from "axios";
 
 const AXIOS_MAX_RETRY = process.env.AXIOS_MAX_RETRY || 3;
+const AXIOS_USER_AGENT = process.env.AXIOS_USER_AGENT || "Canis/11.0.0";
+const AXIOS_TIMEOUT = parseInt(process.env.AXIOS_TIMEOUT || "3000");
+const AXIOS_ORIGIN = process.env.ORIGIN || "";
+const AXIOS_HOST = process.env.HOST || "";
 
-axios.interceptors.response.use(
+const instance = axios.create({
+  timeout: AXIOS_TIMEOUT,
+  headers: {
+    "User-Agent": AXIOS_USER_AGENT,
+    "Content-Type": "application/json",
+    "Origin": AXIOS_ORIGIN,
+    "Host": AXIOS_HOST,
+  },
+});
+
+instance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const config = error.config;
@@ -18,8 +32,8 @@ axios.interceptors.response.use(
       new Promise((resolve) => setTimeout(resolve, ms));
     await delay(config.__retryCount * 1000);
 
-    return axios(config);
+    return instance(config);
   },
 );
 
-export default axios;
+export default instance;
