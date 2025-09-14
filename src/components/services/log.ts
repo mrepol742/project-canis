@@ -2,6 +2,15 @@ import { prisma } from "../prisma";
 import log from "../utils/log";
 import { Message } from "whatsapp-web.js";
 
+const MAX_LENGTH = 191;
+
+function filterContent(body: string): string {
+  if (body.length <= MAX_LENGTH) return body;
+
+  const cutoff = MAX_LENGTH - " [REDACTED]".length;
+  return body.slice(0, cutoff) + " [REDACTED]";
+}
+
 export default async function (
   msg: Message,
   command: string,
@@ -12,8 +21,8 @@ export default async function (
     await prisma.log.create({
       data: {
         lid,
-        command,
-        output: output,
+        command: filterContent(command),
+        output: output ? filterContent(output) : "",
       },
     });
   } catch (error) {
