@@ -1,5 +1,5 @@
 import { Message } from "../../types/message"
-import axios from "axios";
+import axios from "../components/axios";
 import log from "../components/utils/log";
 import { prisma } from "../components/prisma";
 

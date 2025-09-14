@@ -1,10 +1,25 @@
 import axios from "axios";
 
-const axiosInstance = axios.create({
-    timeout: 10000,
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
+const AXIOS_MAX_RETRY = process.env.AXIOS_MAX_RETRY || 3;
 
-export default axiosInstance;
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config;
+
+    if (!config || config.__retryCount >= AXIOS_MAX_RETRY) {
+      return Promise.reject(error);
+    }
+
+    config.__retryCount = config.__retryCount || 0;
+    config.__retryCount += 1;
+
+    const delay = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+    await delay(config.__retryCount * 1000);
+
+    return axios(config);
+  },
+);
+
+export default axios;

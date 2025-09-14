@@ -2,7 +2,7 @@ import { MessageMedia } from "whatsapp-web.js";
 import { Message } from "../../types/message";
 import { getFbVideoInfo } from "fb-downloader-scrapper";
 import log from "../components/utils/log";
-import axios from "axios";
+import axios from "../components/axios";
 import fs from "fs";
 
 export const info = {

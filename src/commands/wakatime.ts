@@ -1,6 +1,6 @@
 import { Message } from "../../types/message";
 import log from "../components/utils/log";
-import axios from "axios";
+import axios from "../components/axios";
 
 export const info = {
   command: "wakatime",
