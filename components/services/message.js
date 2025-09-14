@@ -6,13 +6,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addMessage = addMessage;
 const prisma_1 = require("../prisma");
 const log_1 = __importDefault(require("../../components/utils/log"));
+const MAX_LENGTH = 191;
+function filterContent(body) {
+    if (body.length <= MAX_LENGTH)
+        return body;
+    const cutoff = MAX_LENGTH - " [REDACTED]".length;
+    return body.slice(0, cutoff) + " [REDACTED]";
+}
 async function addMessage(msg, body, type) {
     try {
         const lid = msg.id.remote.split("@")[0];
         await prisma_1.prisma.message.create({
             data: {
                 lid,
-                content: body,
+                content: filterContent(body),
                 type: type,
             },
         });

@@ -64,7 +64,7 @@ function safePrintDBUrl(dbUrl, fallback) {
 function checkMySQL() {
     const dbUrl = process.env.DATABASE_URL || "mysql://root@127.0.0.1:3306";
     try {
-        const version = (0, child_process_1.execSync)("mysql --version").toString().trim();
+        const version = (0, child_process_1.execSync)("mariadb --version").toString().trim();
         log_1.default.info("Requirements", `MySQL available at ${safePrintDBUrl(dbUrl, "mysql://127.0.0.1:3306")} | ${version}`);
     }
     catch {

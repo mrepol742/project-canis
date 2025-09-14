@@ -11,6 +11,13 @@ exports.getBlockUserCount = getBlockUserCount;
 exports.getUsers = getUsers;
 const prisma_1 = require("../prisma");
 const log_1 = __importDefault(require("../../components/utils/log"));
+const MAX_LENGTH = 191;
+function filterContent(body) {
+    if (body.length <= MAX_LENGTH)
+        return body;
+    const cutoff = MAX_LENGTH - " [REDACTED]".length;
+    return body.slice(0, cutoff) + " [REDACTED]";
+}
 async function findOrCreateUser(msg) {
     try {
         const jid = msg.author || msg.from;
@@ -42,7 +49,7 @@ async function findOrCreateUser(msg) {
                     countryCode,
                     type: contact.isBusiness ? "business" : "private",
                     mode: msg.author ? "group" : "private",
-                    about: about,
+                    about: about ? filterContent(about) : "",
                     commandCount: 1,
                 },
             });
