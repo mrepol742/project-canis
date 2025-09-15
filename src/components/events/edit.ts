@@ -11,11 +11,9 @@ export default async function (
   _newBody: string,
   prevBody: string,
 ) {
-  if (msg.fromMe || msg.timestamp < Date.now() / 1000 - 10) return;
-
   // const isGroup = !!msg.author;
   // const user = await getUserbyLid(msg.from) || "Your";
-  if (prevBody) await addMessage(msg, prevBody, "edit");
+  await addMessage(msg, prevBody, "edit");
   // await msg.reply(
   //   `${isGroup ? user : "Your"} message was edited from "${prevBody}".`
   // );

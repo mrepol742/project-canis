@@ -3,7 +3,7 @@ import axios from "../components/axios";
 import log from "../components/utils/log";
 import fs from "fs";
 import path from "path";
-import { commands, commandDirs } from "../index";
+import { commands, commandDirs } from "../components/utils/cmd/loader";
 import Loader from "../components/utils/cmd/loader";
 
 export const info = {
@@ -20,7 +20,7 @@ export default async function (msg: Message) {
 
   if (query.length !== 0) {
     if (!commands[query.toLocaleLowerCase()]) {
-      await msg.reply(`Command "${query}" not found.`);
+      await msg.reply(`Command \`${query}\` not found.`);
       return;
     }
 
@@ -34,20 +34,12 @@ export default async function (msg: Message) {
       }
     }
 
-    if (!found)
-      await msg.reply(
-        `
-    \`Failed to load\`
-    ${query}
-    `,
-      );
-    if (found)
-      await msg.reply(
-        `
-      \`Successfully reloaded\`
-      ${query}
-      `,
-      );
+    if (!found) {
+      await msg.reply(`\`Failed to load\`\n${query}`);
+    } else {
+      await msg.reply(`\`Successfully reloaded\`\n${query}`);
+    }
+
     return;
   }
 

@@ -4,7 +4,7 @@ import os from "os";
 import si from "systeminformation";
 import { getUserCount, getBlockUserCount } from "../components/services/user";
 import { client } from "../components/client";
-import { commands } from "../index";
+import { commands } from "../components/utils/cmd/loader";
 
 export const info = {
   command: "stats",

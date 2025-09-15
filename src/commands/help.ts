@@ -1,6 +1,6 @@
 import { Message } from "../../types/message"
 import log from "../components/utils/log";
-import { commands } from "../index";
+import { commands } from "../components/utils/cmd/loader";
 
 export const info = {
   command: "help",
@@ -16,7 +16,7 @@ type CommandType = {
   role: string;
 };
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 function paginate(items: string[], page: number, pageSize: number): string[] {
   const start = (page - 1) * pageSize;

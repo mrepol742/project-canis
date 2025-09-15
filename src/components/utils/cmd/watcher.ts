@@ -2,7 +2,7 @@ import { watch } from "fs/promises";
 import loader from "./loader";
 import log from "../log";
 import path from "path";
-import { commandDirs } from "../../../index";
+import { commandDirs } from "./loader";
 
 export default async function () {
   for (const dir of commandDirs) {

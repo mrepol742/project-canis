@@ -1,7 +1,7 @@
 import fs from "fs";
 import log from "./log";
 import path from "path";
-import cliProgress from "cli-progress";
+import LoadingBar from "./loadingBar";
 
 function safeReadJSON(filePath: string) {
   try {
@@ -22,24 +22,24 @@ const files: Record<string, string> = {
   joke: "../../data/joke.json",
   quiz: "../../data/quiz.json",
   wyr: "../../data/wyr.json",
+  errors: "../../data/errors.json",
 };
 
-const progressBar = new cliProgress.SingleBar(
-  {
-    format: "Loading Data [{bar}] {percentage}% | {value}/{total} files",
-  },
-  cliProgress.Presets.shades_classic
+const progressBar = LoadingBar(
+  "Loading Data     | {bar} | {value}/{total} {filename}"
 );
 
-progressBar.start(Object.keys(files).length, 0);
+progressBar.start(Object.keys(files).length, 0, {
+  filename: "",
+});
 
 const data: Record<string, any> = {};
 for (const [key, filePath] of Object.entries(files)) {
   data[key] = safeReadJSON(filePath);
-  progressBar.increment();
+  progressBar.increment(1, { filename: path.basename(filePath) });
 }
 
 progressBar.stop();
 
-const { greetings, ball, cat, dyk, joke, quiz, wyr } = data;
-export { greetings, ball, cat, dyk, joke, quiz, wyr };
+const { greetings, ball, cat, dyk, joke, quiz, wyr, errors } = data;
+export { greetings, ball, cat, dyk, joke, quiz, wyr, errors };

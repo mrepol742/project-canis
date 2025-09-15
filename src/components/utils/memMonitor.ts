@@ -12,7 +12,7 @@ interface MemoryStats {
   timestamp: string;
 }
 
-export class MemoryMonitor {
+export default class MemoryMonitor {
   private interval: number;
   private thresholdMB: number;
   private history: MemoryStats[];

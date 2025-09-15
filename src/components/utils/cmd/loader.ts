@@ -1,11 +1,26 @@
 import log from "../log";
 import { promises as fs } from "fs";
 import path from "path";
-import { commands, commandDirs } from "../../../index";
 import { exec } from "child_process";
-import cliProgress from "cli-progress";
+import LoadingBar from "../loadingBar";
 import util from "util";
+import { Message } from "../../../../types/message";
 const execPromise = util.promisify(exec);
+const basePath = path.join(__dirname, "..", "..", "..", "commands");
+
+export const commandDirs = [basePath, path.join(basePath, "private")];
+export const commands: Record<
+  string,
+  {
+    command: string;
+    description: string;
+    usage: string;
+    example: string;
+    role: string;
+    cooldown: number;
+    exec: (msg: Message) => void;
+  }
+> = {};
 
 async function ensureDependencies(
   dependencies: { name: string; version: string }[],
@@ -75,7 +90,9 @@ export async function mapCommands() {
   for (const dir of commandDirs) {
     const files = await fs.readdir(dir);
 
-    const tuples: [string, string][] = files.map((f) => [f, dir] as [string, string]);
+    const tuples: [string, string][] = files.map(
+      (f) => [f, dir] as [string, string],
+    );
     allFiles = [...allFiles, ...tuples];
   }
 
@@ -85,16 +102,9 @@ export async function mapCommands() {
     return;
   }
 
-  const bar = new cliProgress.SingleBar(
-    {
-      format: "Loading Commands | {bar} | {value}/{total} {command}",
-      barCompleteChar: "█",
-      barIncompleteChar: "-",
-      hideCursor: true,
-    },
-    cliProgress.Presets.shades_classic,
+  const bar = LoadingBar(
+    "Loading Commands | {bar} | {value}/{total} {command}",
   );
-
   bar.start(total, 0, { command: "" });
 
   for (const [file, dir] of allFiles) {

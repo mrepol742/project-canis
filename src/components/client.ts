@@ -7,7 +7,7 @@ import {
   Reaction,
 } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
-import cliProgress from "cli-progress";
+import LoadingBar from "./utils/loadingBar";
 import messageEvent from "./events/message";
 import messageEdit from "./events/edit";
 import groupLeave from "./events/groups/leave";
@@ -16,15 +16,7 @@ import reaction from "./events/reaction";
 import ready from "./events/ready";
 import revoke from "./events/revoke";
 
-const loadingBar = new cliProgress.SingleBar(
-  {
-    format: "Loading | {bar} | {value}%",
-    barCompleteChar: "█",
-    barIncompleteChar: "-",
-    hideCursor: true,
-  },
-  cliProgress.Presets.shades_classic
-);
+const loadingBar = LoadingBar("Loading Client   | {bar} | {value}%");
 const client = new Client({
   puppeteer: {
     executablePath:
@@ -40,11 +32,13 @@ client.on("loading_screen", (percent: number, message: string) => {
     isLoadingBarStarted = true;
   }
 
+  if (percent >= 99) loadingBar.stop();
+
   loadingBar.update(percent, { message });
 });
 
 client.on("authenticated", () =>
-  log.info("Auth", "Client authenticated successfully.")
+  log.info("Auth", "Client authenticated successfully."),
 );
 
 client.on("qr", (qr: string) => {
@@ -53,13 +47,10 @@ client.on("qr", (qr: string) => {
   qrcode.generate(qr, { small: true });
 });
 
-client.on("ready", async () => {
-  loadingBar.stop();
-  ready();
-});
+client.on("ready", async () => ready());
 
 client.on("message_reaction", async (react: Reaction) =>
-  reaction(client, react)
+  reaction(client, react),
 );
 
 // client.on("message", (msg) => messageEvent(msg));
@@ -67,20 +58,23 @@ client.on("message_create", async (msg: Message) => messageEvent(msg));
 
 client.on(
   "message_edit",
-  async (msg: Message, newBody: string, prevBody: string) =>
-    messageEdit(msg, newBody, prevBody)
+  async (msg: Message, newBody: string, prevBody: string) => {
+    msg.body = newBody;
+    await Promise.all([messageEdit(msg, newBody, prevBody), messageEvent(msg)]);
+  },
 );
 
 client.on(
   "message_revoke_everyone",
-  async (msg: Message, revoked_msg?: Message) => revoke(msg, revoked_msg)
+  async (msg: Message, revoked_msg?: Message) => revoke(msg, revoked_msg),
 );
 
 client.on("group_join", async (notif: GroupNotification) => groupJoin(notif));
 client.on("group_leave", async (notif: GroupNotification) => groupLeave(notif));
-client.on("auth_failure", (msg: string) =>
-  log.error("Auth", "Authentication failed. Please try again.")
-);
+client.on("auth_failure", (msg: string) => {
+  loadingBar.stop();
+  log.error("Auth", "Authentication failed. Please try again.");
+});
 
 client.initialize();
 
