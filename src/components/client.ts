@@ -54,13 +54,13 @@ client.on("message_reaction", async (react: Reaction) =>
 );
 
 // client.on("message", (msg) => messageEvent(msg));
-client.on("message_create", async (msg: Message) => messageEvent(msg));
+client.on("message_create", async (msg: Message) => messageEvent(msg, "create"));
 
 client.on(
   "message_edit",
   async (msg: Message, newBody: string, prevBody: string) => {
     msg.body = newBody;
-    await Promise.all([messageEdit(msg, newBody, prevBody), messageEvent(msg)]);
+    await Promise.all([messageEdit(msg, newBody, prevBody), messageEvent(msg, "edit")]);
   },
 );
 
