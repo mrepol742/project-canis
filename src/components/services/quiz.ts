@@ -34,7 +34,7 @@ export async function getQuizAttempts(msg: Message): Promise<any | null> {
 
 export async function setQuizAttemptAnswered(
   msg: Message,
-  quoted: Message
+  quoted: Message,
 ): Promise<void> {
   try {
     if (!quoted.id || !quoted.id.remote) return;
@@ -57,5 +57,25 @@ export async function setQuizAttemptAnswered(
     ]);
   } catch (error) {
     log.error("Database", `Failed to set quiz attempt as answered.`, error);
+  }
+}
+
+export async function getQuizCount(
+  lid: string,
+): Promise<{ total: number; answered: number }> {
+  try {
+    const [total, answered] = await Promise.all([
+      prisma.quiz.count({
+        where: { lid },
+      }),
+      prisma.quiz.count({
+        where: { lid, answeredAt: { not: null } },
+      }),
+    ]);
+
+    return { total, answered };
+  } catch (error) {
+    log.error("Database", `Failed to get quiz counts.`, error);
+    return { total: 0, answered: 0 };
   }
 }
