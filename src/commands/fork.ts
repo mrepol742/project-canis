@@ -14,10 +14,10 @@ export default async function (msg: Message) {
 
   const text = `
   \`Canis for WhatsApp\`
-    mrepol742/project-canis
+    https://github.com/mrepol742/project-canis
 
   \`Canis for Telegram\`
-    mrepol742/project-canis-ts
+    https://github.com/mrepol742/project-canis-ts
 
     This bot is not affiliated, endorsed, partner, or connected to Meta.
     Use it at your own RISK.

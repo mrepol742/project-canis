@@ -64,25 +64,24 @@ const mathSansMap: Record<string, string> = {
 };
 
 export default function (text: string) {
-  // Regex to match URLs
   const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
   let result = "";
   let lastIndex = 0;
 
-  // Find all URLs and skip conversion for them
-  text.replace(urlRegex, (url, index) => {
-    // Convert text before URL
+  for (const match of text.matchAll(urlRegex)) {
+    const url = match[0];
+    const index = match.index!;
+
     for (let i = lastIndex; i < index; i++) {
       const char = text[i];
       result += mathSansMap[char] || char;
     }
-    // Add URL as is
-    result += url;
-    lastIndex = index + url.length;
-    return url;
-  });
 
-  // Convert remaining text after last URL
+    result += url;
+
+    lastIndex = index + url.length;
+  }
+
   for (let i = lastIndex; i < text.length; i++) {
     const char = text[i];
     result += mathSansMap[char] || char;
