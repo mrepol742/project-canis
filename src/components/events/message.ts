@@ -153,8 +153,6 @@ export default async function (msg: Message, type: string) {
           await sleep(5000); // Prevent rate limiting issues
           await msg.react("✅");
         }
-
-        return Promise.resolve();
       })(),
     ]);
   } catch (error: any) {
