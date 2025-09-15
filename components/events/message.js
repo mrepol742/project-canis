@@ -16,8 +16,8 @@ const data_1 = require("../utils/data");
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
-async function default_1(msg) {
-    if (msg.timestamp < Date.now() / 1000 - 10)
+async function default_1(msg, type) {
+    if (msg.timestamp < Date.now() / 1000 - 10 && type === "create")
         return;
     if (msg.isForwarded ||
         msg.isGif ||
@@ -103,7 +103,6 @@ async function default_1(msg) {
                     await (0, sleep_1.default)(5000);
                     await msg.react("✅");
                 }
-                return Promise.resolve();
             })(),
         ]);
     }

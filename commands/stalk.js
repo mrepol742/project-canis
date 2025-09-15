@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
+const quiz_1 = require("../components/services/quiz");
 const user_1 = require("../components/services/user");
 exports.info = {
     command: "stalk",
@@ -12,29 +13,15 @@ exports.info = {
     cooldown: 5000,
 };
 async function default_1(msg) {
-    if (msg.body.includes(" ") && msg.mentionedIds.length === 0) {
+    if (msg.mentionedIds.length === 0) {
         await msg.reply("Please mention a user to stalk.");
         return;
     }
-    if (msg.mentionedIds.length === 0) {
-        const contact = await msg.getContact();
-        const countryCode = await contact.getCountryCode();
-        const about = await contact.getAbout();
-        const name = contact.pushname || contact.name || "Unknown";
-        const text = `
-    \`${name}\`
-    ${about || "No about information available."}
-
-    ID: ${contact.id.user}
-    Number: ${contact.number}
-    Country Code: ${countryCode}
-    Type: ${contact.isBusiness ? "Business" : "Personal"}
-    Mode: ${msg.author ? "group" : "private"}
-    `;
-        await msg.reply(text);
-        return;
-    }
-    const user = await (0, user_1.getUserbyLid)(msg.mentionedIds[0].split("@")[0]);
+    const lid = msg.mentionedIds[0].split("@")[0];
+    const [user, quizData] = await Promise.all([
+        (0, user_1.getUserbyLid)(lid),
+        (0, quiz_1.getQuizCount)(lid),
+    ]);
     if (!user)
         return await msg.reply("User not found.");
     const text = `
@@ -47,6 +34,8 @@ async function default_1(msg) {
     Type: ${user.type}
     Mode: ${user.mode}
     Command Count: ${user.commandCount}
+    Quiz Count: ${quizData.answered}/${quizData.total}
+    Last Seen: ${new Date(user.updatedAt).toLocaleString()}
     `;
     await msg.reply(text);
 }

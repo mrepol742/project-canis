@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.newQuizAttempt = newQuizAttempt;
 exports.getQuizAttempts = getQuizAttempts;
 exports.setQuizAttemptAnswered = setQuizAttemptAnswered;
+exports.getQuizCount = getQuizCount;
 const prisma_1 = require("../prisma");
 const log_1 = __importDefault(require("../utils/log"));
 async function newQuizAttempt(msg, qid) {
@@ -60,5 +61,22 @@ async function setQuizAttemptAnswered(msg, quoted) {
     }
     catch (error) {
         log_1.default.error("Database", `Failed to set quiz attempt as answered.`, error);
+    }
+}
+async function getQuizCount(lid) {
+    try {
+        const [total, answered] = await Promise.all([
+            prisma_1.prisma.quiz.count({
+                where: { lid },
+            }),
+            prisma_1.prisma.quiz.count({
+                where: { lid, answeredAt: { not: null } },
+            }),
+        ]);
+        return { total, answered };
+    }
+    catch (error) {
+        log_1.default.error("Database", `Failed to get quiz counts.`, error);
+        return { total: 0, answered: 0 };
     }
 }

@@ -40,10 +40,10 @@ client.on("qr", (qr) => {
 });
 client.on("ready", async () => (0, ready_1.default)());
 client.on("message_reaction", async (react) => (0, reaction_1.default)(client, react));
-client.on("message_create", async (msg) => (0, message_1.default)(msg));
+client.on("message_create", async (msg) => (0, message_1.default)(msg, "create"));
 client.on("message_edit", async (msg, newBody, prevBody) => {
     msg.body = newBody;
-    await Promise.all([(0, edit_1.default)(msg, newBody, prevBody), (0, message_1.default)(msg)]);
+    await Promise.all([(0, edit_1.default)(msg, newBody, prevBody), (0, message_1.default)(msg, "edit")]);
 });
 client.on("message_revoke_everyone", async (msg, revoked_msg) => (0, revoke_1.default)(msg, revoked_msg));
 client.on("group_join", async (notif) => (0, join_1.default)(notif));
