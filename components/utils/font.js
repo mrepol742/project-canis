@@ -69,15 +69,16 @@ function default_1(text) {
     const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
     let result = "";
     let lastIndex = 0;
-    text.replace(urlRegex, (url, index) => {
+    for (const match of text.matchAll(urlRegex)) {
+        const url = match[0];
+        const index = match.index;
         for (let i = lastIndex; i < index; i++) {
             const char = text[i];
             result += mathSansMap[char] || char;
         }
         result += url;
         lastIndex = index + url.length;
-        return url;
-    });
+    }
     for (let i = lastIndex; i < text.length; i++) {
         const char = text[i];
         result += mathSansMap[char] || char;
