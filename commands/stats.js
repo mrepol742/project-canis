@@ -8,7 +8,7 @@ exports.default = default_1;
 const os_1 = __importDefault(require("os"));
 const systeminformation_1 = __importDefault(require("systeminformation"));
 const user_1 = require("../components/services/user");
-const index_1 = require("../index");
+const loader_1 = require("../components/utils/cmd/loader");
 exports.info = {
     command: "stats",
     description: "Get system and Node.js runtime statistics.",
@@ -58,7 +58,7 @@ RAM: ${(stats.usedMemory / 1024 ** 3).toFixed(2)} GB / ${(stats.totalMemory / 10
 VRAM: ${gpuInfo.controllers.map((c) => c.vram).join(", ")} MB
 Shell: ${shell}
 Network: ${networkInterfaces.map((iface) => `${iface.iface} ${iface.speed} Mbps`).join(", ")}
-Commands: ${Object.keys(index_1.commands).length}
+Commands: ${Object.keys(loader_1.commands).length}
 Users: ${userCount}
 Blocked Users: ${blockUserCount}
 

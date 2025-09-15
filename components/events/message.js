@@ -5,13 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = default_1;
 const log_1 = __importDefault(require("../utils/log"));
-const index_1 = require("../../index");
+const loader_1 = require("../utils/cmd/loader");
 const rateLimiter_1 = __importDefault(require("../utils/rateLimiter"));
 const sleep_1 = __importDefault(require("../utils/sleep"));
 const user_1 = require("../services/user");
 const client_1 = require("../client");
 const font_1 = __importDefault(require("../utils/font"));
 const quiz_1 = __importDefault(require("./quiz"));
+const data_1 = require("../utils/data");
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
@@ -43,7 +44,7 @@ async function default_1(msg) {
     const key = bodyHasPrefix
         ? messageBody.slice(commandPrefix.length).trim()
         : messageBody;
-    const handler = index_1.commands[key.toLowerCase()];
+    const handler = loader_1.commands[key.toLowerCase()];
     if (!handler)
         return;
     const isBlockedUser = await (0, user_1.isBlocked)(msg.author ? msg.author.split("@")[0] : senderId);
@@ -126,18 +127,30 @@ async function default_1(msg) {
             };
             if (statusMessages[status]) {
                 const logFn = status === 500 ? log_1.default.error : log_1.default.warn;
-                logFn(key, statusMessages[status], { status, headers });
+                log_1.default.error(key, error);
                 const text = `
-        \`${statusMessages[status]}\`
+        \`${data_1.errors[Math.floor(Math.random() * data_1.errors.length)]}\`\`
 
-          Error fetching data for "${key}" command the
-          provider returned a ${status} status code.
+          We encountered an error while processing ${key}.
+          Provider returned an error ${statusMessages[status]}.
+          We notify the developers of the issue.
+          Please try again later.
         `;
                 await msg.reply(text);
                 return;
             }
         }
-        log_1.default.error(key, "Unexpected error occurred while processing the request:", error);
-        await msg.reply(`An unexpected error occurred while processing your request for "${key}". Please try again later.`);
+        log_1.default.error(key, error);
+        const text = `
+    \`${data_1.errors[Math.floor(Math.random() * data_1.errors.length)]}\`
+
+      We encountered an error while processing ${key}.
+      We notify the developers of the issue.
+      Please try again later.
+      If the problem persists, please create an issue on GitHub.
+
+      https://github.com/project-canis/project-canis/issues/
+    `;
+        await msg.reply(text);
     }
 }

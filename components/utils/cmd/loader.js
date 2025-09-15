@@ -36,16 +36,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.commands = exports.commandDirs = void 0;
 exports.default = loader;
 exports.mapCommands = mapCommands;
 const log_1 = __importDefault(require("../log"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
-const index_1 = require("../../../index");
 const child_process_1 = require("child_process");
-const cli_progress_1 = __importDefault(require("cli-progress"));
+const loadingBar_1 = __importDefault(require("../loadingBar"));
 const util_1 = __importDefault(require("util"));
 const execPromise = util_1.default.promisify(child_process_1.exec);
+const basePath = path_1.default.join(__dirname, "..", "..", "..", "commands");
+exports.commandDirs = [basePath, path_1.default.join(basePath, "private")];
+exports.commands = {};
 async function ensureDependencies(dependencies) {
     for (const dep of dependencies) {
         try {
@@ -81,7 +84,7 @@ async function loader(file, customPath) {
             if (Array.isArray(commandModule.info.dependencies)) {
                 await ensureDependencies(commandModule.info.dependencies);
             }
-            index_1.commands[commandModule.info.command] = {
+            exports.commands[commandModule.info.command] = {
                 command: commandModule.info.command,
                 description: commandModule.info.description || "No description",
                 usage: commandModule.info.usage || "No usage",
@@ -95,7 +98,7 @@ async function loader(file, customPath) {
 }
 async function mapCommands() {
     let allFiles = [];
-    for (const dir of index_1.commandDirs) {
+    for (const dir of exports.commandDirs) {
         const files = await fs_1.promises.readdir(dir);
         const tuples = files.map((f) => [f, dir]);
         allFiles = [...allFiles, ...tuples];
@@ -105,12 +108,7 @@ async function mapCommands() {
         log_1.default.info("Loader", "No commands found.");
         return;
     }
-    const bar = new cli_progress_1.default.SingleBar({
-        format: "Loading Commands | {bar} | {value}/{total} {command}",
-        barCompleteChar: "█",
-        barIncompleteChar: "-",
-        hideCursor: true,
-    }, cli_progress_1.default.Presets.shades_classic);
+    const bar = (0, loadingBar_1.default)("Loading Commands | {bar} | {value}/{total} {command}");
     bar.start(total, 0, { command: "" });
     for (const [file, dir] of allFiles) {
         try {

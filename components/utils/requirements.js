@@ -41,34 +41,24 @@ const child_process_1 = require("child_process");
 const process = __importStar(require("process"));
 const semver_1 = __importDefault(require("semver"));
 const log_1 = __importDefault(require("./log"));
-const url_1 = __importDefault(require("url"));
 function checkNodeVersion() {
     const current = process.versions.node;
     const required = ">=24.0.0";
     if (!semver_1.default.satisfies(current, required)) {
-        log_1.default.warn("Requirements", `Node.js ${required} required, found ${current}`);
+        log_1.default.warn("Node", `Node.js ${required} required, found ${current}`);
     }
     else {
-        log_1.default.info("Requirements", `Node.js version OK: ${current}`);
-    }
-}
-function safePrintDBUrl(dbUrl, fallback) {
-    try {
-        const parsed = new url_1.default.URL(dbUrl);
-        return `${parsed.protocol}//${parsed.hostname}:${parsed.port || ""}`;
-    }
-    catch {
-        return fallback;
+        log_1.default.info("Node", `Node.js ${current}`);
     }
 }
 function checkMySQL() {
     const dbUrl = process.env.DATABASE_URL || "mysql://root@127.0.0.1:3306";
     try {
         const version = (0, child_process_1.execSync)("mariadb --version").toString().trim();
-        log_1.default.info("Requirements", `MySQL available at ${safePrintDBUrl(dbUrl, "mysql://127.0.0.1:3306")} | ${version}`);
+        log_1.default.info("MySQL", version);
     }
     catch {
-        log_1.default.error("Requirements", "MySQL is required but not found (install mysql-client or ensure server is accessible).");
+        log_1.default.error("MySQL", "MySQL is required but not found (install mysql-client or ensure server is accessible).");
         process.exit(1);
     }
 }
@@ -76,44 +66,42 @@ function checkRedis() {
     const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
     try {
         const version = (0, child_process_1.execSync)("redis-cli --version").toString().trim();
-        log_1.default.info("Requirements", `Redis available at ${safePrintDBUrl(redisUrl, "redis://localhost:6379")} | ${version}`);
+        log_1.default.info("Redis", version);
     }
     catch {
-        log_1.default.error("Requirements", "Redis is required but not found (install redis-cli or ensure server is running).");
+        log_1.default.error("Redis", "Redis is required but not found (install redis-cli or ensure server is running).");
         process.exit(1);
     }
 }
 function checkChrome() {
     try {
-        const version = (0, child_process_1.execSync)("google-chrome-stable --version").toString().trim();
-        log_1.default.info("Requirements", `Google Chrome installed | ${version}`);
+        const version = (0, child_process_1.execSync)("google-chrome-stable --version")
+            .toString()
+            .trim();
+        log_1.default.info("GoogleChrome", version);
     }
     catch {
-        try {
-            const version = (0, child_process_1.execSync)("chromium --version").toString().trim();
-            log_1.default.info("Requirements", `Chromium installed | ${version}`);
-        }
-        catch {
-            log_1.default.error("Requirements", "Google Chrome/Chromium is required but not found.");
-            process.exit(1);
-        }
+        log_1.default.error("GoogleChrome", "Google Chrome not found. Some features may not work.");
     }
 }
 function checkFFMPEG() {
     try {
-        const version = (0, child_process_1.execSync)("ffmpeg -version").toString().split("\n")[0].trim();
-        log_1.default.info("Requirements", `FFmpeg installed | ${version}`);
+        const version = (0, child_process_1.execSync)("ffmpeg -version")
+            .toString()
+            .split("\n")[0]
+            .trim();
+        log_1.default.info("FFMPEG", version);
     }
     catch {
-        log_1.default.warn("Requirements", "FFmpeg not found. Some features may not work.");
+        log_1.default.warn("FFMPEG", "FFmpeg not found. Some features may not work.");
     }
 }
 function checkRequirements() {
-    log_1.default.info("Requirements", "Checking system requirements...");
+    log_1.default.info("Requirements", "Checking bot requirements...");
     checkNodeVersion();
     checkMySQL();
     checkRedis();
     checkChrome();
     checkFFMPEG();
-    log_1.default.info("Requirements", "System check complete.");
+    log_1.default.info("Requirements", "Bot requirements check complete.");
 }

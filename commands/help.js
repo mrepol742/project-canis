@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
-const index_1 = require("../index");
+const loader_1 = require("../components/utils/cmd/loader");
 exports.info = {
     command: "help",
     description: "List available commands and their usage.",
@@ -11,7 +11,7 @@ exports.info = {
     role: "user",
     cooldown: 5000,
 };
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 function paginate(items, page, pageSize) {
     const start = (page - 1) * pageSize;
     return items.slice(start, start + pageSize);
@@ -35,7 +35,7 @@ async function default_1(msg) {
         .replace(/^help\b\s*/i, "")
         .trim()
         .toLowerCase();
-    const matchCommands = index_1.commands[query];
+    const matchCommands = loader_1.commands[query];
     if (matchCommands) {
         const response = `
     \`${matchCommands.command}\`
@@ -50,7 +50,7 @@ async function default_1(msg) {
         return;
     }
     if (/^admin$/i.test(query)) {
-        const adminCommands = Object.values(index_1.commands)
+        const adminCommands = Object.values(loader_1.commands)
             .filter((cmd) => cmd.role === "admin")
             .map((cmd) => cmd.command)
             .sort((a, b) => a.localeCompare(b));
@@ -59,7 +59,7 @@ async function default_1(msg) {
     }
     const match = query.match(/(\d+)?/i);
     const page = Math.max(1, match && match[1] ? parseInt(match[1], 10) : 1);
-    const userCommands = Object.values(index_1.commands)
+    const userCommands = Object.values(loader_1.commands)
         .filter((cmd) => cmd.role === "user")
         .map((cmd) => cmd.command)
         .sort((a, b) => a.localeCompare(b));

@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.info = void 0;
 exports.default = default_1;
 const fs_1 = __importDefault(require("fs"));
-const index_1 = require("../index");
-const loader_1 = __importDefault(require("../components/utils/cmd/loader"));
+const loader_1 = require("../components/utils/cmd/loader");
+const loader_2 = __importDefault(require("../components/utils/cmd/loader"));
 exports.info = {
     command: "reload",
     description: "Reload a specific command or all commands.",
@@ -19,45 +19,41 @@ exports.info = {
 async function default_1(msg) {
     const query = msg.body.replace(/^reload\b\s*/i, "").trim();
     if (query.length !== 0) {
-        if (!index_1.commands[query.toLocaleLowerCase()]) {
-            await msg.reply(`Command "${query}" not found.`);
+        if (!loader_1.commands[query.toLocaleLowerCase()]) {
+            await msg.reply(`Command \`${query}\` not found.`);
             return;
         }
         const possibleExtensions = [".ts", ".js"];
         let found = false;
         for (const ext of possibleExtensions) {
-            for (const dir of index_1.commandDirs) {
-                (0, loader_1.default)(`${query}${ext}`, dir);
+            for (const dir of loader_1.commandDirs) {
+                (0, loader_2.default)(`${query}${ext}`, dir);
                 found = true;
             }
         }
-        if (!found)
-            await msg.reply(`
-    \`Failed to load\`
-    ${query}
-    `);
-        if (found)
-            await msg.reply(`
-      \`Successfully reloaded\`
-      ${query}
-      `);
+        if (!found) {
+            await msg.reply(`\`Failed to load\`\n${query}`);
+        }
+        else {
+            await msg.reply(`\`Successfully reloaded\`\n${query}`);
+        }
         return;
     }
     let count = 0;
     const newCommands = [];
     const removeCommands = [];
-    for (const dir of index_1.commandDirs) {
+    for (const dir of loader_1.commandDirs) {
         const files = fs_1.default.readdirSync(dir);
         for (const file of files) {
             if (/\.js$|\.ts$/.test(file)) {
                 const commandName = file.replace(/\.(js|ts)$/, "");
-                if (!index_1.commands[commandName]) {
+                if (!loader_1.commands[commandName]) {
                     newCommands.push(commandName);
                 }
                 else {
                     removeCommands.push(commandName);
                 }
-                await (0, loader_1.default)(file, dir);
+                await (0, loader_2.default)(file, dir);
                 count++;
             }
         }
