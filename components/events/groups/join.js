@@ -14,18 +14,28 @@ async function default_1(notif) {
             return;
         const group = await notif.getChat();
         const recipients = await notif.getRecipients();
+        const newMembers = [];
         for (const contact of recipients) {
             const name = contact.pushname || contact.name || contact.id.user;
             const isSelf = contact.id._serialized === client_1.client.info.wid._serialized;
             await (0, sleep_1.default)(2000);
             log_1.default.info("Group Join", `${name} joined the group ${group.name}`);
             if (isSelf) {
-                await notif.reply(`🙋‍♂️ Hello everyone! I'm ${PROJECT_CANIS_ALIAS} your WhatsApp Bot,
-          for more information please send \`help\` or \`legal\.`);
+                await notif.reply(`🙋‍♂️ Hello everyone!
+
+          I'm ${PROJECT_CANIS_ALIAS}, a scalable, modular and
+          flexible chatbot for WhatsApp and Telegram.
+
+          By continuing you agree to the bot \`terms\` and \`privacy\`.
+          To list down commands type \`help\`.
+        `);
             }
             else {
-                await notif.reply(`👋 Welcome *${name}* 🎉`);
+                newMembers.push(name);
             }
+        }
+        if (newMembers.length > 0) {
+            await notif.reply(`👋 Welcome *${newMembers.join(", ")}* 🎉`);
         }
     }
     catch (err) {

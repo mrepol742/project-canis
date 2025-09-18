@@ -6,8 +6,8 @@ const loader_1 = require("../components/utils/cmd/loader");
 exports.info = {
     command: "help",
     description: "List available commands and their usage.",
-    usage: "help [page] | [role]",
-    example: "help admin",
+    usage: "help [page] | [role] | [command]",
+    example: "help",
     role: "user",
     cooldown: 5000,
 };
@@ -18,7 +18,7 @@ function paginate(items, page, pageSize) {
 }
 function buildUserPage(userCommands, page, totalPages) {
     let response = `
-  Use \`help <command>\` for more details on a specific command.\n
+  Use \`help [page] | [role] | [command]\` for more details on a specific command.\n
   < ─────────── >\n   •  ${userCommands.join("\n   •  ") || "_None_"}\n\n`;
     response += `< ─────────── >`;
     response += `\n\`Page ${page} of ${totalPages}\``;
@@ -26,7 +26,7 @@ function buildUserPage(userCommands, page, totalPages) {
 }
 function buildAdminPage(adminCommands) {
     return `
-  Use \`help <command>\` for more details on a specific command.\n
+  Use \`help [page] | [role] | [command]\` for more details on a specific command.\n
   < ─────────── >\n   •  ${adminCommands.join("\n   •  ") || "_None_"}\n< ─────────── >
   `;
 }
@@ -55,6 +55,10 @@ async function default_1(msg) {
             .map((cmd) => cmd.command)
             .sort((a, b) => a.localeCompare(b));
         await msg.reply(buildAdminPage(adminCommands));
+        return;
+    }
+    if (!/^[1-9]\d*$/.test(query)) {
+        await msg.reply("Please type a valid page number.");
         return;
     }
     const match = query.match(/(\d+)?/i);

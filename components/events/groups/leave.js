@@ -12,11 +12,17 @@ async function default_1(notif) {
             return;
         const group = await notif.getChat();
         const recipients = await notif.getRecipients();
+        const leavers = [];
         for (const contact of recipients) {
             const name = contact.pushname || contact.name || contact.id.user;
             log_1.default.info("Group Leave", `${name} left the group ${group.name}`);
             await (0, sleep_1.default)(1500);
-            await notif.reply(`👋 *${name}* has left. I’ll miss you!`);
+            leavers.push(name);
+        }
+        if (leavers.length > 0) {
+            await notif.reply(leavers.length === 1
+                ? `👋 *${leavers[0]}* has left. I’ll miss you!`
+                : `👋 *${leavers.join(", ")}* have left. We’ll miss you all!`);
         }
     }
     catch (err) {
