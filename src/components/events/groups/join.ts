@@ -11,6 +11,8 @@ export default async function (notif: GroupNotification) {
     const group = await notif.getChat();
     const recipients = await notif.getRecipients();
 
+    const newMembers = [];
+
     for (const contact of recipients) {
       const name = contact.pushname || contact.name || contact.id.user;
       const isSelf = contact.id._serialized === client.info.wid._serialized;
@@ -18,14 +20,25 @@ export default async function (notif: GroupNotification) {
       await sleep(2000);
 
       log.info("Group Join", `${name} joined the group ${group.name}`);
+
       if (isSelf) {
         await notif.reply(
-          `🙋‍♂️ Hello everyone! I'm ${PROJECT_CANIS_ALIAS} your WhatsApp Bot,
-          for more information please send \`help\` or \`legal\.`,
+          `🙋‍♂️ Hello everyone!
+
+          I'm ${PROJECT_CANIS_ALIAS}, a scalable, modular and
+          flexible chatbot for WhatsApp and Telegram.
+
+          By continuing you agree to the bot \`terms\` and \`privacy\`.
+          To list down commands type \`help\`.
+        `,
         );
       } else {
-        await notif.reply(`👋 Welcome *${name}* 🎉`);
+        newMembers.push(name);
       }
+    }
+
+    if (newMembers.length > 0) {
+      await notif.reply(`👋 Welcome *${newMembers.join(", ")}* 🎉`);
     }
   } catch (err) {
     log.error("Group Join", "Failed to process group join event:", err);

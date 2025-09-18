@@ -1,12 +1,12 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import { commands } from "../components/utils/cmd/loader";
 
 export const info = {
   command: "help",
   description: "List available commands and their usage.",
-  usage: "help [page] | [role]",
-  example: "help admin",
+  usage: "help [page] | [role] | [command]",
+  example: "help",
   role: "user",
   cooldown: 5000,
 };
@@ -26,10 +26,10 @@ function paginate(items: string[], page: number, pageSize: number): string[] {
 function buildUserPage(
   userCommands: string[],
   page: number,
-  totalPages: number
+  totalPages: number,
 ): string {
   let response = `
-  Use \`help <command>\` for more details on a specific command.\n
+  Use \`help [page] | [role] | [command]\` for more details on a specific command.\n
   < ─────────── >\n   •  ${userCommands.join("\n   •  ") || "_None_"}\n\n`;
   response += `< ─────────── >`;
   response += `\n\`Page ${page} of ${totalPages}\``;
@@ -38,7 +38,7 @@ function buildUserPage(
 
 function buildAdminPage(adminCommands: string[]): string {
   return `
-  Use \`help <command>\` for more details on a specific command.\n
+  Use \`help [page] | [role] | [command]\` for more details on a specific command.\n
   < ─────────── >\n   •  ${
     adminCommands.join("\n   •  ") || "_None_"
   }\n< ─────────── >
@@ -76,6 +76,11 @@ export default async function (msg: Message) {
       .map((cmd: CommandType) => cmd.command)
       .sort((a, b) => a.localeCompare(b));
     await msg.reply(buildAdminPage(adminCommands));
+    return;
+  }
+
+  if (!/^[1-9]\d*$/.test(query)) {
+    await msg.reply("Please type a valid page number.");
     return;
   }
 
