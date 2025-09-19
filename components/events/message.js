@@ -63,9 +63,7 @@ async function default_1(msg, type) {
     if (handler.role === "admin" && !msg.fromMe) {
         return;
     }
-    if (debug) {
-        log_1.default.info("Message", senderId, msg.body.slice(0, 150));
-    }
+    log_1.default.info("Message", senderId, msg.body.slice(0, 150));
     msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
     const originalReply = msg.reply.bind(msg);
     msg.reply = async (content, chatId, options) => {
@@ -148,7 +146,7 @@ async function default_1(msg, type) {
       Please try again later.
       If the problem persists, please create an issue on GitHub.
 
-      https://github.com/project-canis/project-canis/issues/
+      https://github.com/project-canis/issues/
     `;
         await msg.reply(text);
     }

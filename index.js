@@ -10,6 +10,7 @@ const log_1 = __importDefault(require("./components/utils/log"));
 const loader_1 = require("./components/utils/cmd/loader");
 const watcher_1 = __importDefault(require("./components/utils/cmd/watcher"));
 require("./components/process");
+require("./components/server");
 const memMonitor_1 = __importDefault(require("./components/utils/memMonitor"));
 const monitor = new memMonitor_1.default({ interval: 30000 });
 monitor.start();
