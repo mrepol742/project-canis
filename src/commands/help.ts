@@ -79,7 +79,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  if (!/^[1-9]\d*$/.test(query)) {
+  if (!/^[1-9]\d*$/.test(query) && query != "") {
     await msg.reply("Please type a valid page number.");
     return;
   }

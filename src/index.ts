@@ -8,6 +8,7 @@ import log from "./components/utils/log";
 import { mapCommands } from "./components/utils/cmd/loader";
 import watcher from "./components/utils/cmd/watcher";
 import "./components/process";
+import "./components/server";
 import MemoryMonitor from "./components/utils/memMonitor";
 
 const monitor = new MemoryMonitor({ interval: 30000 });

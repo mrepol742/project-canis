@@ -2,6 +2,7 @@ import { Message } from "../../types/message"
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
+
 export const info = {
   command: "sim",
   description: "Generate a sexy, flirty, funny, and horny response.",
