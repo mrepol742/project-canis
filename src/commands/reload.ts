@@ -34,21 +34,18 @@ export default async function (msg: Message) {
       }
     }
 
-    if (!found) {
-      await msg.reply(`
-        \`Failed to load\`
+    if (!found)
+      return await msg.reply(`
+    \`Failed to load\`
 
-        ${query}
+    ${query}
       `);
-    } else {
-      await msg.reply(`
-        \`Successfully reloaded\`
 
-        ${query}
-      `);
-    }
+    return await msg.reply(`
+    \`Successfully reloaded\`
 
-    return;
+    ${query}
+    `);
   }
 
   // Reload all commands

@@ -1,9 +1,5 @@
 import { Message } from "../../types/message";
-import log from "../components/utils/log";
-import { exec } from "child_process";
-import util from "util";
 import { prisma } from "../components/prisma";
-import { getKey } from "../components/utils/rateLimiter";
 import redis from "../components/redis";
 
 export const info = {
@@ -28,6 +24,15 @@ export default async function (msg: Message) {
   await prisma.block.deleteMany({
     where: { lid: { in: lids } },
   });
+
+  await Promise.all(
+    msg.mentionedIds.map((lid) =>
+      redis.set(
+        `rate:${lid}`,
+        JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 }),
+      ),
+    ),
+  );
 
   await msg.react("✅");
 }

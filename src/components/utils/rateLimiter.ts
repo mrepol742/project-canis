@@ -1,4 +1,3 @@
-import { Message } from "whatsapp-web.js";
 import redis from "../redis";
 import log from "./log";
 import { prisma } from "../prisma";
@@ -7,16 +6,11 @@ const LIMIT = 5;
 const BASE_WINDOW_MS = 30 * 1000;
 const PENALTY_INCREMENT_MS = 10 * 1000;
 
-export function getKey(number: string) {
-  return `rate:${number}`;
-}
-
 export default async function rateLimiter(
-  msg: Message,
+  lid: string,
 ): Promise<boolean | null> {
-  const number = msg.from;
   const now = Date.now();
-  const key = getKey(number);
+  const key = `rate:${lid}`;
 
   const entryRaw = await redis.get(key);
   let entry = entryRaw
@@ -47,14 +41,14 @@ export default async function rateLimiter(
 
     log.warn(
       "RateLimiter",
-      `User ${number} blocked until ${new Date(entry.penaltyUntil).toLocaleTimeString()}`,
+      `User ${lid} blocked until ${new Date(entry.penaltyUntil)}`,
     );
 
     await Promise.all([
       redis.set(key, JSON.stringify(entry)),
       prisma.user.update({
         where: {
-          lid: msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0],
+          lid,
         },
         data: {
           quizAnswered: {

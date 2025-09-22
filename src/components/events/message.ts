@@ -51,7 +51,7 @@ export default async function (msg: Message, type: string) {
     .trim();
 
   const prefix = !msg.body.startsWith(commandPrefix);
-  const senderId = msg.from.split("@")[0];
+  const lid = msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0];
 
   /*
    * Prefix
@@ -73,21 +73,17 @@ export default async function (msg: Message, type: string) {
   /*
    * Block users from running commands.
    */
-  const isBlockedUser = await isBlocked(
-    msg.author ? msg.author.split("@")[0] : senderId,
-  );
-  if (isBlockedUser) {
-    return;
-  }
+  const isBlockedUser = await isBlocked(lid);
+  if (isBlockedUser) return;
 
   /*
    * Rate limit commands to prevent abuse.
    */
   if (!msg.fromMe) {
-    const rate = await rateLimiter(msg);
+    const rate = await rateLimiter(lid);
     if (rate) return;
     if (rate === null) {
-      msg.reply("Please wait a minute or so.");
+      await msg.reply("Please wait a minute or so.");
       return;
     }
 
@@ -118,7 +114,7 @@ export default async function (msg: Message, type: string) {
     return;
   }
 
-  log.info("Message", senderId, msg.body.slice(0, 150));
+  log.info("Message", lid, msg.body.slice(0, 150));
   msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
 
   const originalReply = msg.reply.bind(msg);
@@ -129,9 +125,8 @@ export default async function (msg: Message, type: string) {
   ): Promise<Message> => {
     let messageBody = typeof content === "string" ? Font(content) : content;
 
-    if (Math.random() < 0.5) {
+    if (Math.random() < 0.5)
       return await client.sendMessage(msg.id.remote, messageBody, options);
-    }
     return await originalReply(messageBody, chatId, options);
   };
 

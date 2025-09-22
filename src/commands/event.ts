@@ -12,14 +12,9 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^event/i.test(msg.body)) return;
 
-  let event: Message;
+  let event: Message = msg;
 
-  if (msg.hasQuotedMsg) {
-    const quotedEvent = await msg.getQuotedMessage();
-    event = quotedEvent;
-  } else {
-    event = msg;
-  }
+  if (msg.hasQuotedMsg) event = await msg.getQuotedMessage();
 
   await msg.reply("```" + JSON.stringify(event, null, 2) + "```");
 }
