@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 
 export const info = {
@@ -13,5 +13,11 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^test$/i.test(msg.body)) return;
 
-  await msg.reply("This is a test response.");
+  const testMessage = `
+    \`Hello World\`
+
+    If you can read this it means the bot client is working.
+  `;
+
+  await msg.reply(testMessage);
 }

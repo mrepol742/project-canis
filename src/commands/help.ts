@@ -29,20 +29,27 @@ function buildUserPage(
   totalPages: number,
 ): string {
   let response = `
-  Use \`help [page] | [role] | [command]\` for more details on a specific command.\n
-  < ─────────── >\n   •  ${userCommands.join("\n   •  ") || "_None_"}\n\n`;
-  response += `< ─────────── >`;
-  response += `\n\`Page ${page} of ${totalPages}\``;
+    \`help [page] | [role] | [command]\` for more details on a specific command.
+
+    | ─────────── >
+    |  •  ${userCommands.join("\n    |  •  ") || "_None_"}
+    | ─────────── >
+
+    \`Page ${page} of ${totalPages}\`
+  `;
   return response;
 }
 
 function buildAdminPage(adminCommands: string[]): string {
-  return `
-  Use \`help [page] | [role] | [command]\` for more details on a specific command.\n
-  < ─────────── >\n   •  ${
-    adminCommands.join("\n   •  ") || "_None_"
-  }\n< ─────────── >
+  let response = `
+    \`help [page] | [role] | [command]\` for more details on a specific command.
+
+    | ─────────── >
+    |  •  ${adminCommands.join("\n    |  •  ") || "_None_"}
+    | ─────────── >
+
   `;
+  return response;
 }
 
 export default async function (msg: Message) {

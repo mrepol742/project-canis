@@ -14,7 +14,7 @@ export default async function (msg: Message) {
   if (!/^terms$/i.test(msg.body)) return;
 
   const text = `
-  \`Terms of Service\`
+    \`Terms of Service\`
     By using this bot, you agree to the following terms:
 
     - You will not use the bot for any illegal activities.

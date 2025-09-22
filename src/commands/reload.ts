@@ -35,9 +35,17 @@ export default async function (msg: Message) {
     }
 
     if (!found) {
-      await msg.reply(`\`Failed to load\`\n${query}`);
+      await msg.reply(`
+        \`Failed to load\`
+
+        ${query}
+      `);
     } else {
-      await msg.reply(`\`Successfully reloaded\`\n${query}`);
+      await msg.reply(`
+        \`Successfully reloaded\`
+
+        ${query}
+      `);
     }
 
     return;
@@ -67,14 +75,16 @@ export default async function (msg: Message) {
   }
 
   let text = `
-  \`Reloaded\`
-  ${count} commands
+    \`Reloaded\`
+
+    ${count} commands
   `;
 
   if (newCommands.length > 0) {
     text += `
-  \`Found new command(s)\`
-  ${newCommands.join(", ")}
+    \`Found new command(s)\`
+
+    ${newCommands.join(", ")}
   `;
   }
 

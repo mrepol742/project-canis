@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import os from "os";
 import timestamp from "../components/utils/timestamp";
 import { client } from "../components/client";
@@ -19,17 +19,17 @@ export default async function (msg: Message) {
   const waVersion = await client.getWWebVersion();
 
   const statsMessage = `
-      \`${timestamp(process.uptime())}\`
+    \`${timestamp(process.uptime())}\`
 
-      ID: #${process.pid}
-      LA: ${os
-        .loadavg()
-        .map((n) => n.toFixed(2))
-        .join(", ")}
-      Status: ${waStatus}
-      Version: ${waVersion}
-      Node.js: ${process.version}
-      `;
+    ID: #${process.pid}
+    LA: ${os
+      .loadavg()
+      .map((n) => n.toFixed(2))
+      .join(", ")}
+    Status: ${waStatus}
+    Version: ${waVersion}
+    Node.js: ${process.version}
+  `;
 
   await msg.reply(statsMessage);
 }

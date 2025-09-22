@@ -29,10 +29,10 @@ export default async function (msg: Message) {
   const description = data.description ? `(${data.description})` : "";
   const extract = data.extract || "No summary available.";
   const text = `
-      \`${title}\`
-      ${description}
+    \`${title}\`
+    ${description}
 
-      ${extract}
-      `;
+    ${extract}
+  `;
   await msg.reply(text);
 }

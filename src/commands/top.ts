@@ -21,7 +21,7 @@ export default async function (msg: Message) {
   }
 
   const text = `
-\`Top Users by Activity:\`
+    \`Top Users by Activity:\`
 
     ${user
       .filter((u, index) => u.commandCount !== 0 && index < 20)

@@ -70,7 +70,6 @@ export default async function (msg: Message) {
     Homepage: ${homepage}
     Repository: ${repository}
     Last Published: ${formattedPublished}
-    `;
-
+  `;
   await msg.reply(repo);
 }

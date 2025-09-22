@@ -22,7 +22,7 @@ export default async function (msg: Message) {
     return await msg.reply("I don't have any quiz questions right now...");
 
   let text = `
-  \`${response.question}\`
+    \`${response.question}\`
   `;
 
   if (response.choices && response.choices.length > 0) {

@@ -48,8 +48,16 @@ export default async function (msg: Message) {
   }
 
   if (!found) {
-    await msg.reply(`\`Failed to unload\`\n${query}`);
+    await msg.reply(`
+      \`Failed to unload\`
+
+      ${query}
+    `);
   } else {
-    await msg.reply(`\`Successfully unloaded\`\n${query}`);
+    await msg.reply(`
+      \`Successfully unloaded\`
+
+      ${query}
+    `);
   }
 }

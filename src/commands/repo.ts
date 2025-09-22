@@ -26,20 +26,20 @@ export default async function (msg: Message) {
   }
   const repo = response.data;
   const info = `
-      \`${repo.name}\`
-      ${repo.description.substring(0, 100) || "No description available."}
+    \`${repo.name}\`
+    ${repo.description.substring(0, 100) || "No description available."}
 
-      Stars: ${repo.stargazers_count}
-      Forks: ${repo.forks_count}
-      Open Issues: ${repo.open_issues_count}
-      Watchers: ${repo.watchers_count}
-      Stargazers: ${repo.stargazers_count}
-      License: ${repo.license ? repo.license.name : "N/A"}
-      Is Fork: ${repo.fork ? "Yes" : "No"}
-      Allow Forking: ${repo.allow_forking ? "Yes" : "No"}
-      Language: ${repo.language || "N/A"}
-      Created At: ${new Date(repo.created_at).toLocaleDateString()}
-      Updated At: ${new Date(repo.updated_at).toLocaleDateString()}
-      `;
+    Stars: ${repo.stargazers_count}
+    Forks: ${repo.forks_count}
+    Open Issues: ${repo.open_issues_count}
+    Watchers: ${repo.watchers_count}
+    Stargazers: ${repo.stargazers_count}
+    License: ${repo.license ? repo.license.name : "N/A"}
+    Is Fork: ${repo.fork ? "Yes" : "No"}
+    Allow Forking: ${repo.allow_forking ? "Yes" : "No"}
+    Language: ${repo.language || "N/A"}
+    Created At: ${new Date(repo.created_at).toLocaleDateString()}
+    Updated At: ${new Date(repo.updated_at).toLocaleDateString()}
+  `;
   await msg.reply(info);
 }

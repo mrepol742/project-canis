@@ -14,7 +14,8 @@ export default async function (msg: Message) {
   if (!/^dcma$/i.test(msg.body)) return;
 
   const text = `
-  \`DCMA\`
+    \`DCMA\`
+
     This bot is intended for educational and entertainment purposes only.
     The owner of this bot does not claim ownership of any content shared through it.
     If you believe that your content has been used without permission,

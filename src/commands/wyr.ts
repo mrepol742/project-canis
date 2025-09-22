@@ -17,11 +17,11 @@ export default async function (msg: Message) {
   if (response.length === 0)
     return await msg.reply("I don't have any jokes right now...");
   const text = `
-  \`Would you rather?\`
+    \`Would you rather?\`
 
-  ${response.ops1}
-  or
-  ${response.ops2}
+    ${response.ops1}
+    or
+    ${response.ops2}
   `;
   await msg.reply(text);
 }

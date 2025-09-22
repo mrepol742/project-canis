@@ -70,9 +70,13 @@ export default async function (msg: Message) {
     const seconds = projectDurations[proj];
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    return `- ${proj}: ${hours}h ${minutes}m`;
+    return `${proj}: ${hours}h ${minutes}m`;
   });
 
-  const replyText = `\`Today's WakaTime projects\`\n${projectList.join("\n")}`;
+  const replyText = `
+    \`Today's WakaTime projects\`
+
+    ${projectList.join("\n    ")}
+  `;
   await msg.reply(replyText);
 }

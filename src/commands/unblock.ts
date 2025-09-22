@@ -29,14 +29,5 @@ export default async function (msg: Message) {
     where: { lid: { in: lids } },
   });
 
-  await Promise.all(
-    msg.mentionedIds.map((userId) =>
-      redis.set(
-        getKey(userId),
-        JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 })
-      )
-    )
-  );
-
   await msg.react("✅");
 }

@@ -14,7 +14,7 @@ export default async function (msg: Message) {
   if (!/^license/i.test(msg.body)) return;
 
   const text = `
-  \`License\`
+    \`License\`
     MIT License with Commons Clause and Commercial Licensing
 
     Copyright (c) 2025 Melvin Jones Repol

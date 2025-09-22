@@ -14,7 +14,7 @@ export default async function (msg: Message) {
   if (!/^privacy$/i.test(msg.body)) return;
 
   const text = `
-  \`Privacy Policy\`
+    \`Privacy Policy\`
     This privacy policy outlines how we collect, use, and protect user data in compliance with applicable laws and regulations.
 
     \`Data Collection\`

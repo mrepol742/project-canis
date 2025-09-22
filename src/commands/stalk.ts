@@ -1,6 +1,6 @@
 import { Message } from "../../types/message";
 import { getQuizCount } from "../components/services/quiz";
-import { getUserbyLid } from "../components/services/user";
+import { getUserbyLid, isBlocked } from "../components/services/user";
 
 export const info = {
   command: "stalk",
@@ -18,14 +18,15 @@ export default async function (msg: Message) {
   }
 
   const lid = msg.mentionedIds[0].split("@")[0];
-  const [user] = await Promise.all([
-    getUserbyLid(lid)
+  const [user, isBlockUser] = await Promise.all([
+    getUserbyLid(lid),
+    isBlocked(lid),
   ]);
   if (!user) return await msg.reply("User not found.");
 
   const text = `
-  \`${user.name}\`
-  ${user.about || "No about information available."}
+    \`${user.name}\`
+    ${user.about || "No about information available."}
 
     ID: ${user.lid}
     Number: ${user.number}
@@ -34,6 +35,7 @@ export default async function (msg: Message) {
     Mode: ${user.mode}
     Command Count: ${user.commandCount}
     Last Seen: ${new Date(user.updatedAt).toLocaleString()}
-    `;
+    Blocked: ${isBlockUser ? "Yes" : "No"}
+  `;
   await msg.reply(text);
 }

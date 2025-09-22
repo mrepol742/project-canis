@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import axios from "../components/axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
@@ -29,21 +29,20 @@ export default async function (msg: Message) {
 
   const user = response.data;
   const info = `
-      \`${user.name || user.login}\
-      ${user.bio || ""}
+    \`${user.name || user.login}\
+    ${user.bio || ""}
 
-      Place: ${user.location || "N/A"}
-      Followers: ${user.followers}
-      Following: ${user.following}
-      Gists: ${user.public_gists}
-      Repo: ${user.public_repos}
-      X: ${
-        user.twitter_username
-          ? `https://twitter.com/${user.twitter_username}`
-          : "N/A"
-      }
-      Link: ${user.blog || "N/A"}
+    Place: ${user.location || "N/A"}
+    Followers: ${user.followers}
+    Following: ${user.following}
+    Gists: ${user.public_gists}
+    Repo: ${user.public_repos}
+    X: ${
+      user.twitter_username
+        ? `https://twitter.com/${user.twitter_username}`
+        : "N/A"
+    }
+    Link: ${user.blog || "N/A"}
   `;
-
   await msg.reply(info);
 }

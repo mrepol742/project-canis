@@ -53,13 +53,13 @@ export default async function (msg: Message) {
   }
   const repo = response.data;
   const info = `
-      \`${repo.name}\`
-      ${repo.description || ""}
+    \`${repo.name}\`
+    ${repo.description || ""}
 
-      Stars: ${repo.star_count}
-      Pulls: ${repo.pull_count}
-      Last Updated: ${new Date(repo.last_updated).toLocaleDateString()}
-      Link: https://hub.docker.com/r/${repo.namespace}/${repo.name}
-      `;
+    Stars: ${repo.star_count}
+    Pulls: ${repo.pull_count}
+    Last Updated: ${new Date(repo.last_updated).toLocaleDateString()}
+    Link: https://hub.docker.com/r/${repo.namespace}/${repo.name}
+  `;
   await msg.reply(info);
 }

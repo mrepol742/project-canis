@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 
 export const info = {
@@ -11,26 +11,26 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-    if (!/^legal$/i.test(msg.body)) return;
+  if (!/^legal$/i.test(msg.body)) return;
 
-    const text = `
+  const text = `
     \`Legal Commands\`
 
-       \`terms\`
-       Display the terms of service of the bot.
+    \`terms\`
+    Display the terms of service of the bot.
 
-       \`privacy\`
-       Display the privacy policy of the bot.
+    \`privacy\`
+    Display the privacy policy of the bot.
 
-       \`dcma\`
-       Display the DCMA policy of the bot.
+    \`dcma\`
+    Display the DCMA policy of the bot.
 
-       \`license\`
-       Display the License of the bot.
+    \`license\`
+    Display the License of the bot.
 
-       \`contact\`
-       mrepol742@gmail.com
+    \`contact\`
+    mrepol742@gmail.com
     `;
 
-    await msg.reply(text);
+  await msg.reply(text);
 }
