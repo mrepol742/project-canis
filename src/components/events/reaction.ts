@@ -11,9 +11,7 @@ export default async function (client: Client, react: Reaction) {
 
   const senderId = react.senderId.split("@")[0];
   const isBlockedUser = await isBlocked(senderId);
-  if (isBlockedUser) {
-    return;
-  }
+  if (isBlockedUser) return;
 
   try {
     const message = await client.getMessageById(react.msgId._serialized);

@@ -47,30 +47,24 @@ client.on("qr", (qr: string) => {
   qrcode.generate(qr, { small: true });
 });
 
-client.on("ready", async () => ready());
+client.on("ready", () => ready());
 
-client.on("message_reaction", async (react: Reaction) =>
-  reaction(client, react),
-);
+client.on("message_reaction", (react: Reaction) => reaction(client, react));
 
 // client.on("message", (msg) => messageEvent(msg));
-client.on("message_create", async (msg: Message) => messageEvent(msg, "create"));
+client.on("message_create", (msg: Message) => messageEvent(msg, "create"));
 
-client.on(
-  "message_edit",
-  async (msg: Message, newBody: string, prevBody: string) => {
-    msg.body = newBody;
-    await Promise.all([messageEdit(msg, newBody, prevBody), messageEvent(msg, "edit")]);
-  },
+client.on("message_edit", (msg: Message, newBody: string, prevBody: string) => {
+  msg.body = newBody;
+  Promise.all([messageEdit(msg, newBody, prevBody), messageEvent(msg, "edit")]);
+});
+
+client.on("message_revoke_everyone", (msg: Message, revoked_msg?: Message) =>
+  revoke(msg, revoked_msg),
 );
 
-client.on(
-  "message_revoke_everyone",
-  async (msg: Message, revoked_msg?: Message) => revoke(msg, revoked_msg),
-);
-
-client.on("group_join", async (notif: GroupNotification) => groupJoin(notif));
-client.on("group_leave", async (notif: GroupNotification) => groupLeave(notif));
+client.on("group_join", (notif: GroupNotification) => groupJoin(notif));
+client.on("group_leave", (notif: GroupNotification) => groupLeave(notif));
 client.on("auth_failure", (msg: string) => {
   loadingBar.stop();
   log.error("Auth", "Authentication failed. Please try again.");

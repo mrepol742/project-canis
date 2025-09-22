@@ -13,7 +13,11 @@ import { client } from "../client";
 import Font from "../utils/font";
 import quiz from "./quiz";
 import { errors } from "../utils/data";
+import emojiRegex from "emoji-regex";
+import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
+import { containsAny } from "../utils/string";
 
+const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
@@ -85,6 +89,25 @@ export default async function (msg: Message, type: string) {
     if (rate === null) {
       msg.reply("Please wait a minute or so.");
       return;
+    }
+
+    /*
+     *
+     * Process msg reaction
+     */
+    const emojis = [...msg.body.matchAll(regex)].map((match) => match[0]);
+    if (emojis.length > 0) {
+      const react = emojis[Math.floor(Math.random() * emojis.length)];
+
+      await msg.react(react);
+    } else if (containsAny(msg.body, funD)) {
+      await msg.react("🤣");
+    } else if (containsAny(msg.body, happyEE)) {
+      await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
+    } else if (containsAny(msg.body, sadEE)) {
+      await msg.react("😭");
+    } else if (containsAny(msg.body, loveEE)) {
+      await msg.react("❤️");
     }
   }
 
