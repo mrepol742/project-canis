@@ -2,6 +2,7 @@ import { GroupNotification } from "whatsapp-web.js";
 import log from "../../utils/log";
 import sleep from "../../utils/sleep";
 import { client } from "../../client";
+import { getMessage } from "../../../data/group";
 
 const PROJECT_CANIS_ALIAS = process.env.PROJECT_CANIS_ALIAS || "Canis";
 
@@ -16,8 +17,6 @@ export default async function (notif: GroupNotification) {
     for (const contact of recipients) {
       const name = contact.pushname || contact.name || contact.id.user;
       const isSelf = contact.id._serialized === client.info.wid._serialized;
-
-      await sleep(2000);
 
       log.info("Group Join", `${name} joined the group ${group.name}`);
 
@@ -38,7 +37,7 @@ export default async function (notif: GroupNotification) {
     }
 
     if (newMembers.length > 0) {
-      await notif.reply(`👋 Welcome *${newMembers.join(", ")}* 🎉`);
+      await notif.reply(getMessage("welcome", `*${newMembers.join(", ")}*`));
     }
   } catch (err) {
     log.error("Group Join", "Failed to process group join event:", err);

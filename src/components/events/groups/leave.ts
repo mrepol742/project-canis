@@ -1,6 +1,8 @@
 import { GroupNotification } from "whatsapp-web.js";
 import log from "../../utils/log";
 import sleep from "../../utils/sleep";
+import { client } from "../../client";
+import { getMessage } from "../../../data/group";
 
 export default async function (notif: GroupNotification) {
   try {
@@ -12,19 +14,17 @@ export default async function (notif: GroupNotification) {
 
     for (const contact of recipients) {
       const name = contact.pushname || contact.name || contact.id.user;
-      log.info("Group Leave", `${name} left the group ${group.name}`);
-
-      await sleep(1500); // prevent flooding
-      leavers.push(name);
+      const isSelf = contact.id._serialized === client.info.wid._serialized;
+      if (!isSelf) {
+        log.info("Group Leave", `${name} left the group ${group.name}`);
+        leavers.push(name);
+      } else {
+        log.info("Group Leave", `the bot left the group ${group.name}`);
+      }
     }
 
-    if (leavers.length > 0) {
-      await notif.reply(
-        leavers.length === 1
-          ? `👋 *${leavers[0]}* has left. I’ll miss you!`
-          : `👋 *${leavers.join(", ")}* have left. We’ll miss you all!`,
-      );
-    }
+    if (leavers.length > 0)
+      await notif.reply(getMessage("leaving", `*${leavers.join(", ")}*`));
   } catch (err) {
     log.error("Group Leave", "Failed to process group leave event:", err);
   }
