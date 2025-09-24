@@ -60,6 +60,27 @@ export default async function (msg: Message, type: string) {
   if (msg.fromMe && prefix) return;
 
   /*
+   *
+   * Process msg reaction
+   */
+  if (!msg.fromMe) {
+    const emojis = [...new Set([...msg.body.matchAll(regex)].map((m) => m[0]))];
+    if (emojis.length > 0) {
+      const react = emojis[Math.floor(Math.random() * emojis.length)];
+
+      await msg.react(react);
+    } else if (containsAny(msg.body, funD)) {
+      await msg.react("🤣");
+    } else if (containsAny(msg.body, happyEE)) {
+      await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
+    } else if (containsAny(msg.body, sadEE)) {
+      await msg.react("😭");
+    } else if (containsAny(msg.body, loveEE)) {
+      await msg.react("❤️");
+    }
+  }
+
+  /*
    * Check if the message starts with the command prefix.
    */
   const messageBody = msg.body.split(" ")[0];
@@ -85,25 +106,6 @@ export default async function (msg: Message, type: string) {
     if (rate === null) {
       await msg.reply("Please wait a minute or so.");
       return;
-    }
-
-    /*
-     *
-     * Process msg reaction
-     */
-    const emojis = [...msg.body.matchAll(regex)].map((match) => match[0]);
-    if (emojis.length > 0) {
-      const react = emojis[Math.floor(Math.random() * emojis.length)];
-
-      await msg.react(react);
-    } else if (containsAny(msg.body, funD)) {
-      await msg.react("🤣");
-    } else if (containsAny(msg.body, happyEE)) {
-      await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
-    } else if (containsAny(msg.body, sadEE)) {
-      await msg.react("😭");
-    } else if (containsAny(msg.body, loveEE)) {
-      await msg.react("❤️");
     }
   }
 
