@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
@@ -19,12 +19,31 @@ export default async function (msg: Message) {
     return;
   }
 
+  let quotedMessage: Message | null = null;
+  let contextLabel = "AI";
+
+  if (msg.hasQuotedMsg) {
+    quotedMessage = await msg.getQuotedMessage();
+
+    if (!quotedMessage.fromMe) contextLabel = "Previous user interaction";
+  }
+
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   const text = await agentHandler(
-    `You are an AI agent. Respond to the user's query in no more than 3 sentences.
-    If asked about other AI agents like 'sim', 'mj', or 'chad', mention that their commands are !sim, !mj, or !chad.
-    Adapt your response style to match how those agents typically reply.
+    `You are an AI agent. Today's date is ${today}.
+    Respond to the user's query in no more than 3 sentences.
     User query: ${query}
-    `
+    ${
+      quotedMessage
+        ? `\nQuoted Message (${contextLabel}): ${quotedMessage.body}`
+        : ""
+    }`,
   );
 
   if (!text) {

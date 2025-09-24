@@ -1,8 +1,6 @@
 import { Message } from "../../types/message";
 import axios from "../components/axios";
-import log from "../components/utils/log";
-import fs from "fs/promises";
-import { client } from "../components/client";
+import { download } from "../components/utils/download";
 
 export const info = {
   command: "github",
@@ -28,8 +26,10 @@ export default async function (msg: Message) {
   const response = await axios.get(`https://api.github.com/users/${query}`);
 
   const user = response.data;
+  const downloadAvatar = await download(user.avatar_url, ".png");
+
   const info = `
-    \`${user.name || user.login}\
+    \`${user.name || user.login}\`
     ${user.bio || ""}
 
     Place: ${user.location || "N/A"}
@@ -44,5 +44,7 @@ export default async function (msg: Message) {
     }
     Link: ${user.blog || "N/A"}
   `;
-  await msg.reply(info);
+  await msg.reply(downloadAvatar, undefined, {
+    caption: info,
+  });
 }

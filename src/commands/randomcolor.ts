@@ -1,8 +1,9 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import axios from "../components/axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
 import { client } from "../components/client";
+import { download } from "../components/utils/download";
 
 export const info = {
   command: "randomcolor",
@@ -18,14 +19,13 @@ export default async function (msg: Message) {
 
   const response = await axios.get(`https://api.popcat.xyz/randomcolor`);
 
-  const hex = response.data.hex;
-  const name = response.data.name;
-  const image = response.data.image;
+  const data = response.data;
+  const downloadedFile = await download(data.image, ".png");
 
   const color = `
-    \`${name}\`
+    \`${data.name}\`
 
-    ${hex}
+    ${data.hex}
   `;
-  await msg.reply(color);
+  await msg.reply(downloadedFile, undefined, { caption: color });
 }

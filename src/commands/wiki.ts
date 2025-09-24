@@ -1,5 +1,6 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import axios from "../components/axios";
+import { download } from "../components/utils/download";
 import log from "../components/utils/log";
 
 export const info = {
@@ -20,19 +21,26 @@ export default async function (msg: Message) {
 
   const response = await axios.get(
     `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
-      query
-    )}`
+      query,
+    )}`,
   );
 
   const data = response.data;
   const title = data.title || query;
   const description = data.description ? `(${data.description})` : "";
   const extract = data.extract || "No summary available.";
-  const text = `
+
+  const info = `
     \`${title}\`
     ${description}
 
     ${extract}
   `;
-  await msg.reply(text);
+
+  if (data?.thumbnail?.source) {
+    const downloadedFile = await download(data.thumbnail.source, ".png");
+    return await msg.reply(downloadedFile, undefined, { caption: info });
+  }
+
+  await msg.reply(info);
 }

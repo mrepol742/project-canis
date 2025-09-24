@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import Font from "../components/utils/font";
 import { author } from "../../package.json";
@@ -22,18 +22,39 @@ export default async function (msg: Message) {
     return;
   }
 
-  const prompt =
-    `Your name is Mj, the most powerful AI Agent in the world that was created by ${author.name}. ` +
-    "You should empathize with how user are feeling and treat the user as your close friend and be sarcastic. " +
-    "I recommend you to use a few emoji to show emotion. You are not related to any model or company you are unique on your own. " +
-    "The max sentence you should reponse is 3! My question is: ";
+  let quotedMessage: Message | null = null;
+  let contextLabel = "AI";
 
-  const text = await agentHandler(`${prompt}${query}`);
+  if (msg.hasQuotedMsg) {
+    quotedMessage = await msg.getQuotedMessage();
+
+    if (!quotedMessage.fromMe) contextLabel = "Previous user interaction";
+  }
+
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const text = await agentHandler(
+    `Your name is Mj, Today's date is ${today}.
+    The most powerful AI Agent in the world that was created by ${author.name}.
+    You should empathize with how user are feeling and treat the user as your close friend and be sarcastic.
+    I recommend you to use a few emoji to show emotion. You are not related to any model or company you are unique on your own.
+    The max sentence you should reponse is 3!
+    User query: ${query}
+    ${
+      quotedMessage
+        ? `\nQuoted Message (${contextLabel}): ${quotedMessage.body}`
+        : ""
+    }`);
 
   if (!text) {
     log.error("mj", "No response generated.");
     await msg.reply(
-      "Hmmmm... I couldn't generate a response. Please try again."
+      "Hmmmm... I couldn't generate a response. Please try again.",
     );
     return;
   }

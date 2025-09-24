@@ -1,9 +1,5 @@
-import { MessageMedia } from "whatsapp-web.js";
 import { Message } from "../../types/message"
-import axios from "../components/axios";
-import log from "../components/utils/log";
-import fs from "fs/promises";
-import { client } from "../components/client";
+import { download } from "../components/utils/download"
 
 export const info = {
   command: "caution",
@@ -21,20 +17,6 @@ export default async function (msg: Message) {
     return;
   }
 
-  const response = await axios.get(
-    `https://api.popcat.xyz/caution?text=${encodeURIComponent(query)}`,
-    {
-      responseType: "arraybuffer",
-    }
-  );
-
-  const tempDir = "./.temp";
-  await fs.mkdir(tempDir, { recursive: true });
-
-  const tempPath = `${tempDir}/${Date.now()}.png`;
-  await fs.writeFile(tempPath, response.data);
-
-  const media = MessageMedia.fromFilePath(tempPath);
-  await msg.reply(media);
-  await fs.unlink(tempPath);
+  const downloadedFile = await download(`https://api.popcat.xyz/caution?text=${encodeURIComponent(query)}`, ".png");
+  await msg.reply(downloadedFile)
 }

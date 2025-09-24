@@ -39,7 +39,7 @@ export default async function (msg: Message) {
   const tempDir = "./.temp";
   await fs.mkdir(tempDir, { recursive: true });
 
-  const tempPath = `${tempDir}/${Date.now()}.png`;
+  const tempPath = `${tempDir}/${Date.now()}.gif`;
   await fs.writeFile(tempPath, response.data);
 
   const media = MessageMedia.fromFilePath(tempPath);

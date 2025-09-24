@@ -1,9 +1,5 @@
-import { MessageMedia } from "whatsapp-web.js";
 import { Message } from "../../types/message";
-import axios from "../components/axios";
-import log from "../components/utils/log";
-import fs from "fs/promises";
-import { client } from "../components/client";
+import { download } from "../components/utils/download";
 
 export const info = {
   command: "pooh",
@@ -28,22 +24,11 @@ export default async function (msg: Message) {
   }
   const [text1, text2] = args;
 
-  const response = await axios.get(
+  const downloadedFile = await download(
     `https://api.popcat.xyz/pooh?text1=${encodeURIComponent(
       text1,
     )}&text2=${encodeURIComponent(text2)}`,
-    {
-      responseType: "arraybuffer",
-    },
+    ".png",
   );
-
-  const tempDir = "./.temp";
-  await fs.mkdir(tempDir, { recursive: true });
-
-  const tempPath = `${tempDir}/${Date.now()}.png`;
-  await fs.writeFile(tempPath, response.data);
-
-  const media = MessageMedia.fromFilePath(tempPath);
-  await msg.reply(media);
-  await fs.unlink(tempPath);
+  await msg.reply(downloadedFile);
 }

@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import puppeteer from "puppeteer";
 import fs from "fs/promises";
 
@@ -22,29 +22,27 @@ export default async function (msg: Message) {
   // Validate URL
   if (!/^https?:\/\//i.test(query)) {
     await msg.reply(
-      "Please provide a valid URL starting with http:// or https://"
+      "Please provide a valid URL starting with http:// or https://",
     );
     return;
   }
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
-  await page.goto(query, {
-    waitUntil: "networkidle2",
-    timeout: 60000,
-  });
+  await page.goto(query, { waitUntil: "networkidle0" });
+  await page.setViewport({ width: 800, height: 600 });
 
   const tempDir = "./.temp";
   await fs.mkdir(tempDir, { recursive: true });
 
-  const path = `${tempDir}/${Date.now()}.png`;
-
-  await page.screenshot({ path });
-
+  const buffer = await page.screenshot({ fullPage: true });
   await browser.close();
 
-  const media = MessageMedia.fromFilePath(path);
+  const media = new MessageMedia(
+    "image/png",
+    buffer.toString("base64"),
+    `result.png`,
+  );
   await msg.reply(media);
-  await fs.unlink(path);
 }

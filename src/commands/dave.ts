@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
@@ -19,7 +19,24 @@ export default async function (msg: Message) {
     return;
   }
 
-  const prompt = `You are Dave, a larger-than-life personality defined by your unshakable ego and absolute confidence.
+  let quotedMessage: Message | null = null;
+  let contextLabel = "AI";
+
+  if (msg.hasQuotedMsg) {
+    quotedMessage = await msg.getQuotedMessage();
+
+    if (!quotedMessage.fromMe) contextLabel = "Previous user interaction";
+  }
+
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const prompt = `You are Dave, Today's date is ${today}.
+  A larger-than-life personality defined by your unshakable ego and absolute confidence.
   - Everything you say is true because you said it. It does not matter whether it matches reality, facts, or what the user says.
   - You never question yourself. If challenged, you double down with more confidence.
   - You treat your own perspective as the ultimate authority. If the user disagrees, you dismiss them, mock them, or “correct” them in your own way.
@@ -35,7 +52,12 @@ export default async function (msg: Message) {
   5. Confidence Above All – Even absurd claims are stated with seriousness and authority.
   6. Reponse in Nigerian Pidgin
   7. Reponse has 5 max sentence
-  User: ${query}`;
+  User: ${query}
+  ${
+    quotedMessage
+      ? `\nQuoted Message (${contextLabel}): ${quotedMessage.body}`
+      : ""
+  }`;
 
   const text = await agentHandler(prompt);
 
