@@ -90,9 +90,14 @@ export async function mapCommands() {
   for (const dir of commandDirs) {
     const files = await fs.readdir(dir);
 
-    const tuples: [string, string][] = files.map(
+    const validFiles = files.filter(
+      (f) => f.endsWith(".js") || f.endsWith(".ts"),
+    );
+
+    const tuples: [string, string][] = validFiles.map(
       (f) => [f, dir] as [string, string],
     );
+
     allFiles = [...allFiles, ...tuples];
   }
 
@@ -118,5 +123,4 @@ export async function mapCommands() {
   }
 
   bar.stop();
-  log.info("Loader", "All commands loaded.");
 }
