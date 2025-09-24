@@ -60,6 +60,12 @@ export default async function loader(file: string, customPath: string) {
       delete require.cache[resolvedPath];
     }
 
+    try {
+      await fs.access(resolvedPath);
+    } catch {
+      return;
+    }
+
     const commandModule = await import(filePath);
 
     if (
