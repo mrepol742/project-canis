@@ -61,6 +61,29 @@ export default async function (msg: Message, type: string) {
 
   /*
    *
+   * Override the default function
+   *     react(reaction: string) Promise<void>
+   */
+  const originalReact = msg.react.bind(msg);
+  msg.react = async (reaction: string): Promise<void> => {
+    // add delay for more
+    // humanly like interaction
+    const min = 2000;
+    const max = 6000;
+    const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    await sleep(randomMs);
+    const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
+
+    if (Math.random() < 0.5 && !isEmoji)
+      if (Math.random() < 0.5)
+        await client.sendMessage(msg.id.remote, reaction);
+      else await msg.reply(reaction);
+    else await originalReact(reaction);
+  };
+
+  /*
+   *
    * Process msg reaction
    */
   if (!msg.fromMe) {
@@ -119,6 +142,13 @@ export default async function (msg: Message, type: string) {
   log.info("Message", lid, msg.body.slice(0, 150));
   msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
 
+  /*
+   *
+   * Override the default function
+   *     reply(content: MessageContent,
+   *           chatId?: string,
+   *           options?: MessageSendOptions) Promise<Message>
+   */
   const originalReply = msg.reply.bind(msg);
   msg.reply = async (
     content: MessageContent,
