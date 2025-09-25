@@ -6,11 +6,8 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "clear && while [ true ]; do npm run canis ; done",
-    "canis": "ts-node src/index.ts"
-  },
-  "bin": {
-    "client": "./dist/index.js"
+    "start": "clear && while [ true ]; do node dist/index.js ; done",
+    "dev": "clear && while [ true ]; do ts-node src/index.ts ; done"
   },
   "author": {
     "name": "Melvin Jones Repol",

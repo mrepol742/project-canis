@@ -36,14 +36,10 @@ Canis supports multiple AI providers out of the box:
 
 ## Getting started
 
-0. **Fork repo**
-
-   Click [https://github.com/mrepol742/project-canis/fork](https://github.com/mrepol742/project-canis/fork) to fork this repo.
-
 1. **Clone repo**
 
    ```sh
-   git clone https://github.com/<your-username>/project-canis.git
+   git clone https://github.com/mrepol742/project-canis.git
    cd project-canis
 
    ```
@@ -70,7 +66,7 @@ Canis supports multiple AI providers out of the box:
 5. **Start bot**
 
    ```sh
-   npm run start
+   npm run dev
    ```
 
 #### Docker & Production
@@ -104,7 +100,6 @@ Canis supports multiple AI providers out of the box:
 2. **Start**
 
    ```
-   cd dist
    pm2 start ecosystem.config.js
    ```
 
@@ -119,7 +114,6 @@ Canis supports multiple AI providers out of the box:
 2. **Start**
 
    ```
-   cd dist
    npm run start
    ```
 
