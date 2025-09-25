@@ -46,7 +46,7 @@
     "semver": "^7.7.2",
     "systeminformation": "^5.27.7",
     "whatsapp-web.js": "^1.31.0",
-    "youtubei.js": "^15.0.0"
+    "youtubei.js": "^15.1.1"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",

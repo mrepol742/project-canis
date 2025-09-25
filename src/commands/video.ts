@@ -27,8 +27,9 @@ export default async function (msg: Message) {
   }
 
   const yt = await Innertube.create({
-    cache: new UniversalCache(false),
-    generate_session_locally: true,
+   cache: new UniversalCache(false),
+   generate_session_locally: true,
+   player_id: "0004de42",
   });
   const search = await yt.search(query, { type: "video" });
 
@@ -79,7 +80,7 @@ export default async function (msg: Message) {
     `${video.title}.mp4`,
   );
 
-  await msg.reply(media, msg.from, {
+  await msg.reply(media, undefined, {
     caption: `${video.title}`,
   });
 

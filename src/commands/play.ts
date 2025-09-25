@@ -29,6 +29,7 @@ export default async function play(msg: Message) {
   const yt = await Innertube.create({
     cache: new UniversalCache(false),
     generate_session_locally: true,
+    player_id: "0004de42"
   });
   const search = await yt.music.search(query, { type: "song" });
 
@@ -79,9 +80,8 @@ export default async function play(msg: Message) {
     `${audio.title}.mp3`,
   );
 
-  await msg.reply(media, msg.from, {
+  await msg.reply(media, undefined, {
     caption: audio.title,
-    sendAudioAsVoice: true,
   });
 
   Promise.all([fs.promises.unlink(tempPath), fs.promises.unlink(tempPath)]);
