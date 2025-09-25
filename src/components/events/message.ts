@@ -47,6 +47,12 @@ export default async function (msg: Message, type: string) {
   )
     return; // ignore them all
 
+  // process normalization
+  msg.body = msg.body
+    .normalize("NFKC")
+    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
+    .trim();
+
   /*
    *
    * Quiz command validation
@@ -55,12 +61,6 @@ export default async function (msg: Message, type: string) {
     const quoted = await msg.getQuotedMessage();
     if (await quiz(msg, quoted)) return;
   }
-
-  // process normalization
-  msg.body = msg.body
-    .normalize("NFKC")
-    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
-    .trim();
 
   const prefix = !msg.body.startsWith(commandPrefix);
   const lid = msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0];
