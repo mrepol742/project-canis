@@ -25,7 +25,7 @@ export default class MemoryMonitor {
 
   constructor({
     interval = 60000,
-    thresholdMB = 500,
+    thresholdMB = 1024,
   }: MemoryMonitorOptions = {}) {
     this.interval = interval;
     this.thresholdMB = thresholdMB;

@@ -11,7 +11,14 @@ import "./components/process";
 import "./components/server";
 import MemoryMonitor from "./components/utils/memMonitor";
 
-const monitor = new MemoryMonitor({ interval: 30000 });
+const monitor = new MemoryMonitor({
+  interval: 60000,
+  thresholdMB: parseInt(
+    process.env.PROJECT_THRESHOLD_MEMORY || "1024",
+    10
+  )
+});
+
 monitor.start();
 checkRequirements();
 

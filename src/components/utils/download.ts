@@ -3,6 +3,7 @@ import path from "path";
 import crypto from "crypto";
 import { MessageMedia } from "whatsapp-web.js";
 import axios from "../axios";
+import log from "./log";
 
 export async function download(
   url: string,
@@ -20,6 +21,20 @@ export async function download(
 
   try {
     await fs.writeFile(tempPath, response.data, "base64");
+
+    // Schedule deletion after 1 minute
+    setTimeout(async () => {
+      try {
+        await fs.unlink(tempPath);
+        log.info("Download", `Temporary file deleted: ${tempPath}`);
+      } catch (err) {
+        log.error(
+          "Download",
+          `Failed to delete temp file: ${(err as Error).message}`,
+        );
+      }
+    }, 60 * 1000);
+
     return MessageMedia.fromFilePath(tempPath);
   } catch (err) {
     throw new Error(
