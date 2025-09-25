@@ -34,7 +34,7 @@ export default async function play(msg: Message) {
   const search = await yt.music.search(query, { type: "song" });
 
   const audio = search.contents[0].contents[0];
-  if (!audio) {
+  if (!audio.id) {
     await msg.reply("Unable to find resources for the given query.");
     return;
   }
