@@ -1,5 +1,6 @@
 import log from "./utils/log";
 import {
+  Call,
   Client,
   GroupNotification,
   LocalAuth,
@@ -15,6 +16,7 @@ import groupJoin from "./events/groups/join";
 import reaction from "./events/reaction";
 import ready from "./events/ready";
 import revoke from "./events/revoke";
+import callEvent from "./events/call";
 
 const loadingBar = LoadingBar("Loading Client   | {bar} | {value}%");
 const client = new Client({
@@ -62,6 +64,8 @@ client.on("message_edit", (msg: Message, newBody: string, prevBody: string) => {
 client.on("message_revoke_everyone", (msg: Message, revoked_msg?: Message) =>
   revoke(msg, revoked_msg),
 );
+
+client.on("call", (call: Call) => callEvent(call));
 
 client.on("group_join", (notif: GroupNotification) => groupJoin(notif));
 client.on("group_leave", (notif: GroupNotification) => groupLeave(notif));

@@ -12,6 +12,7 @@ export default async function (
   _newBody: string,
   prevBody: string,
 ) {
+  if (msg.fromMe) return;
   // const isGroup = !!msg.author;
   // const user = await getUserbyLid(msg.from) || "Your";
   //

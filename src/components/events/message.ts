@@ -21,6 +21,18 @@ const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
+const mentionResponses = [
+  "👀 Did someone just say my name?",
+  "Bruh, why me again? 😂",
+  "Oh no… not me 😭",
+  "You called? Or just summoning me like Voldemort?",
+  "Here I am, what’s the emergency? 🚨",
+  "Why always me tho 🤔",
+  "Plot twist: I was just about to mention YOU.",
+  "Careful… mention me three times and I appear 👻",
+  "My ears were burning 🔥",
+  "Did you just @ me for vibes, or do I owe you money? 💸",
+];
 
 export default async function (msg: Message, type: string) {
   // ignore message if it is older than 10 seconds
@@ -113,7 +125,21 @@ export default async function (msg: Message, type: string) {
     ? messageBody.slice(commandPrefix.length).trim()
     : messageBody;
   const handler = commands[key.toLowerCase()];
-  if (!handler) return;
+
+  // no match command
+  // so check if the message mentioned the bot name
+  // and return funny messages HAHAHAHA
+  if (!handler) {
+    if (
+      msg.mentionedIds &&
+      msg.mentionedIds.length > 0 &&
+      msg.mentionedIds.includes(client.info.wid._serialized)
+    )
+      await msg.reply(
+        mentionResponses[Math.random() * mentionResponses.length],
+      );
+    return;
+  }
 
   /*
    * Block users from running commands.
