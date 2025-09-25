@@ -16,13 +16,13 @@ export default async function () {
 
       await client.sendMessage(tempData.id.remote, "Restart Finished.");
     } catch (err) {
-      log.error("restart", err);
+      log.error("Restart", err);
     } finally {
       fs.unlink(hotReloadPath, (err) => {
         if (err) {
-          log.error("restart", "Failed to delete restart file:", err);
+          log.error("Restart", "Failed to delete restart file:", err);
         } else {
-          log.info("restart", "Restart file deleted successfully.");
+          log.info("Restart", "Restart file deleted successfully.");
         }
       });
     }

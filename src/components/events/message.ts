@@ -74,6 +74,7 @@ export default async function (msg: Message, type: string) {
 
     await sleep(randomMs);
     const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
+    log.info("AutoReact", reaction);
 
     if (Math.random() < 0.1 && !isEmoji)
       if (Math.random() < 0.2)
@@ -156,6 +157,8 @@ export default async function (msg: Message, type: string) {
     options?: MessageSendOptions,
   ): Promise<Message> => {
     let messageBody = typeof content === "string" ? Font(content) : content;
+
+    log.info("ReplyMessage", lid, content.toString().slice(0, 150));
 
     if (Math.random() < 0.5)
       return await client.sendMessage(msg.id.remote, messageBody, options);

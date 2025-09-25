@@ -1,6 +1,7 @@
 import { Message } from "whatsapp-web.js";
 import { getUserbyLid } from "../services/user";
 import { addMessage } from "../services/message";
+import log from "../utils/log";
 
 /*
  * TODO: Implement settings to enable/disable this event.
@@ -13,6 +14,8 @@ export default async function (
 ) {
   // const isGroup = !!msg.author;
   // const user = await getUserbyLid(msg.from) || "Your";
+  //
+  log.info("EditMessage", prevBody);
   await addMessage(msg, prevBody, "edit");
   // await msg.reply(
   //   `${isGroup ? user : "Your"} message was edited from "${prevBody}".`

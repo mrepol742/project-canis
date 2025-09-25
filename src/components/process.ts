@@ -15,17 +15,17 @@ process.on("SIGINT", function () {
 
 process.on("uncaughtException", (err, origin) => {
   log.error(
-    "Uncaught Exception",
+    "UncaughtException",
     `Exception: ${err.message}\nOrigin: ${origin}`
   );
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-  log.error("Unhandled Rejection", `Reason: ${reason}\nPromise: ${promise}`);
+  log.error("UnhandledRejection", `Reason: ${reason}\nPromise: ${promise}`);
 });
 
 process.on("beforeExit", (code) => {
-  log.info("Before Exit", `Process is about to exit with code: ${code}`);
+  log.info("BeforeExit", `Process is about to exit with code: ${code}`);
 });
 
 process.on("exit", (code) => {

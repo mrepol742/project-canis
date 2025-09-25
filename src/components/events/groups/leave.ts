@@ -16,16 +16,16 @@ export default async function (notif: GroupNotification) {
       const name = contact.pushname || contact.name || contact.id.user;
       const isSelf = contact.id._serialized === client.info.wid._serialized;
       if (!isSelf) {
-        log.info("Group Leave", `${name} left the group ${group.name}`);
+        log.info("GroupLeave", `${name} left the group ${group.name}`);
         leavers.push(name);
       } else {
-        log.info("Group Leave", `the bot left the group ${group.name}`);
+        log.info("GroupLeave", `the bot left the group ${group.name}`);
       }
     }
 
     if (leavers.length > 0)
       await notif.reply(getMessage("leaving", `*${leavers.join(", ")}*`));
   } catch (err) {
-    log.error("Group Leave", "Failed to process group leave event:", err);
+    log.error("GroupLeave", "Failed to process group leave event:", err);
   }
 }

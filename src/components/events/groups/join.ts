@@ -18,7 +18,7 @@ export default async function (notif: GroupNotification) {
       const name = contact.pushname || contact.name || contact.id.user;
       const isSelf = contact.id._serialized === client.info.wid._serialized;
 
-      log.info("Group Join", `${name} joined the group ${group.name}`);
+      log.info("GroupJoin", `${name} joined the group ${group.name}`);
 
       if (isSelf) {
         await notif.reply(
@@ -40,6 +40,6 @@ export default async function (notif: GroupNotification) {
       await notif.reply(getMessage("welcome", `*${newMembers.join(", ")}*`));
     }
   } catch (err) {
-    log.error("Group Join", "Failed to process group join event:", err);
+    log.error("GroupJoin", "Failed to process group join event:", err);
   }
 }

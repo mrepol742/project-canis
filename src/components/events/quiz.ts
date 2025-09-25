@@ -1,6 +1,7 @@
 import { Message } from "whatsapp-web.js";
 import { getQuizAttempts, setQuizAttemptAnswered } from "../services/quiz";
 import { quiz } from "../utils/data";
+import log from "../utils/log";
 
 const done = [
   "Correct! 🎉",
@@ -56,11 +57,13 @@ export default async function (
           msg.reply(done[Math.floor(Math.random() * done.length)]),
           setQuizAttemptAnswered(msg, quoted),
           quoted.delete(true, true),
+          log.info("QuizAnswered", "Correct", quoted.body),
         ]);
       } else {
         await Promise.all([
           msg.reply(wrong[Math.floor(Math.random() * wrong.length)]),
           quoted.delete(true, true),
+          log.info("QuizAnswered", "Wrong", quoted.body),
         ]);
       }
       return true;
