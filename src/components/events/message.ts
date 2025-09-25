@@ -233,8 +233,6 @@ export default async function (msg: Message, type: string) {
 
           We encountered an error while processing ${key}.
           Provider returned an error ${statusMessages[status]}.
-          We notify the developers of the issue.
-          Please try again later.
         `;
         await msg.reply(text);
         return;
@@ -245,11 +243,6 @@ export default async function (msg: Message, type: string) {
     \`${errors[Math.floor(Math.random() * errors.length)]}\`
 
       We encountered an error while processing ${key}.
-      We notify the developers of the issue.
-      Please try again later.
-      If the problem persists, please create an issue on GitHub.
-
-      https://github.com/project-canis/issues/
     `;
     await msg.reply(text);
   }
