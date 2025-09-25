@@ -34,7 +34,7 @@ export default async function (msg: Message) {
   const search = await yt.search(query, { type: "video" });
 
   const video = search.results[0];
-  if (!video) {
+  if (!video.video_id) {
     await msg.reply("Unable to find resources for the given query.");
     return;
   }
