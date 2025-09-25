@@ -11,8 +11,8 @@
     "rootDir": "./src",
     "strict": true,
     "moduleResolution": "node",
-    "skipLibCheck": true, 
-    "typeRoots": ["./node_modules/@types", "./types"]
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./types"],
   },
   "include": ["src"]
 }

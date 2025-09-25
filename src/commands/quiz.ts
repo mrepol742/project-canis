@@ -18,9 +18,6 @@ export default async function (msg: Message) {
   const id = Math.floor(Math.random() * quiz.length);
   const response = quiz[id];
 
-  if (response.length === 0)
-    return await msg.reply("I don't have any quiz questions right now...");
-
   let text = `
     \`${response.question}\`
   `;
