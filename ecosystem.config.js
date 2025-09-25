@@ -3,14 +3,13 @@ module.exports = {
     {
       name: "project-canis",
       script: "dist/index.js",
-      instances: 3,
-      exec_mode: "cluster",
-      sticky: true,
-      node_args: "--max-old-space-size=1024",
+      instances: 1,
+      exec_mode: "fork",
+      node_args: "--max-old-space-size=2048",
       env: {
         NODE_ENV: "production",
       },
-      max_memory_restart: "512M",
+      max_memory_restart: "2560M",
       watch: false,
       autorestart: true,
     },
