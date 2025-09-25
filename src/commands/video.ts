@@ -27,15 +27,17 @@ export default async function (msg: Message) {
   }
 
   const yt = await Innertube.create({
-   cache: new UniversalCache(false),
-   generate_session_locally: true,
-   player_id: "0004de42",
+    cache: new UniversalCache(false),
+    generate_session_locally: true,
+    player_id: "0004de42",
   });
   const search = await yt.search(query, { type: "video" });
 
   const video = search.results[0];
   if (!video.video_id) {
-    await msg.reply("Unable to find resources for the given query.");
+    await msg.reply(
+      "Sorry, it seems like im not able to get any search results.",
+    );
     return;
   }
 
@@ -69,11 +71,13 @@ export default async function (msg: Message) {
     writeStream.write(chunk);
   }
 
-  await execPromise(
-    `ffmpeg -y -i "${tempPath}" -c:v copy -c:a copy "${tempPath}.mp4"`,
-  );
+  await new Promise<void>((resolve, reject) => {
+    writeStream.end();
+    writeStream.on("finish", resolve);
+    writeStream.on("error", reject);
+  });
 
-  const audioBuffer = fs.readFileSync(tempPath + ".mp4");
+  const audioBuffer = fs.readFileSync(`${tempPath}`);
   const media = new MessageMedia(
     "audio/mpeg",
     audioBuffer.toString("base64"),
@@ -84,5 +88,5 @@ export default async function (msg: Message) {
     caption: `${video.title}`,
   });
 
-  Promise.all([fs.promises.unlink(tempPath), fs.promises.unlink(tempPath)]);
+  fs.promises.unlink(tempPath);
 }

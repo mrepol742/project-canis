@@ -29,7 +29,7 @@ export default async function play(msg: Message) {
   const yt = await Innertube.create({
     cache: new UniversalCache(false),
     generate_session_locally: true,
-    player_id: "0004de42"
+    player_id: "0004de42",
   });
   const search = await yt.music.search(query, { type: "song" });
 
@@ -42,7 +42,7 @@ export default async function play(msg: Message) {
   // Only allow audios shorter than 10 minutes (600 seconds)
   if (audio.length && audio.length.seconds > 600) {
     await msg.reply(
-      "Sorry, only videos shorter than 10 minutes can be downloaded.",
+      "Sorry, it seems like im not able to get any search results.",
     );
     return;
   }
@@ -62,18 +62,24 @@ export default async function play(msg: Message) {
 
   const tempDir = "./.temp";
   await fs.promises.mkdir(tempDir, { recursive: true });
-  const tempPath = path.join(tempDir, `${audio.id}.mp4`);
+  const tempPath = path.join(tempDir, `${audio.id}.mp3`);
   let writeStream = fs.createWriteStream(tempPath);
 
   for await (const chunk of Utils.streamToIterable(stream)) {
     writeStream.write(chunk);
   }
 
+  await new Promise<void>((resolve, reject) => {
+    writeStream.end();
+    writeStream.on("finish", resolve);
+    writeStream.on("error", reject);
+  });
+
   await execPromise(
     `ffmpeg -y -i "${tempPath}" -vn -ar 44100 -ac 2 -b:a 192k "${tempPath}.mp3"`,
   );
 
-  const audioBuffer = fs.readFileSync(tempPath + ".mp3");
+  const audioBuffer = fs.readFileSync(`${tempPath}.mp3`);
   const media = new MessageMedia(
     "audio/mpeg",
     audioBuffer.toString("base64"),
@@ -84,5 +90,8 @@ export default async function play(msg: Message) {
     caption: audio.title,
   });
 
-  Promise.all([fs.promises.unlink(tempPath), fs.promises.unlink(tempPath)]);
+  Promise.all([
+    fs.promises.unlink(tempPath),
+    fs.promises.unlink(`${tempPath}.mp3`),
+  ]);
 }

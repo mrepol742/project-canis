@@ -257,8 +257,8 @@ export default async function (msg: Message, type: string) {
         const text = `
         \`${errors[Math.floor(Math.random() * errors.length)]}\`\`
 
-          We encountered an error while processing ${key}.
-          Provider returned an error ${statusMessages[status]}.
+        We encountered an error while processing ${key}.
+        Provider returned an error ${statusMessages[status]}.
         `;
         await msg.reply(text);
         return;
@@ -268,7 +268,7 @@ export default async function (msg: Message, type: string) {
     const text = `
     \`${errors[Math.floor(Math.random() * errors.length)]}\`
 
-      We encountered an error while processing ${key}.
+    We encountered an error while processing ${key}.
     `;
     await msg.reply(text);
   }
