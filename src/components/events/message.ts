@@ -75,8 +75,8 @@ export default async function (msg: Message, type: string) {
     await sleep(randomMs);
     const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
 
-    if (Math.random() < 0.5 && !isEmoji)
-      if (Math.random() < 0.5)
+    if (Math.random() < 0.1 && !isEmoji)
+      if (Math.random() < 0.2)
         await client.sendMessage(msg.id.remote, reaction);
       else await msg.reply(reaction);
     else await originalReact(reaction);
