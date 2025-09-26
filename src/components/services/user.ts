@@ -25,7 +25,7 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
     if (user) return false;
 
     const contact = await msg.getContact();
-    if (!contact) return true;
+    if (!contact) return false;
 
     const countryCode = await contact.getCountryCode();
     const about = await contact.getAbout();

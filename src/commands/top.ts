@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import { getUsers } from "../components/services/user";
 
@@ -25,10 +25,10 @@ export default async function (msg: Message) {
 
     ${user
       .sort((a, b) => (b.totalActivity ?? 0) - (a.totalActivity ?? 0))
-      .slice(0, 30)
+      .slice(0, 50)
       .map((u, index) => {
         const displayName =
-          u.name.length > 9 ? u.name.slice(0, 9) + ".." : u.name;
+          u.name.length > 12 ? u.name.slice(0, 12) + ".." : u.name;
         return `${index + 1}. ${displayName}: ${u.totalActivity} Points`;
       })
       .join("\n    ")}
