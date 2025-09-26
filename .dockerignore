@@ -1,9 +1,0 @@
-node_modules
-dist
-.wwebjs_auth
-.wwebjs_cache
-.temp
-*.log
-*.env
-
-/src/generated/prisma

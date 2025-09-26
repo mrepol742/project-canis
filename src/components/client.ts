@@ -21,6 +21,7 @@ import callEvent from "./events/call";
 const loadingBar = LoadingBar("Loading Client   | {bar} | {value}%");
 const client = new Client({
   puppeteer: {
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
     executablePath:
       process.env.PUPPETEER_EXEC_PATH || "/opt/google/chrome/google-chrome",
   },

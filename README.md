@@ -1,7 +1,5 @@
 # Project Canis
 
-[![Build](https://github.com/mrepol742/project-canis/actions/workflows/build.yml/badge.svg)](https://github.com/mrepol742/project-canis/actions/workflows/build.yml) [![Docker CI](https://github.com/mrepol742/project-canis/actions/workflows/docker.yml/badge.svg)](https://github.com/mrepol742/project-canis/actions/workflows/docker.yml)
-
 A scalable, modular WhatsApp chatbot built in TypeScript. It leverages modern best practices, lean architecture, Prisma ORM, Dockerization, and environment-based configuration to deliver a robust, flexible successor to Project Orion.
 
 > ⚠️ **Warning:**
@@ -67,26 +65,6 @@ Canis supports multiple AI providers out of the box:
 
    ```sh
    npm run dev
-   ```
-
-#### Docker & Production
-
-1. **Build image**
-
-   ```
-   docker build -t project-canis .
-   ```
-
-2. **Run with Docker Compose**
-
-   ```
-   docker-compose up -d
-   ```
-
-3. **Run with expose port**
-
-   ```
-   docker run -d -p 3000:3000 project-canis
    ```
 
 #### PM2

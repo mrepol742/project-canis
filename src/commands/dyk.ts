@@ -14,6 +14,5 @@ export default async function (msg: Message) {
   if (!/^dyk$/i.test(msg.body)) return;
 
   const response = dyk[Math.floor(Math.random() * dyk.length)];
-  if (response.length === 0) return await msg.reply("I dont know...");
   await msg.reply(response);
 }

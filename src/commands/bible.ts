@@ -49,10 +49,10 @@ export default async function (msg: Message) {
 
   const v = data[0];
   const verses = `
-*${v.bookname} ${v.chapter}:${v.verse}*
+    *${v.bookname} ${v.chapter}:${v.verse}*
 
-${v.text.trim()}
-`;
+    ${v.text.trim()}
+  `;
 
   await msg.reply(verses);
 }
