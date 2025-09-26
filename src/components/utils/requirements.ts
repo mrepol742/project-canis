@@ -2,7 +2,6 @@ import { execSync } from "child_process";
 import * as process from "process";
 import semver from "semver";
 import log from "./log";
-import url from "url";
 
 function checkNodeVersion() {
   const current = process.versions.node;

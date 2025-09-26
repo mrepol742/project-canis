@@ -16,6 +16,7 @@ import { errors } from "../utils/data";
 import emojiRegex from "emoji-regex";
 import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
 import { containsAny } from "../utils/string";
+import { checkMessage } from "../utils/phishtank";
 
 const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
@@ -55,11 +56,33 @@ export default async function (msg: Message, type: string) {
 
   /*
    *
+   * Check for scam urls
+   */
+
+  Promise.resolve().then(async () => {
+    const spamUrls = checkMessage(msg.body);
+
+    if (spamUrls.length == 0) return;
+
+    const text = `
+    \`Phishing Alert\`
+
+    We've found that this url(s): \`${spamUrls.join(", ")}\`
+    to be phishing site/page.
+    Proceed with caution.
+    `;
+    await msg.reply(text);
+  });
+
+  /*
+   *
    * Quiz command validation
    */
   if (msg.hasQuotedMsg) {
-    const quoted = await msg.getQuotedMessage();
-    if (await quiz(msg, quoted)) return;
+    Promise.resolve().then(async () => {
+      const quoted = await msg.getQuotedMessage();
+      await quiz(msg, quoted);
+    });
   }
 
   const prefix = !msg.body.startsWith(commandPrefix);
@@ -99,22 +122,26 @@ export default async function (msg: Message, type: string) {
    *
    * Process msg reaction
    */
-  if (!msg.fromMe) {
-    const emojis = [...new Set([...msg.body.matchAll(regex)].map((m) => m[0]))];
-    if (emojis.length > 0) {
-      const react = emojis[Math.floor(Math.random() * emojis.length)];
+  Promise.resolve().then(async () => {
+    if (!msg.fromMe) {
+      const emojis = [
+        ...new Set([...msg.body.matchAll(regex)].map((m) => m[0])),
+      ];
+      if (emojis.length > 0) {
+        const react = emojis[Math.floor(Math.random() * emojis.length)];
 
-      await msg.react(react);
-    } else if (containsAny(msg.body, funD)) {
-      await msg.react("🤣");
-    } else if (containsAny(msg.body, happyEE)) {
-      await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
-    } else if (containsAny(msg.body, sadEE)) {
-      await msg.react("😭");
-    } else if (containsAny(msg.body, loveEE)) {
-      await msg.react("❤️");
+        await msg.react(react);
+      } else if (containsAny(msg.body, funD)) {
+        await msg.react("🤣");
+      } else if (containsAny(msg.body, happyEE)) {
+        await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
+      } else if (containsAny(msg.body, sadEE)) {
+        await msg.react("😭");
+      } else if (containsAny(msg.body, loveEE)) {
+        await msg.react("❤️");
+      }
     }
-  }
+  });
 
   /*
    * Check if the message starts with the command prefix.
