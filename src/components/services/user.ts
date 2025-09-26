@@ -13,47 +13,36 @@ function filterContent(body: string): string {
 
 export async function findOrCreateUser(msg: Message): Promise<boolean> {
   try {
-    const jid = msg.author || msg.from;
-    const lid = jid.split("@")[0];
+    const lid = (msg.author ?? msg.from).split("@")[0];
 
-    let user = await prisma.user.findUnique({
-      where: { lid },
-    });
-
-    if (user) {
-      await prisma.user.update({
+    const user = await prisma.user
+      .update({
         where: { lid },
-        data: {
-          commandCount: {
-            increment: 1,
-          },
-        },
-      });
-      return false;
-    }
+        data: { commandCount: { increment: 1 } },
+      })
+      .catch(() => null);
 
-    try {
-      const contact = await msg.getContact();
-      const countryCode = await contact.getCountryCode();
-      const about = await contact.getAbout();
-      const name = contact.pushname || contact.name || "Unknown";
+    if (user) return false;
 
-      user = await prisma.user.create({
-        data: {
-          lid,
-          name,
-          number: contact.number,
-          countryCode,
-          type: contact.isBusiness ? "business" : "private",
-          mode: msg.author ? "group" : "private",
-          about: about ? filterContent(about) : "",
-          commandCount: 1,
-        },
-      });
-    } catch (err) {
-      log.error("Database", `Could not fetch contact for JID: ${jid}`);
-      return false;
-    }
+    const contact = await msg.getContact();
+    if (!contact) return true;
+
+    const countryCode = await contact.getCountryCode();
+    const about = await contact.getAbout();
+    const name = contact.pushname || contact.name || "Unknown";
+
+    await prisma.user.create({
+      data: {
+        lid,
+        name,
+        number: contact.number,
+        countryCode,
+        type: contact.isBusiness ? "business" : "private",
+        mode: msg.author ? "group" : "private",
+        about: about ? filterContent(about) : "",
+        commandCount: 1,
+      },
+    });
   } catch (error) {
     log.error("Database", `Failed to find or create user.`, error);
   }
@@ -128,8 +117,7 @@ export async function getUsers(): Promise<any[]> {
     return users.map((u) => ({
       name: u.name,
       number: u.number,
-      commandCount: u._sum.commandCount,
-      quizAnswered: u._sum.quizAnswered,
+      totalActivity: (u._sum.commandCount ?? 0) + (u._sum.quizAnswered ?? 0),
     }));
   } catch (error) {
     log.error("Database", `Failed to get users.`, error);

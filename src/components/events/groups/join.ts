@@ -11,6 +11,15 @@ export default async function (notif: GroupNotification) {
     if (notif.timestamp < Date.now() / 1000 - 10) return;
     const group = await notif.getChat();
     const recipients = await notif.getRecipients();
+    const text = `
+      🙋‍♂️ Hello everyone!
+
+      I'm ${PROJECT_CANIS_ALIAS}, a scalable, modular and
+      flexible chatbot for WhatsApp and Telegram.
+
+      By continuing you agree to the bot \`terms\` and \`privacy\`.
+      To list down commands type \`help\`.
+    `;
 
     const newMembers = [];
 
@@ -21,16 +30,7 @@ export default async function (notif: GroupNotification) {
       log.info("GroupJoin", `${name} joined the group ${group.name}`);
 
       if (isSelf) {
-        await notif.reply(
-          `🙋‍♂️ Hello everyone!
-
-          I'm ${PROJECT_CANIS_ALIAS}, a scalable, modular and
-          flexible chatbot for WhatsApp and Telegram.
-
-          By continuing you agree to the bot \`terms\` and \`privacy\`.
-          To list down commands type \`help\`.
-        `,
-        );
+        await notif.reply(text);
       } else {
         newMembers.push(name);
       }

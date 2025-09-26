@@ -9,10 +9,10 @@ import log from "../utils/log";
  */
 export default async function (msg: Message, revoked_msg?: Message) {
   if (msg.fromMe || !revoked_msg) return;
-  if (msg.timestamp < Date.now() / 1000 - 10) return;
+  const lid = (msg.author ?? msg.from).split("@")[0];
   // const isGroup = !!msg.author;
   // const user = (await getUserbyLid(msg.from)) || "Your";
-  log.info("RevokeMessage", revoked_msg?.body);
+  log.info("RevokeMessage", lid, revoked_msg?.body);
   await addMessage(msg, revoked_msg?.body, "revoke");
   // await msg.reply(
   //   `${isGroup ? user : "Your"} message "${revoked_msg?.body}" was deleted.`

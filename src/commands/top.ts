@@ -24,11 +24,12 @@ export default async function (msg: Message) {
     \`Top Users by Activity:\`
 
     ${user
-      .filter((u, index) => u.commandCount !== 0 && index < 20)
+      .sort((a, b) => (b.totalActivity ?? 0) - (a.totalActivity ?? 0))
+      .slice(0, 30)
       .map((u, index) => {
         const displayName =
-          u.name.length > 12 ? u.name.slice(0, 12) + "..." : u.name;
-        return `${index + 1}. ${displayName}: ${u.commandCount + u.quizAnswered} Points`;
+          u.name.length > 9 ? u.name.slice(0, 9) + ".." : u.name;
+        return `${index + 1}. ${displayName}: ${u.totalActivity} Points`;
       })
       .join("\n    ")}
     `;

@@ -19,7 +19,8 @@ export async function addMessage(
   if (!body) return;
 
   try {
-    const lid = msg.id.remote.split("@")[0];
+    const lid = (msg.author ?? msg.from).split("@")[0];
+
     await prisma.message.create({
       data: {
         lid,

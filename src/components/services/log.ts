@@ -17,7 +17,8 @@ export default async function (
   output?: string
 ): Promise<void> {
   try {
-    const lid = msg.id.remote.split("@")[0];
+    const lid = (msg.author ?? msg.from).split("@")[0];
+
     await prisma.log.create({
       data: {
         lid,

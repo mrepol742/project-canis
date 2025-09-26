@@ -4,7 +4,8 @@ import { Message } from "whatsapp-web.js";
 
 export async function newQuizAttempt(msg: Message, qid: string): Promise<void> {
   try {
-    const lid = msg.id.remote.split("@")[0];
+    const lid = (msg.author ?? msg.from).split("@")[0];
+
     await prisma.quiz.create({
       data: {
         mid: msg.id.id,
@@ -38,6 +39,7 @@ export async function setQuizAttemptAnswered(
 ): Promise<void> {
   try {
     if (!quoted.id || !quoted.id.remote) return;
+    const lid = (msg.author ?? msg.from).split("@")[0];
 
     await Promise.all([
       prisma.quiz.update({
@@ -46,7 +48,7 @@ export async function setQuizAttemptAnswered(
       }),
       prisma.user.update({
         where: {
-          lid: msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0],
+          lid,
         },
         data: {
           quizAnswered: {

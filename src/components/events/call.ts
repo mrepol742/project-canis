@@ -24,24 +24,22 @@ export default async function (call: Call) {
   try {
     if (call.fromMe) return;
 
-    if (call.timestamp < Date.now() / 1000 - 60) {
-      await call.reject();
-      if (!call.from) return;
+    await call.reject();
+    if (!call.from) return;
 
-      let response;
-      if (call.isVideo) {
-        response = getRandomResponse(videoResponses);
-      } else {
-        response = getRandomResponse(voiceResponses);
-      }
-
-      await client.sendMessage(call.from, response);
-
-      log.info(
-        "CallEvent",
-        `Rejected a ${call.isVideo ? "video" : "voice"} call from ${call.from}`,
-      );
+    let response;
+    if (call.isVideo) {
+      response = getRandomResponse(videoResponses);
+    } else {
+      response = getRandomResponse(voiceResponses);
     }
+
+    await client.sendMessage(call.from, response);
+
+    log.info(
+      "CallEvent",
+      `Rejected a ${call.isVideo ? "video" : "voice"} call from ${call.from}`,
+    );
   } catch (err) {
     log.error("Error handling call:", err);
   }

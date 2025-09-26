@@ -39,14 +39,7 @@ export default async function (msg: Message, type: string) {
   // ignore message if it is older than 10 seconds
   if (msg.timestamp < Date.now() / 1000 - 10 && type === "create") return;
 
-  if (
-    // (msg.hasQuotedMsg && !msg.fromMe) ||
-    msg.isForwarded ||
-    msg.isGif ||
-    msg.isStatus ||
-    msg.broadcast
-  )
-    return; // ignore them all
+  if (msg.isGif || msg.isStatus || msg.broadcast) return; // ignore them all
 
   // process normalization
   msg.body = msg.body
@@ -73,6 +66,8 @@ export default async function (msg: Message, type: string) {
     `;
     await msg.reply(text);
   });
+
+  if (msg.isForwarded) return;
 
   /*
    *
@@ -109,7 +104,7 @@ export default async function (msg: Message, type: string) {
 
     await sleep(randomMs);
     const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
-    log.info("AutoReact", reaction);
+    log.info("AutoReact", lid, reaction);
 
     if (Math.random() < 0.1 && !isEmoji)
       if (Math.random() < 0.2)
@@ -251,6 +246,8 @@ export default async function (msg: Message, type: string) {
       handler.exec(msg),
 
       (async () => {
+        if (!msg.author) return;
+
         const user = await findOrCreateUser(msg);
 
         if (user) {

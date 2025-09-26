@@ -13,10 +13,11 @@ export default async function (
   prevBody: string,
 ) {
   if (msg.fromMe) return;
+  const lid = (msg.author ?? msg.from).split("@")[0];
   // const isGroup = !!msg.author;
   // const user = await getUserbyLid(msg.from) || "Your";
   //
-  log.info("EditMessage", prevBody);
+  log.info("EditMessage", lid, prevBody);
   await addMessage(msg, prevBody, "edit");
   // await msg.reply(
   //   `${isGroup ? user : "Your"} message was edited from "${prevBody}".`

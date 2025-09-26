@@ -18,7 +18,7 @@ export default async function (client: Client, react: Reaction) {
     if (!message) return;
     await sleep(2000);
     await message.react(react.reaction);
-    log.info("Reaction", `Reacted to message with ${react.reaction}`);
+    log.info("Reaction", senderId, `Reacted to message with ${react.reaction}`);
   } catch (error) {
     log.error("Failed to react back to message:", error);
   }

@@ -49,7 +49,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.react("✅");
+  await msg.react("🔍");
 
   const stream = await yt.download(video.video_id, {
     type: "video+audio",
@@ -61,6 +61,8 @@ export default async function (msg: Message) {
     await msg.reply("Failed to download the video stream.");
     return;
   }
+
+  await msg.react("⬇️");
 
   const tempDir = "./.temp";
   await fs.promises.mkdir(tempDir, { recursive: true });
