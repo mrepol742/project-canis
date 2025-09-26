@@ -20,12 +20,9 @@ export default async function (msg: Message) {
   }
 
   let quotedMessage: Message | null = null;
-  let contextLabel = "AI";
 
   if (msg.hasQuotedMsg) {
     quotedMessage = await msg.getQuotedMessage();
-
-    if (!quotedMessage.fromMe) contextLabel = "Previous user interaction";
   }
 
   const today = new Date().toLocaleDateString("en-US", {
@@ -41,7 +38,7 @@ export default async function (msg: Message) {
     User query: ${query}
     ${
       quotedMessage
-        ? `\nQuoted Message (${contextLabel}): ${quotedMessage.body}`
+        ? `\nQuoted Message: ${quotedMessage.body}`
         : ""
     }`,
   );
