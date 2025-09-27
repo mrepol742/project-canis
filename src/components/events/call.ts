@@ -1,6 +1,7 @@
 import { Call } from "whatsapp-web.js";
 import log from "../utils/log";
 import { client } from "../client";
+import { getSetting } from "../services/settings";
 
 const voiceResponses = [
   "Sorry, I can't take voice calls right now.",
@@ -23,6 +24,8 @@ function getRandomResponse(arr: string[]) {
 export default async function (call: Call) {
   try {
     if (call.fromMe) return;
+    const isCallMustReject = await getSetting("call_reject");
+    if (!isCallMustReject || isCallMustReject == "off") return;
 
     await call.reject();
     if (!call.from) return;
