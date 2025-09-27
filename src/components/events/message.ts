@@ -17,6 +17,7 @@ import emojiRegex from "emoji-regex";
 import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
 import { containsAny } from "../utils/string";
 import { checkMessage } from "../utils/phishtank";
+import { getSetting } from "../services/settings";
 
 const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
@@ -101,49 +102,54 @@ export default async function (msg: Message, type: string) {
    * Override the default function
    *     react(reaction: string) Promise<void>
    */
-  const originalReact = msg.react.bind(msg);
-  msg.react = async (reaction: string): Promise<void> => {
-    // add delay for more
-    // humanly like interaction
-    const min = 2000;
-    const max = 6000;
-    const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
+  const [isMustautoReact] = await Promise.all([getSetting("auto_react")]);
+  if (isMustautoReact && isMustautoReact == "on") {
+    const originalReact = msg.react.bind(msg);
+    msg.react = async (reaction: string): Promise<void> => {
+      // add delay for more
+      // humanly like interaction
+      const min = 2000;
+      const max = 6000;
+      const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
 
-    await sleep(randomMs);
-    const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
-    log.info("AutoReact", lid, reaction);
+      await sleep(randomMs);
+      const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
+      log.info("AutoReact", lid, reaction);
 
-    if (Math.random() < 0.1 && !isEmoji)
-      if (Math.random() < 0.2)
-        await client.sendMessage(msg.id.remote, reaction);
-      else await msg.reply(reaction);
-    else await originalReact(reaction);
-  };
+      if (Math.random() < 0.1 && !isEmoji)
+        if (Math.random() < 0.2)
+          await client.sendMessage(msg.id.remote, reaction);
+        else await msg.reply(reaction);
+      else await originalReact(reaction);
+    };
+  }
 
   /*
    *
    * Process msg reaction
    */
-  Promise.resolve().then(async () => {
-    if (!msg.fromMe) {
-      const emojis = [
-        ...new Set([...msg.body.matchAll(regex)].map((m) => m[0])),
-      ];
-      if (emojis.length > 0) {
-        const react = emojis[Math.floor(Math.random() * emojis.length)];
+  if (isMustautoReact && isMustautoReact == "on") {
+    Promise.resolve().then(async () => {
+      if (!msg.fromMe) {
+        const emojis = [
+          ...new Set([...msg.body.matchAll(regex)].map((m) => m[0])),
+        ];
+        if (emojis.length > 0) {
+          const react = emojis[Math.floor(Math.random() * emojis.length)];
 
-        await msg.react(react);
-      } else if (containsAny(msg.body, funD)) {
-        await msg.react("🤣");
-      } else if (containsAny(msg.body, happyEE)) {
-        await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
-      } else if (containsAny(msg.body, sadEE)) {
-        await msg.react("😭");
-      } else if (containsAny(msg.body, loveEE)) {
-        await msg.react("❤️");
+          await msg.react(react);
+        } else if (containsAny(msg.body, funD)) {
+          await msg.react("🤣");
+        } else if (containsAny(msg.body, happyEE)) {
+          await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
+        } else if (containsAny(msg.body, sadEE)) {
+          await msg.react("😭");
+        } else if (containsAny(msg.body, loveEE)) {
+          await msg.react("❤️");
+        }
       }
-    }
-  });
+    });
+  }
 
   /*
    * Check if the message starts with the command prefix.

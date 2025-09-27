@@ -2,12 +2,15 @@ import { Client, Reaction } from "whatsapp-web.js";
 import log from "../utils/log";
 import sleep from "../utils/sleep";
 import { isBlocked } from "../services/user";
+import { getSetting } from "../services/settings";
 
 export default async function (client: Client, react: Reaction) {
   if (react.msgId.fromMe || react.id.fromMe) return;
   if (!react.reaction?.trim()) return;
   // ignore react if it is older than 10 seconds
   if (react.timestamp < Date.now() / 1000 - 10) return;
+  const isMustRepeatReact = await getSetting("react_repeater");
+  if (!isMustRepeatReact || isMustRepeatReact == "off") return;
 
   const senderId = react.senderId.split("@")[0];
   const isBlockedUser = await isBlocked(senderId);
