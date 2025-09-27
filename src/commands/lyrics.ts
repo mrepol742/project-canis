@@ -1,4 +1,8 @@
 import { Message } from "../../types/message";
+// for i dont know reasons
+// using the ESM outputs to Client not found
+// so i recommend using `require` for now...
+// it works
 const Genius = require("genius-lyrics");
 import log from "../components/utils/log";
 import { request } from "undici";
