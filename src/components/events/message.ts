@@ -41,11 +41,19 @@ export default async function (msg: Message, type: string) {
 
   if (msg.isGif || msg.isStatus || msg.broadcast) return; // ignore them all
 
+  const lid = msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0];
+
   // process normalization
   msg.body = msg.body
     .normalize("NFKC")
     .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
     .trim();
+
+  /*
+   * Block users from running commands.
+   */
+  const isBlockedUser = await isBlocked(lid);
+  if (isBlockedUser) return;
 
   /*
    *
@@ -81,7 +89,6 @@ export default async function (msg: Message, type: string) {
   }
 
   const prefix = !msg.body.startsWith(commandPrefix);
-  const lid = msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0];
 
   /*
    * Prefix
@@ -162,12 +169,6 @@ export default async function (msg: Message, type: string) {
       );
     return;
   }
-
-  /*
-   * Block users from running commands.
-   */
-  const isBlockedUser = await isBlocked(lid);
-  if (isBlockedUser) return;
 
   /*
    * Rate limit commands to prevent abuse.
