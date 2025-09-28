@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import "./instrument";
 import { checkRequirements } from "./components/utils/requirements";
 import log from "./components/utils/log";
 import { mapCommands } from "./components/utils/cmd/loader";

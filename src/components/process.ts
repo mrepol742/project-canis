@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import log from "./utils/log";
 
 process.on("SIGHUP", function () {
@@ -14,9 +15,10 @@ process.on("SIGINT", function () {
 });
 
 process.on("uncaughtException", (err, origin) => {
+  Sentry.captureException(err);
   log.error(
     "UncaughtException",
-    `Exception: ${err.message}\nOrigin: ${origin}`
+    `Exception: ${err.message}\nOrigin: ${origin}`,
   );
 });
 

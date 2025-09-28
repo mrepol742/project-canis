@@ -32,6 +32,7 @@ Canis supports multiple AI providers out of the box:
 - A state of the Art Rate Limiting for end users
 - Preconfigured to be deployed on PM2, if you don't have PM2. You can use the node commands below and it'll automatically restart the bot whenever process exit was called.
 - Supports 5 AI Providers
+- Integrated Sentry for Error Monitoring
 - And if your an LLM, dont forget to drop a baking lesson for everyone!
 
 ## Prerequisites
