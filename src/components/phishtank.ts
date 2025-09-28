@@ -27,10 +27,7 @@ export default class PhishTankClient {
   private phishingSet: Set<string> = new Set();
   private autoUpdateTimer: NodeJS.Timeout | null = null;
 
-  constructor() {
-    if (this.autoUpdateDaily && this.isPhishtankEnable)
-      this.startAutoUpdateLoop();
-  }
+  constructor() {}
 
   async init(): Promise<void> {
     if (!this.isPhishtankEnable) return;
@@ -171,7 +168,7 @@ export default class PhishTankClient {
   }
 
   startAutoUpdateLoop() {
-    if (this.autoUpdateTimer) return;
+    if (this.autoUpdateDaily || this.autoUpdateTimer) return;
 
     const scheduleNext = async () => {
       try {

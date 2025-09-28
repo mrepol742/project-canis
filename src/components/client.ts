@@ -75,6 +75,4 @@ client.on("auth_failure", (msg: string) => {
   log.error("Auth", "Authentication failed. Please try again.");
 });
 
-client.initialize();
-
 export { client };

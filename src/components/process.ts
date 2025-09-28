@@ -32,4 +32,6 @@ process.on("exit", (code) => {
   console.log("");
 });
 
+log.info("Bot", `Initiating ${process.env.PROJECT_CANIS_ALIAS || "Canis"}...`);
+log.info("Bot", `prefix: ${process.env.COMMAND_PREFIX || "!"}`);
 log.info("Process", "Event listeners for process signals have been set up.");
