@@ -7,9 +7,8 @@ import { mapCommands } from "./components/utils/cmd/loader";
 import watcher from "./components/utils/cmd/watcher";
 import "./components/process";
 import "./components/server";
-import { checkMessage } from "./components/utils/phishtank";
 import MemoryMonitor from "./components/utils/memMonitor";
-import sleep from "./components/utils/sleep";
+import PhishTankClient from "./components/phishtank";
 
 const monitor = new MemoryMonitor({
   interval: 60000,
@@ -18,6 +17,9 @@ const monitor = new MemoryMonitor({
 
 monitor.start();
 checkRequirements();
+const phishtank = new PhishTankClient();
+phishtank.init();
+const phishingSet: Set<string> = phishtank.getPhishingSet();
 
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const botName = process.env.PROJECT_CANIS_ALIAS || "Canis";
@@ -29,3 +31,5 @@ log.info("Bot", `prefix: ${commandPrefix}`);
 mapCommands();
 // Watch for changes
 if (autoReload) watcher();
+
+export { phishingSet };

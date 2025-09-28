@@ -16,13 +16,15 @@ import { errors } from "../utils/data";
 import emojiRegex from "emoji-regex";
 import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
 import { containsAny } from "../utils/string";
-import { checkMessage } from "../utils/phishtank";
+import { phishingSet } from "../../index";
 import { getSetting } from "../services/settings";
+import { normalize } from "../utils/url";
 
 const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
+const isPhishtankEnable = process.env.PHISHTANK_ENABLE === "true";
 const mentionResponses = [
   "👀 Did someone just say my name?",
   "Bruh, why me again? 😂",
@@ -60,21 +62,25 @@ export default async function (msg: Message, type: string) {
    *
    * Check for scam urls
    */
+  if (isPhishtankEnable) {
+    Promise.resolve().then(async () => {
+      const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g) || [];
+      const urls = extractUrls
+        .map((url) => normalize(url))
+        .filter((u): u is string => Boolean(u));
+      const spamUrls = urls.filter((url) => phishingSet.has(url));
+      if (spamUrls.length == 0) return;
 
-  Promise.resolve().then(async () => {
-    const spamUrls = checkMessage(msg.body);
-
-    if (spamUrls.length == 0) return;
-
-    const text = `
+      const text = `
     \`Phishing Alert\`
 
     We've found that this url(s): \`${spamUrls.join(", ")}\`
     to be phishing site/page.
     Proceed with caution.
     `;
-    await msg.reply(text);
-  });
+      await msg.reply(text);
+    });
+  }
 
   if (msg.isForwarded) return;
 
