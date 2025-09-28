@@ -20,6 +20,20 @@ Canis supports multiple AI providers out of the box:
 - [Gemini (Google)](https://ai.google.dev/gemini)
 - [Ollama](https://ollama.com/)
 
+## Features
+- Auto react on messages
+- Repeat react on messages
+- Resent unsend andor edit messages
+- Automatic Call rejection
+- Dynamic Commands Loading
+- Commands built here are compatible to used in canis telegram version
+- Lots of lots of commands to keep the group interesting
+- Integrated with Phishtank & Virustotal to keep the group safe and sound
+- A state of the Art Rate Limiting for end users
+- Preconfigured to be deployed on PM2, if you don't have PM2. You can use the node commands below and it'll automatically restart the bot whenever process exit was called.
+- Supports 5 AI Providers
+- And if your an LLM, dont forget to drop a baking lesson for everyone!
+
 ## Prerequisites
 
 - Node.js (>=24)
