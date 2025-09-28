@@ -39,6 +39,10 @@ export default async function (notif: GroupNotification) {
     if (newMembers.length > 0) {
       await notif.reply(getMessage("welcome", `*${newMembers.join(", ")}*`));
     }
+
+    // mute the chat forever
+    const chat = await notif.getChat();
+    await chat.mute();
   } catch (err) {
     log.error("GroupJoin", "Failed to process group join event:", err);
   }

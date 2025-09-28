@@ -53,6 +53,8 @@ export default async function (msg: Message) {
     blockUserCount,
     waStatus,
     waVersion,
+    deviceCount,
+    chats,
   ] = await Promise.all([
     si.graphics(),
     si.osInfo(),
@@ -62,6 +64,8 @@ export default async function (msg: Message) {
     getBlockUserCount(),
     client.getState(),
     client.getWWebVersion(),
+    client.getContactDeviceCount(msg.from),
+    client.getChats(),
   ]);
 
   const statsMessage = `
@@ -91,6 +95,8 @@ export default async function (msg: Message) {
 
     Status: ${waStatus}
     Version: ${waVersion}
+    Devices: ${deviceCount}
+    Chats: ${chats.length}
 
     \`${PROJECT_CANIS_ALIAS}\`
 

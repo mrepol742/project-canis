@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import * as GoogleTTS from "google-tts-api";
 import fs from "fs";
@@ -28,6 +28,10 @@ export default async function (msg: Message) {
     host: "https://translate.google.com",
   });
 
+  // simulates audio recording
+  const chat = await msg.getChat();
+  chat.sendStateRecording();
+
   const response = await axios.get(url, { responseType: "arraybuffer" });
   const buffer = Buffer.from(response.data);
   const tempDir = "./.temp";
@@ -42,7 +46,7 @@ export default async function (msg: Message) {
   const media = new MessageMedia(
     "audio/mpeg",
     audioBuffer.toString("base64"),
-    `${filename}.mp3`
+    `${filename}.mp3`,
   );
   await msg.reply(media, msg.from, {
     sendAudioAsVoice: true,

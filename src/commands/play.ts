@@ -80,6 +80,10 @@ export default async function play(msg: Message) {
     writeStream.on("error", reject);
   });
 
+  // simulates audio recording
+  const chat = await msg.getChat();
+  chat.sendStateRecording();
+
   await execPromise(
     `ffmpeg -y -i "${tempPath}" -vn -ar 44100 -ac 2 -b:a 192k "${tempPath}.mp3"`,
   );
