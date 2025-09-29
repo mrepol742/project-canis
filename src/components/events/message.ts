@@ -46,17 +46,19 @@ export default async function (msg: Message, type: string) {
 
   const lid = msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0];
 
-  // process normalization
-  msg.body = msg.body
-    .normalize("NFKC")
-    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
-    .trim();
-
   /*
    * Block users from running commands.
    */
   const isBlockedUser = await isBlocked(lid);
   if (isBlockedUser) return;
+
+  const prefix = !msg.body.startsWith(commandPrefix);
+
+  /*
+   * Prefix
+   */
+  if (!commandPrefixLess && prefix) return;
+  if (msg.fromMe && prefix) return;
 
   /*
    *
@@ -84,6 +86,12 @@ export default async function (msg: Message, type: string) {
 
   if (msg.isForwarded) return;
 
+  // process normalization
+  msg.body = msg.body
+    .normalize("NFKC")
+    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
+    .trim();
+
   /*
    *
    * Quiz command validation
@@ -94,14 +102,6 @@ export default async function (msg: Message, type: string) {
       await quiz(msg, quoted);
     });
   }
-
-  const prefix = !msg.body.startsWith(commandPrefix);
-
-  /*
-   * Prefix
-   */
-  if (!commandPrefixLess && prefix) return;
-  if (msg.fromMe && prefix) return;
 
   /*
    *

@@ -43,10 +43,11 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
         commandCount: 1,
       },
     });
+    return true;
   } catch (error) {
     log.error("Database", `Failed to find or create user.`, error);
   }
-  return true;
+  return false;
 }
 
 export async function getUserbyLid(lid: string) {

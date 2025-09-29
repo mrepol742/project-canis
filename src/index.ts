@@ -18,13 +18,14 @@ const monitor = new MemoryMonitor({
   thresholdMB: parseInt(process.env.PROJECT_THRESHOLD_MEMORY || "1024", 10),
 });
 const phishtank = new PhishTankClient();
-const phishingSet: Set<string> = phishtank.getPhishingSet();
+let phishingSet: Set<string>;
 
 async function main() {
   checkRequirements();
   monitor.start();
   phishtank.startAutoUpdateLoop();
   await phishtank.init();
+  phishingSet = phishtank.getPhishingSet();
   await client.initialize();
 
   mapCommands();
