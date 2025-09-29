@@ -3,10 +3,9 @@ import { Message } from "../../types/message";
 import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
-// fallback import for compatibility
-// youtubei.js currently does not support ESM directly
-const { Innertube, UniversalCache, Utils } = require("youtubei.js");
+import { Innertube, UniversalCache, Utils } from "youtubei.js";
 import util from "util";
+import log from "../components/utils/log";
 
 const execPromise = util.promisify(exec);
 
@@ -18,6 +17,24 @@ export const info = {
   role: "user",
   cooldown: 5000,
 };
+
+async function search(yt: Innertube, query: string) {
+  log.info("Play", `Searching for ${query}`);
+  const results = await yt.music.search(query, { type: "song" });
+  const firstShelf = results.contents?.[0];
+  const audio: any =
+    firstShelf && "contents" in firstShelf
+      ? firstShelf.contents?.[0]
+      : undefined;
+
+  if (audio?.id) return audio;
+
+  const didYouMean: any = results.contents?.[0].contents?.[0];
+  if (!didYouMean) return undefined;
+
+  log.info("Play", `Did you mean ${didYouMean.corrected_query.text}`);
+  return await search(yt, didYouMean.corrected_query.text);
+}
 
 export default async function play(msg: Message) {
   const query = msg.body.replace(/^play\b\s*/i, "").trim();
@@ -31,18 +48,17 @@ export default async function play(msg: Message) {
     generate_session_locally: true,
     player_id: "0004de42",
   });
-  const search = await yt.music.search(query, { type: "song" });
 
-  const audio = search.contents[0].contents[0];
-  if (!audio.id) {
-    await msg.reply("Unable to find resources for the given query.");
+  const audio: any = await search(yt, query);
+  if (!audio) {
+    await msg.reply(`No youtube music found for "${query}".`);
     return;
   }
 
-  // Only allow audios shorter than 10 minutes (600 seconds)
-  if (audio.length && audio.length.seconds > 600) {
+  // Only allow audios shorter than 20 minutes (1200 seconds)
+  if (audio.duration && audio.duration.seconds > 1200) {
     await msg.reply(
-      "Sorry, it seems like im not able to get any search results.",
+      "Opps, the music is quite long we can only process max of 20 minutes.",
     );
     return;
   }
@@ -57,7 +73,7 @@ export default async function play(msg: Message) {
 
   if (!stream) {
     await Promise.all([
-      msg.reply("Failed to download the audio stream."),
+      msg.reply("Failed to download the audio."),
       msg.react(""),
     ]);
     return;
@@ -88,13 +104,7 @@ export default async function play(msg: Message) {
     `ffmpeg -y -i "${tempPath}" -vn -ar 44100 -ac 2 -b:a 192k "${tempPath}.mp3"`,
   );
 
-  const audioBuffer = fs.readFileSync(`${tempPath}.mp3`);
-  const media = new MessageMedia(
-    "audio/mpeg",
-    audioBuffer.toString("base64"),
-    `${audio.title}.mp3`,
-  );
-
+  const media = MessageMedia.fromFilePath(`${tempPath}.mp3`);
   await msg.reply(media, undefined, {
     caption: audio.title,
   });

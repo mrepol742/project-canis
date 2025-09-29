@@ -2,13 +2,8 @@ import { MessageMedia } from "whatsapp-web.js";
 import { Message } from "../../types/message";
 import fs from "fs";
 import path from "path";
-// fallback import for compatibility
-// youtubei.js currently does not support ESM directly
-const { Innertube, UniversalCache, Utils } = require("youtubei.js");
-import { exec } from "child_process";
-import util from "util";
-
-const execPromise = util.promisify(exec);
+import { Innertube, UniversalCache, Utils } from "youtubei.js";
+import log from "../components/utils/log";
 
 export const info = {
   command: "video",
@@ -18,6 +13,20 @@ export const info = {
   role: "user",
   cooldown: 5000,
 };
+
+async function search(yt: Innertube, query: string) {
+  log.info("Video", `Searching for ${query}`);
+  const results = await yt.search(query, { type: "video" });
+  const video: any = results.results?.[0];
+
+  if (video?.video_id) return video;
+
+  const didYouMean: any = results.results?.[0];
+  if (!didYouMean) return undefined;
+
+  log.info("Video", `Did you mean ${didYouMean.corrected_query.text}`);
+  return await search(yt, didYouMean.corrected_query.text);
+}
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^video\b\s*/i, "").trim();
@@ -31,20 +40,17 @@ export default async function (msg: Message) {
     generate_session_locally: true,
     player_id: "0004de42",
   });
-  const search = await yt.search(query, { type: "video" });
 
-  const video = search.results[0];
-  if (!video.video_id) {
-    await msg.reply(
-      "Sorry, it seems like im not able to get any search results.",
-    );
+  const video: any = await search(yt, query);
+  if (!video) {
+    await msg.reply(`No youtube video found for "${query}".`);
     return;
   }
 
-  // Only allow videos shorter than 10 minutes (600 seconds)
-  if (video.length && video.length.seconds > 600) {
+  // Only allow audios shorter than 20 minutes (1200 seconds)
+  if (video.duration && video.duration.seconds > 1200) {
     await msg.reply(
-      "Sorry, only videos shorter than 10 minutes can be downloaded.",
+      "Opps, the video is quite long we can only process max of 20 minutes.",
     );
     return;
   }
@@ -58,7 +64,10 @@ export default async function (msg: Message) {
   });
 
   if (!stream) {
-    await msg.reply("Failed to download the video stream.");
+    await Promise.all([
+      msg.reply("Failed to download the video."),
+      msg.react(""),
+    ]);
     return;
   }
 
@@ -79,15 +88,9 @@ export default async function (msg: Message) {
     writeStream.on("error", reject);
   });
 
-  const audioBuffer = fs.readFileSync(`${tempPath}`);
-  const media = new MessageMedia(
-    "audio/mpeg",
-    audioBuffer.toString("base64"),
-    `${video.title}.mp4`,
-  );
-
+  const media = MessageMedia.fromFilePath(tempPath);
   await msg.reply(media, undefined, {
-    caption: `${video.title}`,
+    caption: video.title.text,
   });
 
   fs.promises.unlink(tempPath);
