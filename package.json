@@ -37,6 +37,7 @@
     "genius-lyrics": "^4.4.7",
     "google-tts-api": "^2.0.2",
     "groq-sdk": "^0.27.0",
+    "is-spaghetti-code": "^1.0.1",
     "npmlog": "^7.0.1",
     "ollama": "^0.5.16",
     "openai": "^5.10.2",
