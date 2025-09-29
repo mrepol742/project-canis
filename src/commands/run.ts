@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
@@ -7,25 +7,33 @@ import fs from "fs/promises";
 export const info = {
   command: "run",
   description: "Run a code snippet in a specified programming language.",
-  usage: "run <language>\n<code>",
-  example: "run python\nprint('Hello, World!')",
+  usage: "run <language>",
+  example: "run py",
   role: "admin",
   cooldown: 5000,
 };
 
 export default async function (msg: Message) {
-  const body = msg.body.trim();
-  const match = body.match(/^run\s+(python|java|c|js|php)\s*\r?\n([\s\S]+)/i);
+  const query = msg.body.replace(/^run\b\s*/i, "").trim();
+  if (query.length !== 0) {
+    if (!/^(py|java|c|js|php)$/i.test(query)) {
+      await msg.reply(
+        "Invalid argument. Please use one of the following:\n\npy, java, c, js or php",
+      );
+      return;
+    }
+  }
 
-  if (!match) {
-    await msg.reply(
-      "Please use the format:\n\nrun python\n<code>\n\nor\n\nrun java\n<code>"
-    );
+  if (!msg.hasQuotedMsg) {
+    await msg.reply("This only works on qouted messages.");
     return;
   }
 
-  const lang = match[1].toLowerCase();
-  const code = match[2];
+  const qouted = await msg.getQuotedMessage();
+  qouted.body = qouted.body
+    .normalize("NFKC")
+    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
+    .trim();
 
   let command: string;
   let tempFile: string;
@@ -33,19 +41,19 @@ export default async function (msg: Message) {
   const tempDir = "./.temp";
   await fs.mkdir(tempDir, { recursive: true });
 
-  if (lang === "python") {
+  if (query === "py") {
     tempFile = `${tempDir}/run.py`;
     command = `python3 "${tempFile}"`;
-  } else if (lang === "java") {
+  } else if (query === "java") {
     tempFile = `${tempDir}/run.java`;
     command = `javac "${tempFile}" && java -cp /tmp Code`;
-  } else if (lang === "c") {
+  } else if (query === "c") {
     tempFile = `${tempDir}/run.c`;
     command = `gcc "${tempFile}" -o /tmp/code && /tmp/code`;
-  } else if (lang === "js") {
+  } else if (query === "js") {
     tempFile = `${tempDir}/code.js`;
     command = `node "${tempFile}"`;
-  } else if (lang === "php") {
+  } else if (query === "php") {
     tempFile = `${tempDir}/run.php`;
     command = `php "${tempFile}"`;
   } else {
@@ -53,7 +61,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  await fs.writeFile(tempFile, code);
+  await fs.writeFile(tempFile, qouted.body);
 
   const execPromise = util.promisify(exec);
 
