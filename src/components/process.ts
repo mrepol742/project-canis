@@ -1,17 +1,24 @@
 import * as Sentry from "@sentry/node";
 import log from "./utils/log";
+import { client } from "./client";
 
-process.on("SIGHUP", function () {
-  process.exit(0);
-});
+async function gracefulShutdown(signal: string) {
+  log.info("Process", `Received ${signal}, shutting down...`);
 
-process.on("SIGTERM", function () {
-  process.exit(0);
-});
+  try {
+    if (client.pupBrowser) {
+      await client.pupBrowser.close();
+      log.info("Browser", "Puppeteer browser closed successfully.");
+    }
+  } catch (err) {
+    log.error("Browser", `Error closing browser: ${(err as Error).message}`);
+  }
 
-process.on("SIGINT", function () {
-  process.kill(process.pid);
   process.exit(0);
+}
+
+["SIGINT", "SIGTERM", "SIGHUP"].forEach((signal) => {
+  process.on(signal, () => gracefulShutdown(signal));
 });
 
 process.on("uncaughtException", (err, origin) => {
@@ -24,14 +31,6 @@ process.on("uncaughtException", (err, origin) => {
 
 process.on("unhandledRejection", (reason, promise) => {
   log.error("UnhandledRejection", `Reason: ${reason}\nPromise: ${promise}`);
-});
-
-process.on("beforeExit", (code) => {
-  log.info("BeforeExit", `Process is about to exit with code: ${code}`);
-});
-
-process.on("exit", (code) => {
-  console.log("");
 });
 
 log.info("Bot", `Initiating ${process.env.PROJECT_CANIS_ALIAS || "Canis"}...`);
