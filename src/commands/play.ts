@@ -18,6 +18,15 @@ export const info = {
   cooldown: 5000,
 };
 
+const fileExists = async (filePath: string) => {
+  try {
+    await fs.promises.access(filePath, fs.constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 async function search(yt: Innertube, query: string) {
   log.info("Play", `Searching for ${query}`);
   const results = await yt.music.search(query, { type: "song" });
@@ -65,6 +74,17 @@ export default async function play(msg: Message) {
 
   await msg.react("🔍");
 
+  const tempDir = "./.temp";
+  await fs.promises.mkdir(tempDir, { recursive: true });
+  const tempPath = path.join(tempDir, `${audio.id}.mp3`);
+  const savePath = path.join(tempDir, `${audio.id}.m4a`);
+
+  if (await fileExists(savePath)) {
+    const media = MessageMedia.fromFilePath(savePath);
+    await msg.reply(media);
+    return;
+  }
+
   const stream = await yt.download(audio.id, {
     type: "video+audio",
     quality: "best",
@@ -81,9 +101,6 @@ export default async function play(msg: Message) {
 
   await msg.react("⬇️");
 
-  const tempDir = "./.temp";
-  await fs.promises.mkdir(tempDir, { recursive: true });
-  const tempPath = path.join(tempDir, `${audio.id}.mp3`);
   let writeStream = fs.createWriteStream(tempPath);
 
   for await (const chunk of Utils.streamToIterable(stream)) {
@@ -100,17 +117,7 @@ export default async function play(msg: Message) {
   const chat = await msg.getChat();
   chat.sendStateRecording();
 
-  await execPromise(
-    `ffmpeg -y -i "${tempPath}" -vn -ar 44100 -ac 2 -b:a 192k "${tempPath}.mp3"`,
-  );
-
-  const media = MessageMedia.fromFilePath(`${tempPath}.mp3`);
-  await msg.reply(media, undefined, {
-    caption: audio.title,
-  });
-
-  Promise.all([
-    fs.promises.unlink(tempPath),
-    fs.promises.unlink(`${tempPath}.mp3`),
-  ]);
+  await execPromise(`ffmpeg -y -i "${tempPath}" -vn -c:a copy "${savePath}"`);
+  const media = MessageMedia.fromFilePath(savePath);
+  Promise.all([msg.reply(media), fs.promises.unlink(tempPath)]);
 }

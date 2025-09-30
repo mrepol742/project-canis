@@ -14,6 +14,15 @@ export const info = {
   cooldown: 5000,
 };
 
+const fileExists = async (filePath: string) => {
+  try {
+    await fs.promises.access(filePath, fs.constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 async function search(yt: Innertube, query: string) {
   log.info("Video", `Searching for ${query}`);
   const results = await yt.search(query, { type: "video" });
@@ -57,6 +66,18 @@ export default async function (msg: Message) {
 
   await msg.react("🔍");
 
+  const tempDir = "./.temp";
+  await fs.promises.mkdir(tempDir, { recursive: true });
+  const tempPath = path.join(tempDir, `${video.video_id}.mp4`);
+
+  if (await fileExists(tempPath)) {
+    const media = MessageMedia.fromFilePath(tempPath);
+    await msg.reply(media, undefined, {
+      caption: video.title.text,
+    });
+    return;
+  }
+
   const stream = await yt.download(video.video_id, {
     type: "video+audio",
     quality: "best",
@@ -73,9 +94,6 @@ export default async function (msg: Message) {
 
   await msg.react("⬇️");
 
-  const tempDir = "./.temp";
-  await fs.promises.mkdir(tempDir, { recursive: true });
-  const tempPath = path.join(tempDir, `${video.video_id}.mp4`);
   let writeStream = fs.createWriteStream(tempPath);
 
   for await (const chunk of Utils.streamToIterable(stream)) {
@@ -92,6 +110,4 @@ export default async function (msg: Message) {
   await msg.reply(media, undefined, {
     caption: video.title.text,
   });
-
-  fs.promises.unlink(tempPath);
 }
