@@ -81,7 +81,7 @@ export default async function play(msg: Message) {
 
   if (await fileExists(savePath)) {
     const media = MessageMedia.fromFilePath(savePath);
-    await msg.reply(media);
+    await Promise.all([msg.reply(media), msg.react("")]);
     return;
   }
 

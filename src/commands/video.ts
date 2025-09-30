@@ -72,9 +72,13 @@ export default async function (msg: Message) {
 
   if (await fileExists(tempPath)) {
     const media = MessageMedia.fromFilePath(tempPath);
-    await msg.reply(media, undefined, {
-      caption: video.title.text,
-    });
+
+    await Promise.all([
+      msg.reply(media, undefined, {
+        caption: video.title.text,
+      }),
+      msg.react(""),
+    ]);
     return;
   }
 
