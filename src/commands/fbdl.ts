@@ -1,6 +1,7 @@
 import { MessageMedia } from "whatsapp-web.js";
 import { Message } from "../../types/message";
 import { getFbVideoInfo } from "fb-downloader-scrapper";
+import crypto from "crypto";
 import log from "../components/utils/log";
 import axios from "../components/axios";
 import fs from "fs";
@@ -12,6 +13,15 @@ export const info = {
   example: "fbdl https://www.facebook.com/watch?v=1234567890",
   role: "user",
   cooldown: 5000,
+};
+
+const fileExists = async (filePath: string) => {
+  try {
+    await fs.promises.access(filePath, fs.constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 export default async function (msg: Message) {
@@ -28,27 +38,41 @@ export default async function (msg: Message) {
     return;
   }
 
+  await msg.react("🔍");
+
   const result = await getFbVideoInfo(query);
-  if (!result.url)
-    return await msg.reply("No video found at the provided URL.");
+  if (!result.url) {
+    await Promise.all([
+      msg.reply("No video found at the provided URL."),
+      msg.react(""),
+    ]);
+    return;
+  }
+
+  const tempDir = "./.temp";
+  fs.mkdirSync(tempDir, { recursive: true });
+  const tempPath = `${tempDir}/${crypto.randomUUID()}.mp4`;
+
+  if (await fileExists(tempPath)) {
+    const media = MessageMedia.fromFilePath(tempPath);
+    await Promise.all([
+      msg.reply(media, undefined, {
+        caption: result.title,
+      }),
+      msg.react(""),
+    ]);
+    return;
+  }
+
+  await msg.react("⬇️");
 
   const response = await axios.get(result.hd || result.sd, {
     responseType: "arraybuffer",
   });
-
-  const tempDir = "./.temp";
-  fs.mkdirSync(tempDir, { recursive: true });
-
-  const tempPath = `${tempDir}/fbdl_${Date.now()}.mp4`;
   fs.writeFileSync(tempPath, response.data);
 
-  const audioBuffer = fs.readFileSync(tempPath);
-  const media = new MessageMedia(
-    "audio/mpeg",
-    audioBuffer.toString("base64"),
-    `${result.title}.mp4`,
-  );
-
-  await msg.reply(media, msg.from);
-  await fs.promises.unlink(tempPath);
+  const media = MessageMedia.fromFilePath(tempPath);
+  await msg.reply(media, undefined, {
+    caption: result.title,
+  });
 }
