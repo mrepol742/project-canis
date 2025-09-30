@@ -19,6 +19,7 @@ import { containsAny } from "../utils/string";
 import { phishingSet } from "../../index";
 import { getSetting } from "../services/settings";
 import { normalize } from "../utils/url";
+import { InstantDownloader } from "../utils/instantdl/downloader";
 
 const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
@@ -37,6 +38,19 @@ const mentionResponses = [
   "My ears were burning 🔥",
   "Did you just @ me for vibes, or do I owe you money? 💸",
 ];
+
+async function isRateLimit(msg: Message, lid: string) {
+  if (msg.fromMe) return false;
+
+  const rate = await rateLimiter(lid);
+  if (rate) return true;
+  if (rate === null) {
+    await msg.reply("Please wait a minute or so.");
+    return true;
+  }
+
+  return false;
+}
 
 export default async function (msg: Message, type: string) {
   // ignore message if it is older than 10 seconds
@@ -86,6 +100,19 @@ export default async function (msg: Message, type: string) {
 
   if (msg.isForwarded) return;
 
+  Promise.resolve().then(async () => {
+    if (await isRateLimit(msg, lid)) return;
+
+    const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
+    if (!extractUrls) return;
+
+    const url = extractUrls[Math.floor(Math.random() * extractUrls.length)];
+    const message = msg;
+    message.body = url;
+    log.info("Instant Downloader", `Found ${url}`);
+    await InstantDownloader(message);
+  });
+
   // process normalization
   msg.body = msg.body
     .normalize("NFKC")
@@ -98,6 +125,8 @@ export default async function (msg: Message, type: string) {
    */
   if (msg.hasQuotedMsg) {
     Promise.resolve().then(async () => {
+      if (await isRateLimit(msg, lid)) return;
+
       const quoted = await msg.getQuotedMessage();
       await quiz(msg, quoted);
     });
@@ -185,14 +214,7 @@ export default async function (msg: Message, type: string) {
   /*
    * Rate limit commands to prevent abuse.
    */
-  if (!msg.fromMe) {
-    const rate = await rateLimiter(lid);
-    if (rate) return;
-    if (rate === null) {
-      await msg.reply("Please wait a minute or so.");
-      return;
-    }
-  }
+  if (await isRateLimit(msg, lid)) return;
 
   /*
    * Role base restrictions.

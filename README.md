@@ -26,6 +26,7 @@ Canis supports multiple AI providers out of the box:
 - Resent unsend andor edit messages
 - Automatic Call rejection
 - Dynamic Commands Loading
+- Instant Download of Videos from supported platform
 - Commands built here are compatible to used in canis telegram version
 - Lots of lots of commands to keep the group interesting
 - Integrated with Phishtank & Virustotal to keep the group safe and sound
