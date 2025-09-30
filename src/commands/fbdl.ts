@@ -24,6 +24,10 @@ const fileExists = async (filePath: string) => {
   }
 };
 
+function md5FromUrl(url: string) {
+  return crypto.createHash("md5").update(url).digest("hex");
+}
+
 export default async function (msg: Message) {
   const query = msg.body.replace(/^fbdl\b\s*/i, "").trim();
   if (query.length === 0) {
@@ -51,7 +55,7 @@ export default async function (msg: Message) {
 
   const tempDir = "./.temp";
   fs.mkdirSync(tempDir, { recursive: true });
-  const tempPath = `${tempDir}/${crypto.randomUUID()}.mp4`;
+  const tempPath = `${tempDir}/${md5FromUrl(result.url)}.mp4`;
 
   if (await fileExists(tempPath)) {
     const media = MessageMedia.fromFilePath(tempPath);
