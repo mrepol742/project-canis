@@ -64,5 +64,11 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.reply(text);
+  const mentionIdRegExp: RegExp = /@([^\s]+)/g
+  const mentions: string[] = [...text.matchAll(mentionIdRegExp)].map(matchId => {
+    if (/^\+?\d+$/.test(matchId[1])) return (matchId[0] + "c.us")
+    return matchId[0]
+  });
+
+  await msg.reply(text, undefined, { mentions });
 }
