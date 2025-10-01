@@ -6,6 +6,7 @@ import { getUserCount, getBlockUserCount } from "../components/services/user";
 import { client } from "../components/client";
 import { commands } from "../components/utils/cmd/loader";
 import timestamp from "../components/utils/timestamp";
+import speedTest from "../components/utils/speedtest";
 
 export const info = {
   command: "stats",
@@ -42,6 +43,7 @@ export default async function (msg: Message) {
     usedMemory: os.totalmem() - os.freemem(),
     totalMemory: os.totalmem(),
     cpu: os.cpus(),
+    uptime: os.uptime(),
   };
 
   const [
@@ -55,6 +57,7 @@ export default async function (msg: Message) {
     waVersion,
     deviceCount,
     chats,
+    speedTestResults,
   ] = await Promise.all([
     si.graphics(),
     si.osInfo(),
@@ -66,12 +69,14 @@ export default async function (msg: Message) {
     client.getWWebVersion(),
     client.getContactDeviceCount(msg.from),
     client.getChats(),
+    speedTest(),
   ]);
 
   const statsMessage = `
     \`System Monitor\`
 
     OS: ${osInfo.distro} ${osInfo.kernel}
+    Uptime: ${timestamp(stats.uptime)}
     CPU: ${stats.cpu[0].model}
     LA: ${os
       .loadavg()
@@ -81,7 +86,12 @@ export default async function (msg: Message) {
     RAM: ${(stats.usedMemory / 1024 ** 3).toFixed(2)} GB / ${(stats.totalMemory / 1024 ** 3).toFixed(2)} GB
     VRAM: ${gpuInfo.controllers.map((c) => c.vram).join(", ")} MB
     Shell: ${shell}
-    Network: ${networkInterfaces.map((iface) => `${iface.iface} ${iface.speed} Mbps`).join(", ")}
+
+    \`Network\`
+    Interface: ${networkInterfaces.map((iface) => `${iface.iface} ${iface.speed} Mbps`).join(", ")}
+    Download: ${speedTestResults.download.bandwidth / 125000} Mbps
+    Upload: ${speedTestResults.upload.bandwidth / 125000} Mbps
+    Ping: ${speedTestResults.ping.latency} ms
 
     \`Node.js Runtime\`
 
