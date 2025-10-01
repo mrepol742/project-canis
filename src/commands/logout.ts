@@ -15,7 +15,7 @@ export default async function (msg: Message) {
   if (!/^logout$/i.test(msg.body)) return;
 
   try {
-    await client.logout();
+    (await client()).logout();
     log.info("Logout", "Client logged out successfully.");
   } catch (error) {
     log.error("Logout", "Failed to log out the client.", error);

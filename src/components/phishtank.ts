@@ -168,7 +168,7 @@ export default class PhishTankClient {
   }
 
   startAutoUpdateLoop() {
-    if (this.autoUpdateDaily || this.autoUpdateTimer) return;
+    if (!this.autoUpdateDaily && !this.autoUpdateTimer) return;
 
     const scheduleNext = async () => {
       try {

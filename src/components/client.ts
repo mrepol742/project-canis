@@ -18,61 +18,79 @@ import ready from "./events/ready";
 import revoke from "./events/revoke";
 import callEvent from "./events/call";
 
-const loadingBar = LoadingBar("Loading Client   | {bar} | {value}%");
-const client = new Client({
-  puppeteer: {
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath:
-      process.env.PUPPETEER_EXEC_PATH || "/opt/google/chrome/google-chrome",
-  },
-  authStrategy: new LocalAuth(),
-});
+let instance: Client | null = null;
 let isLoadingBarStarted = false;
+const loadingBar = LoadingBar("Loading Client   | {bar} | {value}%");
 
-client.on("loading_screen", (percent: number, message: string) => {
-  if (!isLoadingBarStarted) {
-    loadingBar.start(100, 0, { message });
-    isLoadingBarStarted = true;
-  }
+async function client(): Promise<Client> {
+  if (instance) return instance; // prevent re-creating
 
-  if (percent >= 99) loadingBar.stop();
+  const newClient = new Client({
+    puppeteer: {
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      executablePath:
+        process.env.PUPPETEER_EXEC_PATH || "/opt/google/chrome/google-chrome",
+    },
+    authStrategy: new LocalAuth(),
+  });
 
-  loadingBar.update(percent, { message });
-});
+  registerEvents(newClient);
 
-client.on("authenticated", () =>
-  log.info("Auth", "Client authenticated successfully."),
-);
+  instance = newClient;
+  await newClient.initialize();
+  return newClient;
+}
 
-client.on("qr", (qr: string) => {
-  // Generate and scan this code with your phone
-  log.info("QR", "Scan this QR code with your WhatsApp app:");
-  qrcode.generate(qr, { small: true });
-});
+function registerEvents(client: Client) {
+  client.on("loading_screen", (percent: number, message: string) => {
+    if (!isLoadingBarStarted) {
+      loadingBar.start(100, 0, { message });
+      isLoadingBarStarted = true;
+    }
+    if (percent >= 99) loadingBar.stop();
+    loadingBar.update(percent, { message });
+  });
 
-client.on("ready", () => ready());
+  client.on("authenticated", () =>
+    log.info("Auth", "Client authenticated successfully."),
+  );
 
-client.on("message_reaction", (react: Reaction) => reaction(client, react));
+  client.on("qr", (qr: string) => {
+    log.info("QR", "Scan this QR code with your WhatsApp app:");
+    qrcode.generate(qr, { small: true });
+  });
 
-// client.on("message", (msg) => messageEvent(msg));
-client.on("message_create", (msg: Message) => messageEvent(msg, "create"));
+  client.on("ready", () => ready());
 
-client.on("message_edit", (msg: Message, newBody: string, prevBody: string) => {
-  msg.body = newBody;
-  Promise.all([messageEdit(msg, newBody, prevBody), messageEvent(msg, "edit")]);
-});
+  client.on("message_reaction", (react: Reaction) => reaction(client, react));
 
-client.on("message_revoke_everyone", (msg: Message, revoked_msg?: Message) =>
-  revoke(msg, revoked_msg),
-);
+  client.on("message_create", (msg: Message) => messageEvent(msg, "create"));
 
-client.on("call", (call: Call) => callEvent(call));
+  client.on(
+    "message_edit",
+    (msg: Message, newBody: string, prevBody: string) => {
+      msg.body = newBody;
+      Promise.all([
+        messageEdit(msg, newBody, prevBody),
+        messageEvent(msg, "edit"),
+      ]);
+    },
+  );
 
-client.on("group_join", (notif: GroupNotification) => groupJoin(notif));
-client.on("group_leave", (notif: GroupNotification) => groupLeave(notif));
-client.on("auth_failure", (msg: string) => {
-  loadingBar.stop();
-  log.error("Auth", "Authentication failed. Please try again.");
-});
+  client.on("message_revoke_everyone", (msg: Message, revoked_msg?: Message) =>
+    revoke(msg, revoked_msg),
+  );
+
+  client.on("call", (call: Call) => callEvent(call));
+
+  client.on("group_join", (notif: GroupNotification) => groupJoin(notif));
+  client.on("group_leave", (notif: GroupNotification) => groupLeave(notif));
+
+  client.on("auth_failure", () => {
+    loadingBar.stop();
+    log.error("Auth", "Authentication failed. Please try again.");
+  });
+}
 
 export { client };
+export default client;

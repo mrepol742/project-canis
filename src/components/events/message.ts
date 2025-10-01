@@ -153,7 +153,7 @@ export default async function (msg: Message, type: string) {
 
       if (Math.random() < 0.1 && !isEmoji)
         if (Math.random() < 0.2)
-          await client.sendMessage(msg.id.remote, reaction);
+          (await client()).sendMessage(msg.id.remote, reaction);
         else await msg.reply(reaction);
       else await originalReact(reaction);
     };
@@ -203,7 +203,7 @@ export default async function (msg: Message, type: string) {
     if (
       msg.mentionedIds &&
       msg.mentionedIds.length > 0 &&
-      msg.mentionedIds.includes(client.info.wid._serialized)
+      msg.mentionedIds.includes((await client()).info.wid._serialized)
     )
       await msg.reply(
         mentionResponses[Math.random() * mentionResponses.length],
@@ -244,7 +244,7 @@ export default async function (msg: Message, type: string) {
     log.info("ReplyMessage", lid, content.toString().slice(0, 150));
 
     if (Math.random() < 0.5)
-      return await client.sendMessage(msg.id.remote, messageBody, options);
+      return (await client()).sendMessage(msg.id.remote, messageBody, options);
     return await originalReply(messageBody, chatId, options);
   };
 

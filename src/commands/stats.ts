@@ -20,6 +20,7 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^stats$/i.test(msg.body)) return;
 
+  const waClient = await client();
   // Node.js runtime stats
   const mem = process.memoryUsage();
   const cpu = process.cpuUsage();
@@ -65,10 +66,10 @@ export default async function (msg: Message) {
     si.networkInterfaces(),
     getUserCount(),
     getBlockUserCount(),
-    client.getState(),
-    client.getWWebVersion(),
-    client.getContactDeviceCount(msg.from),
-    client.getChats(),
+    waClient.getState(),
+    waClient.getWWebVersion(),
+    waClient.getContactDeviceCount(msg.from),
+    waClient.getChats(),
     speedTest(),
   ]);
 

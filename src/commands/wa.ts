@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import { client } from "../components/client";
 import log from "../components/utils/log";
 import logService from "../components/services/log";
@@ -17,7 +17,7 @@ export default async function (msg: Message) {
   if (query.length !== 0) {
     if (!/^(status|name)$/i.test(query)) {
       await msg.reply(
-        "Invalid argument. Please use one of the following:\n\nstatus or name"
+        "Invalid argument. Please use one of the following:\n\nstatus or name",
       );
       return;
     }
@@ -34,7 +34,7 @@ export default async function (msg: Message) {
     return;
   }
   if (query === "status") {
-    client.setStatus(quotedMsg.body);
+    (await client()).setStatus(quotedMsg.body);
     await Promise.all([
       msg.reply("Status updated successfully."),
       logService(msg, "status", quotedMsg.body),
@@ -43,7 +43,7 @@ export default async function (msg: Message) {
     return;
   }
 
-  client.setDisplayName(quotedMsg.body);
+  (await client()).setDisplayName(quotedMsg.body);
   await Promise.all([
     msg.reply("Name updated successfully."),
     logService(msg, "name", quotedMsg.body),

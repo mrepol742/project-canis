@@ -6,8 +6,9 @@ async function gracefulShutdown(signal: string) {
   log.info("Process", `Received ${signal}, shutting down...`);
 
   try {
-    if (client.pupBrowser) {
-      await client.pupBrowser.close();
+    const popupBrowser = (await client()).pupBrowser;
+    if (popupBrowser) {
+      await popupBrowser.close();
       log.info("Browser", "Puppeteer browser closed successfully.");
     }
   } catch (err) {

@@ -5,7 +5,8 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc",
     "start": "clear && while [ true ]; do node dist/index.js ; done",
     "dev": "clear && while [ true ]; do ts-node src/index.ts ; done"
   },
@@ -60,6 +61,7 @@
     "@types/speedtest-net": "^2.1.5",
     "@types/unbzip2-stream": "^1.4.3",
     "prisma": "^6.12.0",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },

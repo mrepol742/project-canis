@@ -27,7 +27,7 @@ export default async function (msg: Message) {
       getUserbyLid(lid),
       isBlocked(lid),
       redis.get(`rate:${lid}`),
-      client.getProfilePicUrl(jid).catch(() => null),
+      (await client()).getProfilePicUrl(jid).catch(() => null),
     ]);
 
   if (!user) {

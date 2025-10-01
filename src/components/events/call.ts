@@ -37,7 +37,7 @@ export default async function (call: Call) {
       response = getRandomResponse(voiceResponses);
     }
 
-    await client.sendMessage(call.from, response);
+    (await client()).sendMessage(call.from, response);
 
     log.info(
       "CallEvent",

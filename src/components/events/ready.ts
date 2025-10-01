@@ -14,7 +14,7 @@ export default async function () {
     try {
       const tempData = JSON.parse(fs.readFileSync(hotReloadPath, "utf-8"));
 
-      await client.sendMessage(tempData.id.remote, "Restart Finished.");
+      (await client()).sendMessage(tempData.id.remote, "Restart Finished.");
     } catch (err) {
       log.error("Restart", err);
     } finally {

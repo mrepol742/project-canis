@@ -15,8 +15,11 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^uptime\b/i.test(msg.body)) return;
 
-  const waStatus = await client.getState();
-  const waVersion = await client.getWWebVersion();
+  const waClient = await client();
+  const [state, version] = await Promise.all([
+    waClient.getState(),
+    waClient.getWWebVersion(),
+  ]);
 
   const statsMessage = `
     \`${timestamp(process.uptime())}\`
@@ -26,8 +29,8 @@ export default async function (msg: Message) {
       .loadavg()
       .map((n) => n.toFixed(2))
       .join(", ")}
-    Status: ${waStatus}
-    Version: ${waVersion}
+    State: ${state}
+    Version: ${version}
     Node.js: ${process.version}
   `;
 
