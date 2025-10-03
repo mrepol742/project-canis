@@ -23,9 +23,8 @@ export default async function (
   const isMustResent = await getSetting("resent_edit");
   if (!isMustResent || isMustResent == "off") return;
 
-  const isGroup = !!msg.author;
-  const user = (await getUserbyLid(msg.from)) || "Your";
+  const user = (await getUserbyLid(msg.from)) || "User";
   await msg.reply(
-    `${isGroup ? user : "Your"} message was edited from "${prevBody}".`,
+    `${msg.author ? user : "Your"} message was edited from "${prevBody}".`,
   );
 }

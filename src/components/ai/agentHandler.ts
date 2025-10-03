@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { openrouter, generateText } from "./openRouter";
 import { groq } from "./groq";
 import { gemini } from "./gemini";
@@ -9,11 +10,11 @@ const aiProvider = process.env.AI_PROVIDER || "groq";
 const isQueryCachingEnabled = process.env.ALLOW_QUERY_CACHING === "true";
 const queryCachingCount = parseInt(
   process.env.QUERY_CACHING_COUNT || "1000",
-  10
+  10,
 );
 const queryCachingTTL = parseInt(process.env.QUERY_CACHING_TTL || "3600", 10);
 /*
- * As time goes by and new models are released, 
+ * As time goes by and new models are released,
  * these defaults may need to be updated.
  */
 const openRouterModel =
@@ -25,7 +26,8 @@ const openAiModel = process.env.OPENAI_MODEL || "gpt-4o";
 const ollamaModel = process.env.OLLAMA_MODEL || "llama3.1";
 
 function getCacheKey(prompt: string) {
-  return `ai:prompt:${Buffer.from(prompt).toString("base64")}`;
+  const hash = crypto.createHash("sha256").update(prompt).digest("hex");
+  return `ai:prompt:${hash}`;
 }
 
 export default async function (prompt: string, model?: string) {

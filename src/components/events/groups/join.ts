@@ -25,7 +25,8 @@ export default async function (notif: GroupNotification) {
 
     for (const contact of recipients) {
       const name = contact.pushname || contact.name || contact.id.user;
-      const isSelf = contact.id._serialized === (await client()).info.wid._serialized;
+      const isSelf =
+        contact.id._serialized === (await client()).info.wid._serialized;
 
       log.info("GroupJoin", `${name} joined the group ${group.name}`);
 
@@ -36,13 +37,19 @@ export default async function (notif: GroupNotification) {
       }
     }
 
-    if (newMembers.length > 0) {
-      await notif.reply(getMessage("welcome", `*${newMembers.join(", ")}*`));
-    }
-
-    // mute the chat forever
-    const chat = await notif.getChat();
-    await chat.mute();
+    await Promise.all([
+      (async () => {
+        if (newMembers.length > 0) {
+          await notif.reply(
+            getMessage("welcome", `*${newMembers.join(", ")}*`),
+          );
+        }
+      })(),
+      (async () => {
+        const chat = await notif.getChat();
+        await chat.mute();
+      })(),
+    ]);
   } catch (err) {
     log.error("GroupJoin", "Failed to process group join event:", err);
   }

@@ -1,7 +1,7 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import { quiz } from "../components/utils/data";
-import { newQuizAttempt } from "../components/services/quiz";
 import log from "../components/utils/log";
+import redis from "../components/redis";
 
 export const info = {
   command: "quiz",
@@ -32,8 +32,9 @@ export default async function (msg: Message) {
   }
 
   const messageReturn = await msg.reply(text);
-  await Promise.all([
-    newQuizAttempt(messageReturn, id.toString()),
-    log.info("quiz", `Quiz question sent: ${response.question}`),
-  ]);
+  redis.set(
+    `quiz:${messageReturn.id.id}`,
+    JSON.stringify({ quiz_id: id.toString() }),
+  );
+  log.info("quiz", `Quiz question sent: ${response.question}`);
 }

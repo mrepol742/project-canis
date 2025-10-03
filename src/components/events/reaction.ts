@@ -3,6 +3,7 @@ import log from "../utils/log";
 import sleep from "../utils/sleep";
 import { isBlocked } from "../services/user";
 import { getSetting } from "../services/settings";
+import { rateLimiter } from "../utils/rateLimiter";
 
 export default async function (client: Client, react: Reaction) {
   if (react.msgId.fromMe || react.id.fromMe) return;
@@ -13,8 +14,16 @@ export default async function (client: Client, react: Reaction) {
   if (!isMustRepeatReact || isMustRepeatReact == "off") return;
 
   const senderId = react.senderId.split("@")[0];
-  const isBlockedUser = await isBlocked(senderId);
-  if (isBlockedUser) return;
+
+  /*
+   * Block asshole users
+   */
+  const [isRateLimit, isBlockedUser] = await Promise.all([
+    rateLimiter(senderId),
+    isBlocked(senderId),
+  ]);
+
+  if (isBlockedUser || isRateLimit.status) return;
 
   try {
     const message = await client.getMessageById(react.msgId._serialized);

@@ -6,12 +6,12 @@ import {
 } from "whatsapp-web.js";
 import log from "../utils/log";
 import { commands } from "../utils/cmd/loader";
-import rateLimiter from "../utils/rateLimiter";
+import { penalizeUser, rateLimiter } from "../utils/rateLimiter";
 import sleep from "../utils/sleep";
 import { findOrCreateUser, isBlocked } from "../services/user";
 import { client } from "../client";
 import Font from "../utils/font";
-import quiz from "./quiz";
+import quiz from "../utils/quiz";
 import { errors } from "../utils/data";
 import emojiRegex from "emoji-regex";
 import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
@@ -39,32 +39,12 @@ const mentionResponses = [
   "Did you just @ me for vibes, or do I owe you money? 💸",
 ];
 
-async function isRateLimit(msg: Message, lid: string) {
-  if (msg.fromMe) return false;
-
-  const rate = await rateLimiter(lid);
-  if (rate) return true;
-  if (rate === null) {
-    await msg.reply("Please wait a minute or so.");
-    return true;
-  }
-
-  return false;
-}
-
 export default async function (msg: Message, type: string) {
   // ignore message if it is older than 10 seconds
+  if (!msg.body) return;
   if (msg.timestamp < Date.now() / 1000 - 10 && type === "create") return;
-
   if (msg.isGif || msg.isStatus || msg.broadcast) return; // ignore them all
-
   const lid = msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0];
-
-  /*
-   * Block users from running commands.
-   */
-  const isBlockedUser = await isBlocked(lid);
-  if (isBlockedUser) return;
 
   const prefix = !msg.body.startsWith(commandPrefix);
 
@@ -73,6 +53,16 @@ export default async function (msg: Message, type: string) {
    */
   if (!commandPrefixLess && prefix) return;
   if (msg.fromMe && prefix) return;
+
+  /*
+   * Block users from running commands.
+   */
+  const [isRateLimit, isBlockedUser] = await Promise.all([
+    rateLimiter(lid),
+    isBlocked(lid),
+  ]);
+
+  if (isBlockedUser) return;
 
   /*
    *
@@ -101,15 +91,12 @@ export default async function (msg: Message, type: string) {
   if (msg.isForwarded) return;
 
   Promise.resolve().then(async () => {
-    if (await isRateLimit(msg, lid)) return;
-
     const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
-    if (!extractUrls) return;
+    if (!extractUrls || isRateLimit.status) return;
 
     const url = extractUrls[Math.floor(Math.random() * extractUrls.length)];
     const message = msg;
     message.body = url;
-    log.info("Instant Downloader", `Found ${url}`);
     await InstantDownloader(message);
   });
 
@@ -125,9 +112,8 @@ export default async function (msg: Message, type: string) {
    */
   if (msg.hasQuotedMsg) {
     Promise.resolve().then(async () => {
-      if (await isRateLimit(msg, lid)) return;
-
       const quoted = await msg.getQuotedMessage();
+      if (!quoted.body || isRateLimit.status) return;
       await quiz(msg, quoted);
     });
   }
@@ -206,15 +192,15 @@ export default async function (msg: Message, type: string) {
       msg.mentionedIds.includes((await client()).info.wid._serialized)
     )
       await msg.reply(
-        mentionResponses[Math.random() * mentionResponses.length],
+        mentionResponses[Math.floor(Math.random() * mentionResponses.length)],
       );
     return;
   }
 
-  /*
-   * Rate limit commands to prevent abuse.
-   */
-  if (await isRateLimit(msg, lid)) return;
+  if (isRateLimit.status) {
+    penalizeUser(lid, isRateLimit.value);
+    return;
+  }
 
   /*
    * Role base restrictions.
@@ -284,11 +270,7 @@ export default async function (msg: Message, type: string) {
         if (!msg.author) return;
 
         const user = await findOrCreateUser(msg);
-
-        if (user) {
-          await sleep(5000); // Prevent rate limiting issues
-          await msg.react("✅");
-        }
+        if (user) await msg.react("✅");
       })(),
     ]);
   } catch (error: any) {

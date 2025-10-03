@@ -1,6 +1,10 @@
 import { Message } from "../../types/message";
 import log from "../components/utils/log";
-import { getUsers } from "../components/services/user";
+import {
+  getUsersPoints,
+  getUsersCommandCount,
+  getUsersQuiz,
+} from "../components/services/user";
 
 export const info = {
   command: "top",
@@ -14,22 +18,41 @@ export const info = {
 export default async function (msg: Message) {
   if (!/^top$/i.test(msg.body)) return;
 
-  const user = await getUsers();
-  if (!user || user.length === 0) {
-    await msg.reply("No users found.");
-    return;
-  }
+  const [usersPoints, usersCommandCount, usersQuiz] = await Promise.all([
+    getUsersPoints(),
+    getUsersCommandCount(),
+    getUsersQuiz(),
+  ]);
 
   const text = `
-    \`Top Users by Activity:\`
+    \`Points:\`
 
-    ${user
-      .sort((a, b) => (b.totalActivity ?? 0) - (a.totalActivity ?? 0))
-      .slice(0, 50)
+    ${usersPoints
       .map((u, index) => {
         const displayName =
-          u.name.length > 12 ? u.name.slice(0, 12) + ".." : u.name;
-        return `${index + 1}. ${displayName}: ${u.totalActivity} Points`;
+          u.name.length > 16 ? u.name.slice(0, 16) + ".. " : u.name;
+        return `${index + 1}. ${displayName}: ${u.points} Points`;
+      })
+      .join("\n    ")}
+
+    \`Quiz:\`
+
+    ${usersQuiz
+      .sort((a, b) => b.score - a.score)
+      .map((u, index) => {
+        const displayName =
+          u.name.length > 16 ? u.name.slice(0, 16) + ".. " : u.name;
+        return `${index + 1}. ${displayName}: ${u.score} Score`;
+      })
+      .join("\n    ")}
+
+    \`Reputation:\`
+
+    ${usersCommandCount
+      .map((u, index) => {
+        const displayName =
+          u.name.length > 16 ? u.name.slice(0, 16) + ".. " : u.name;
+        return `${index + 1}. ${displayName}: ${u.commandCount} Rep`;
       })
       .join("\n    ")}
     `;

@@ -2,7 +2,7 @@ import speedTest from "speedtest-net";
 import redis from "../redis";
 
 const CACHE_KEY = "speedtest:result";
-const CACHE_TTL = 60 * 60; // 1 hour in seconds
+const CACHE_TTL = 60 * 60 * 12; // 12 hour
 
 export default async function (): Promise<speedTest.ResultEvent> {
   const cached = await redis.get(CACHE_KEY);

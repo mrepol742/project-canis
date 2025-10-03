@@ -45,6 +45,9 @@ export default async function (msg: Message) {
     Type: ${user.type}
     Mode: ${user.mode}
     Command Count: ${user.commandCount}
+    Quiz Answered: ${user.quizAnswered}
+    Quiz Answered Wrong: ${user.quizAnsweredWrong}
+    Points: ${user.points}
     Last Seen: ${new Date(user.updatedAt).toLocaleString()}
     Blocked: ${
       isBlockPermanently

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `User` ADD COLUMN `points` DOUBLE NOT NULL DEFAULT 0.0,
+    ADD COLUMN `quizAnsweredWrong` INTEGER NOT NULL DEFAULT 0;

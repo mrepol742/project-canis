@@ -53,12 +53,12 @@ export default async function play(msg: Message) {
   }
 
   const yt = await Innertube.create({
-    cache: new UniversalCache(false),
+    cache: new UniversalCache(true, "./.youtubei"),
     generate_session_locally: true,
     player_id: "0004de42",
   });
 
-  const audio: any = await search(yt, query);
+  const [audio] = await Promise.all([search(yt, query), msg.react("🔍")]);
   if (!audio) {
     await msg.reply(`No youtube music found for "${query}".`);
     return;
@@ -66,13 +66,14 @@ export default async function play(msg: Message) {
 
   // Only allow audios shorter than 20 minutes (1200 seconds)
   if (audio.duration && audio.duration.seconds > 1200) {
-    await msg.reply(
-      "Opps, the music is quite long we can only process max of 20 minutes.",
-    );
+    await Promise.all([
+      msg.reply(
+        "Opps, the music is quite long we can only process max of 20 minutes.",
+      ),
+      msg.react(""),
+    ]);
     return;
   }
-
-  await msg.react("🔍");
 
   const tempDir = "./.temp";
   await fs.promises.mkdir(tempDir, { recursive: true });
@@ -85,11 +86,14 @@ export default async function play(msg: Message) {
     return;
   }
 
-  const stream = await yt.download(audio.id, {
-    type: "video+audio",
-    quality: "best",
-    format: "mp4",
-  });
+  const [stream] = await Promise.all([
+    yt.download(audio.id, {
+      type: "video+audio",
+      quality: "best",
+      format: "mp4",
+    }),
+    msg.react("⬇️"),
+  ]);
 
   if (!stream) {
     await Promise.all([
@@ -99,12 +103,13 @@ export default async function play(msg: Message) {
     return;
   }
 
-  await msg.react("⬇️");
-
   let writeStream = fs.createWriteStream(tempPath);
-
   for await (const chunk of Utils.streamToIterable(stream)) {
-    writeStream.write(chunk);
+    if (!writeStream.write(chunk)) {
+      await new Promise<void>((resolve) =>
+        writeStream.once("drain", () => resolve()),
+      );
+    }
   }
 
   await new Promise<void>((resolve, reject) => {

@@ -11,14 +11,55 @@ function filterContent(body: string): string {
   return body.slice(0, cutoff) + " [REDACTED]";
 }
 
+export async function addUserQuizPoints(
+  msg: Message,
+  answered: Boolean,
+): Promise<void> {
+  try {
+    const lid = (msg.author ?? msg.from).split("@")[0];
+
+    await prisma.user.update({
+      where: {
+        lid,
+      },
+      data: {
+        commandCount: {
+          increment: 1,
+        },
+        quizAnswered: {
+          increment: answered ? 1 : 0,
+        },
+        quizAnsweredWrong: {
+          increment: answered ? 0 : 1,
+        },
+        points: {
+          increment: answered ? 5 : 1,
+        },
+      },
+    });
+  } catch (error) {
+    log.error("Database", `Failed to set quiz attempt answered.`, error);
+  }
+}
+
 export async function findOrCreateUser(msg: Message): Promise<boolean> {
   try {
     const lid = (msg.author ?? msg.from).split("@")[0];
 
+    const min = 0.1;
+    const max = 0.9;
+    const rand = Math.random() * (max - min) + min;
+    const points = parseFloat(rand.toFixed(1));
+
     const user = await prisma.user
       .update({
         where: { lid },
-        data: { commandCount: { increment: 1 } },
+        data: {
+          commandCount: { increment: 1 },
+          points: {
+            increment: points,
+          },
+        },
       })
       .catch(() => null);
 
@@ -41,6 +82,7 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
         mode: msg.author ? "group" : "private",
         about: about ? filterContent(about) : "",
         commandCount: 1,
+        points: points,
       },
     });
     return true;
@@ -99,27 +141,93 @@ export async function getBlockUserCount(): Promise<number> {
   }
 }
 
-export async function getUsers(): Promise<any[]> {
+export async function getUsersPoints(): Promise<any[]> {
   try {
     const users = await prisma.user.groupBy({
-      by: ["number", "name", "quizAnswered"],
+      by: ["name", "points"],
+      _sum: {
+        points: true,
+      },
+      where: {
+        points: {
+          not: 0,
+        },
+      },
+      orderBy: {
+        _sum: {
+          points: "desc",
+        },
+      },
+      take: 15,
+    });
+
+    return users.map((u) => ({
+      name: u.name,
+      points: u._sum.points,
+    }));
+  } catch (error) {
+    log.error("Database", `Failed to get users.`, error);
+    return [];
+  }
+}
+
+export async function getUsersCommandCount(): Promise<any[]> {
+  try {
+    const users = await prisma.user.groupBy({
+      by: ["name", "commandCount"],
       _sum: {
         commandCount: true,
-        quizAnswered: true,
+      },
+      where: {
+        commandCount: {
+          not: 0,
+        },
       },
       orderBy: {
         _sum: {
           commandCount: "desc",
         },
       },
+      take: 15,
     });
 
-    // format
     return users.map((u) => ({
       name: u.name,
-      number: u.number,
-      totalActivity: (u._sum.commandCount ?? 0) + (u._sum.quizAnswered ?? 0),
+      commandCount: ((u._sum.commandCount ?? 0) * 0.5) / 2,
     }));
+  } catch (error) {
+    log.error("Database", `Failed to get users.`, error);
+    return [];
+  }
+}
+
+export async function getUsersQuiz(): Promise<any[]> {
+  try {
+    const users = await prisma.user.groupBy({
+      by: ["name", "quizAnswered", "quizAnsweredWrong"],
+      _sum: {
+        quizAnswered: true,
+        quizAnsweredWrong: true,
+      },
+      where: {
+        OR: [{ quizAnswered: { not: 0 } }, { quizAnsweredWrong: { not: 0 } }],
+      },
+      orderBy: {
+        _sum: {
+          quizAnswered: "desc",
+        },
+      },
+      take: 15,
+    });
+
+    return users.map((u) => {
+      const total =
+        (u._sum.quizAnswered ?? 0) + (u._sum.quizAnsweredWrong ?? 0);
+      return {
+        name: u.name,
+        score: total / 2,
+      };
+    });
   } catch (error) {
     log.error("Database", `Failed to get users.`, error);
     return [];

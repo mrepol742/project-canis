@@ -14,18 +14,20 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  lid          String   @unique
-  name         String
-  number       String
-  countryCode  String
-  type         String
-  mode         String
-  about        String?
-  commandCount Int      @default(0)
-  quizAnswered Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                Int      @id @default(autoincrement())
+  lid               String   @unique
+  name              String
+  number            String
+  countryCode       String
+  type              String
+  mode              String
+  about             String?
+  commandCount      Int      @default(0)
+  quizAnswered      Int      @default(0)
+  quizAnsweredWrong Int      @default(0)
+  points            Float    @default(0.0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 model Block {
@@ -70,14 +72,4 @@ model Log {
   output    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Quiz {
-  id         Int       @id @default(autoincrement())
-  mid        String    @unique
-  lid        String
-  qid        String
-  answeredAt DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
 }
