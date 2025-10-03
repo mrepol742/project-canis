@@ -14,6 +14,7 @@ function filterContent(body: string): string {
 export async function addUserQuizPoints(
   msg: Message,
   answered: Boolean,
+  points: number = 5,
 ): Promise<void> {
   try {
     const lid = (msg.author ?? msg.from).split("@")[0];
@@ -33,7 +34,7 @@ export async function addUserQuizPoints(
           increment: answered ? 0 : 1,
         },
         points: {
-          increment: answered ? 5 : 1,
+          increment: answered ? points : 1,
         },
       },
     });
@@ -66,25 +67,30 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
     if (user) return false;
 
     const contact = await msg.getContact();
-    if (!contact) return false;
 
-    const countryCode = await contact.getCountryCode();
-    const about = await contact.getAbout();
-    const name = contact.pushname || contact.name || "Unknown";
+    const name = contact?.pushname || contact?.name || "null";
+    const number = contact?.number || "0";
+    const countryCode = contact
+      ? await contact.getCountryCode().catch(() => "null")
+      : "null";
+    const about = contact ? await contact.getAbout().catch(() => null) : null;
 
-    await prisma.user.create({
-      data: {
-        lid,
-        name,
-        number: contact.number,
-        countryCode,
-        type: contact.isBusiness ? "business" : "private",
-        mode: msg.author ? "group" : "private",
-        about: about ? filterContent(about) : "",
-        commandCount: 1,
-        points: points,
-      },
-    });
+    await Promise.all([
+      msg.react("✅"),
+      prisma.user.create({
+        data: {
+          lid,
+          name,
+          number,
+          countryCode,
+          type: contact?.isBusiness ? "business" : "private",
+          mode: msg.author ? "group" : "private",
+          about: about ? filterContent(about) : null,
+          commandCount: 1,
+          points,
+        },
+      }),
+    ]);
     return true;
   } catch (error) {
     log.error("Database", `Failed to find or create user.`, error);

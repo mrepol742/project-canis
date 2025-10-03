@@ -27,7 +27,11 @@ export default async function (msg: Message) {
     await prisma.block.upsert({
       where: { lid },
       update: {},
-      create: { lid, mode: msg.author ? "group" : "private" },
+      create: {
+        lid,
+        mode: msg.author ? "group" : "private",
+        reason: "Blocked by admin",
+      },
     });
   }
 

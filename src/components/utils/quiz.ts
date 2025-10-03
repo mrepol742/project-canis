@@ -1,33 +1,8 @@
 import { Message } from "whatsapp-web.js";
 import { addUserQuizPoints } from "../services/user";
-import { quiz } from "../utils/data";
+import { quiz, done, wrong } from "../utils/data";
 import log from "../utils/log";
 import redis from "../redis";
-
-const done = [
-  "Correct! 🎉",
-  "Well done! 👍",
-  "Nice job! ✅",
-  "You got it! 🥳",
-  "That's right! 👏",
-  "Excellent! 🌟",
-  "Great answer! 💡",
-  "Spot on! 🎯",
-  "Perfect! 🏆",
-  "You nailed it! 🔥",
-];
-const wrong = [
-  "Not quite! ❌",
-  "Oops, try again! 🔄",
-  "Close, but not correct. 🤔",
-  "That's not it. 🚫",
-  "Incorrect! ⚠️",
-  "Give it another shot! 🎯",
-  "Nope, not this time. 😅",
-  "Almost, but not right. 🌀",
-  "Sorry, that's wrong. 🙈",
-  "Try once more! 🔁",
-];
 
 export default async function (
   msg: Message,

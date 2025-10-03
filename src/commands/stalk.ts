@@ -14,6 +14,12 @@ export const info = {
 };
 
 export default async function (msg: Message) {
+  const chat = await msg.getChat();
+  if (!chat.isGroup) {
+    await msg.reply("This only works on group chats");
+    return;
+  }
+
   if (msg.mentionedIds.length === 0) {
     await msg.reply("Please mention a user to stalk.");
     return;

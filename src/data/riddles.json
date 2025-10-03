@@ -1,0 +1,406 @@
+[
+  {
+    "question": "I’m tall when I’m young and short when I’m old. What am I?",
+    "answer": "candle"
+  },
+  {
+    "question": "What has to be broken before you can use it?",
+    "answer": "egg"
+  },
+  {
+    "question": "What has keys but can’t open locks?",
+    "answer": "piano"
+  },
+  {
+    "question": "What has hands but can’t clap?",
+    "answer": "clock"
+  },
+  {
+    "question": "What gets wetter the more it dries?",
+    "answer": "towel"
+  },
+  {
+    "question": "I’m full of holes but still hold water. What am I?",
+    "answer": "sponge"
+  },
+  {
+    "question": "What can you catch but not throw?",
+    "answer": "cold"
+  },
+  {
+    "question": "What building has the most stories?",
+    "answer": "library"
+  },
+  {
+    "question": "What goes up but never comes down?",
+    "answer": "Your age"
+  },
+  {
+    "question": "What belongs to you but others use it more than you do?",
+    "answer": "Your name"
+  },
+  {
+    "question": "I speak without a mouth and hear without ears. I have nobody, but I come alive with wind. What am I?",
+    "answer": "echo"
+  },
+  {
+    "question": "The more you take, the more you leave behind. What am I?",
+    "answer": "Footsteps"
+  },
+  {
+    "question": "I’m light as a feather, yet the strongest person can’t hold me for five minutes. What am I?",
+    "answer": "Breath"
+  },
+  {
+    "question": "I have cities but no houses, forests but no trees, and rivers with no water. What am I?",
+    "answer": "map"
+  },
+  {
+    "question": "Forward I am heavy, backward I am not. What am I?",
+    "answer": "word 'ton'"
+  },
+  {
+    "question": "I have a neck but no head, two arms but no hands. What am I?",
+    "answer": "shirt"
+  },
+  {
+    "question": "I can run but never walk, have a mouth but never talk. What am I?",
+    "answer": "river"
+  },
+  {
+    "question": "I turn once, what is out will not get in. I turn again, what is in will not get out. What am I?",
+    "answer": "key"
+  },
+  {
+    "question": "I’m taken from a mine and shut up in a wooden case, from which I am never released, and yet I am used by almost everyone. What am I?",
+    "answer": "Pencil lead"
+  },
+  {
+    "question": "I have roots nobody sees, I am taller than trees. Up, up I go, yet I never grow. What am I?",
+    "answer": "mountain"
+  },
+  {
+    "question": "Two in a corner, one in a room, zero in a house, but one in a shelter. What is it?",
+    "answer": "letter 'r'"
+  },
+  {
+    "question": "I build up castles; I tear down mountains. I blind some men and help others to see. What am I?",
+    "answer": "Sand"
+  },
+  {
+    "question": "I am always hungry, I must always be fed. The finger I touch will soon turn red. What am I?",
+    "answer": "Fire"
+  },
+  {
+    "question": "I have keys that open no locks, space but no room, you can enter but not go inside. What am I?",
+    "answer": "keyboard"
+  },
+  {
+    "question": "What has one eye but can’t see?",
+    "answer": "needle"
+  },
+  {
+    "question": "What can travel around the world while staying in a corner?",
+    "answer": "stamp"
+  },
+  {
+    "question": "What disappears as soon as you say its name?",
+    "answer": "Silence"
+  },
+  {
+    "question": "I have a head and a tail but no body. What am I?",
+    "answer": "coin"
+  },
+  {
+    "question": "What has an eye but cannot see, and gets wetter as it dries?",
+    "answer": "towel (or sponge)"
+  },
+  {
+    "question": "I go up and down the stairs without moving. What am I?",
+    "answer": "carpet"
+  },
+  {
+    "question": "What has many teeth but can’t bite?",
+    "answer": "comb"
+  },
+  {
+    "question": "If you drop me I’m sure to crack, but smile at me and I’ll smile back. What am I?",
+    "answer": "mirror"
+  },
+  {
+    "question": "I have an eye but I’m blind. What am I?",
+    "answer": "hurricane (or storm)"
+  },
+  {
+    "question": "What can fill a room but takes up no space?",
+    "answer": "Light"
+  },
+  {
+    "question": "What kind of coat is always wet when you put it on?",
+    "answer": "coat of paint"
+  },
+  {
+    "question": "What runs all around a backyard, yet never moves?",
+    "answer": "fence"
+  },
+  {
+    "question": "What begins with T, ends with T, and has T in it?",
+    "answer": "teapot"
+  },
+  {
+    "question": "What belongs to you but gets used by everyone else more than you?",
+    "answer": "Your name"
+  },
+  {
+    "question": "What can you hold in your left hand but not in your right?",
+    "answer": "Your right elbow"
+  },
+  {
+    "question": "I have four legs in the morning, two in the afternoon, and three in the evening. What am I?",
+    "answer": "human (the riddle of the Sphinx: baby, adult, elderly with cane)"
+  },
+  {
+    "question": "What goes through towns and over hills but never moves?",
+    "answer": "road"
+  },
+  {
+    "question": "What tastes better than it smells?",
+    "answer": "tongue"
+  },
+  {
+    "question": "I have a face but no eyes, hands but no arms. What am I?",
+    "answer": "clock"
+  },
+  {
+    "question": "The more there is, the less you see. What is it?",
+    "answer": "Darkness"
+  },
+  {
+    "question": "What can be cracked, made, told, and played?",
+    "answer": "joke"
+  },
+  {
+    "question": "I fly without wings, I cry without eyes. Wherever I go, darkness follows me. What am I?",
+    "answer": "cloud"
+  },
+  {
+    "question": "What is full of holes but still holds water?",
+    "answer": "sponge"
+  },
+  {
+    "question": "What building has the most stories?",
+    "answer": "library"
+  },
+  {
+    "question": "What goes up when the rain comes down?",
+    "answer": "umbrella (or roof?)"
+  },
+  {
+    "question": "I have a thumb and four fingers but I’m not alive. What am I?",
+    "answer": "glove"
+  },
+  {
+    "question": "What has words but never speaks?",
+    "answer": "book"
+  },
+  {
+    "question": "What runs but never walks, has a mouth but never talks, has a head but never weeps?",
+    "answer": "river"
+  },
+  {
+    "question": "What can you break, even if you never pick it up or touch it?",
+    "answer": "promise"
+  },
+  {
+    "question": "I’m found in socks, scarves and mittens; and often in the paws of playful kittens. What am I?",
+    "answer": "Yarn"
+  },
+  {
+    "question": "What room do ghosts avoid?",
+    "answer": "living room"
+  },
+  {
+    "question": "What invention lets you look right through a wall?",
+    "answer": "window"
+  },
+  {
+    "question": "I shave every day, but my beard stays the same. What am I?",
+    "answer": "barber"
+  },
+  {
+    "question": "What kind of tree can you carry in your hand?",
+    "answer": "palm"
+  },
+  {
+    "question": "What goes up and never comes down?",
+    "answer": "Age"
+  },
+  {
+    "question": "What has a head, a tail, is brown, and has no legs?",
+    "answer": "penny (or coin)"
+  },
+  {
+    "question": "What has one head, one foot and four legs?",
+    "answer": "bed"
+  },
+  {
+    "question": "I am easily lifted but hard to throw. What am I?",
+    "answer": "feather"
+  },
+  {
+    "question": "I have a bed but never sleep, I run but never walk. What am I?",
+    "answer": "river"
+  },
+  {
+    "question": "I make two people out of one. What am I?",
+    "answer": "mirror"
+  },
+  {
+    "question": "I am not alive, but I grow; I don’t have lungs, but I need air; I don’t have a mouth, but water kills me. What am I?",
+    "answer": "Fire"
+  },
+  {
+    "question": "I go all around the world but always stay in a corner. What am I?",
+    "answer": "stamp"
+  },
+  {
+    "question": "What has to be given before you can get it?",
+    "answer": "promise"
+  },
+  {
+    "question": "What has a ring but no finger?",
+    "answer": "telephone"
+  },
+  {
+    "question": "What word becomes shorter when you add two letters to it?",
+    "answer": "Short"
+  },
+  {
+    "question": "I am always in front of you but can’t be seen. What am I?",
+    "answer": "future"
+  },
+  {
+    "question": "I start out tall, but the longer I stand, the shorter I grow. What am I?",
+    "answer": "candle"
+  },
+  {
+    "question": "What tastes better than it smells?",
+    "answer": "tongue"
+  },
+  {
+    "question": "I’m taken from a mine and shut up in a wooden case, from which I am never released, and yet I am used by almost everyone. What am I?",
+    "answer": "Pencil lead"
+  },
+  {
+    "question": "What can be seen once in a minute, twice in a moment, and never in a thousand years?",
+    "answer": "letter 'm'"
+  },
+  {
+    "question": "What is always in front of you but can’t be seen?",
+    "answer": "future"
+  },
+  {
+    "question": "What begins with an E but only has one letter?",
+    "answer": "envelope"
+  },
+  {
+    "question": "What kind of band never plays music?",
+    "answer": "rubber band"
+  },
+  {
+    "question": "What has many keys but can’t open a single lock?",
+    "answer": "piano"
+  },
+  {
+    "question": "What has a bottom at the top?",
+    "answer": "leg"
+  },
+  {
+    "question": "I have seas without water, coasts without sand, towns without people, mountains without land. What am I?",
+    "answer": "map"
+  },
+  {
+    "question": "I am not alive but I can die; what am I?",
+    "answer": "battery (or a flame)"
+  },
+  {
+    "question": "What is so fragile that saying its name breaks it?",
+    "answer": "Silence"
+  },
+  {
+    "question": "What has one eye but can’t see?",
+    "answer": "needle"
+  },
+  {
+    "question": "What kind of room has no doors or windows?",
+    "answer": "mushroom"
+  },
+  {
+    "question": "I’m white and I’m often served with tea; inside I’m yellow, but cooked I can be eaten. What am I?",
+    "answer": "egg"
+  },
+  {
+    "question": "What runs around the whole yard without moving?",
+    "answer": "fence"
+  },
+  {
+    "question": "What can you keep after giving to someone?",
+    "answer": "Your word"
+  },
+  {
+    "question": "What goes up and down but doesn’t move?",
+    "answer": "staircase"
+  },
+  {
+    "question": "What has many teeth but cannot bite?",
+    "answer": "comb"
+  },
+  {
+    "question": "What comes once in a minute, twice in a moment, but never in a thousand years?",
+    "answer": "letter 'm'"
+  },
+  {
+    "question": "What invention lets you see through walls?",
+    "answer": "window"
+  },
+  {
+    "question": "What goes around the world but stays in a corner?",
+    "answer": "stamp"
+  },
+  {
+    "question": "What building has the most stories?",
+    "answer": "library"
+  },
+  {
+    "question": "What is always coming but never arrives?",
+    "answer": "tomorrow"
+  },
+  {
+    "question": "What has a head, a tail, is brown, and has no legs?",
+    "answer": "penny"
+  },
+  {
+    "question": "What gets sharper the more you use it?",
+    "answer": "Your brain (or your mind)"
+  },
+  {
+    "question": "What train runs on water?",
+    "answer": "canoe (or a ferry)"
+  },
+  {
+    "question": "I am a word of letters three; add two and fewer there will be. What word am I?",
+    "answer": "few"
+  },
+  {
+    "question": "What can you catch but not throw?",
+    "answer": "cold"
+  },
+  {
+    "question": "What goes up the chimney down but not down the chimney up?",
+    "answer": "umbrella"
+  },
+  {
+    "question": "I speak without a mouth and hear without ears. I have nobody, but I come alive with wind. What am I?",
+    "answer": "echo"
+  }
+]

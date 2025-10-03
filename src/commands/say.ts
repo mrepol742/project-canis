@@ -28,10 +28,6 @@ export default async function (msg: Message) {
     host: "https://translate.google.com",
   });
 
-  // simulates audio recording
-  const chat = await msg.getChat();
-  chat.sendStateRecording();
-
   const response = await axios.get(url, { responseType: "arraybuffer" });
   const buffer = Buffer.from(response.data);
   const tempDir = "./.temp";
@@ -48,7 +44,7 @@ export default async function (msg: Message) {
     audioBuffer.toString("base64"),
     `${filename}.mp3`,
   );
-  await msg.reply(media, msg.from, {
+  await msg.reply(media, undefined, {
     sendAudioAsVoice: true,
   });
   await fs.promises.unlink(tempPath);

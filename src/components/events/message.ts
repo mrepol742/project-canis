@@ -20,6 +20,9 @@ import { phishingSet } from "../../index";
 import { getSetting } from "../services/settings";
 import { normalize } from "../utils/url";
 import { InstantDownloader } from "../utils/instantdl/downloader";
+import riddle from "../utils/riddle";
+import { checkInappropriate } from "../utils/contentChecker";
+import { prisma } from "../prisma";
 
 const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
@@ -114,7 +117,8 @@ export default async function (msg: Message, type: string) {
     Promise.resolve().then(async () => {
       const quoted = await msg.getQuotedMessage();
       if (!quoted.body || isRateLimit.status) return;
-      await quiz(msg, quoted);
+
+      await Promise.all([quiz(msg, quoted), riddle(msg, quoted)]);
     });
   }
 
@@ -226,13 +230,37 @@ export default async function (msg: Message, type: string) {
     options?: MessageSendOptions,
   ): Promise<Message> => {
     let messageBody = typeof content === "string" ? Font(content) : content;
-
     log.info("ReplyMessage", lid, content.toString().slice(0, 150));
 
     if (Math.random() < 0.5)
       return (await client()).sendMessage(msg.id.remote, messageBody, options);
     return await originalReply(messageBody, chatId, options);
   };
+
+  const isInapproiateResponse = checkInappropriate(msg.body);
+  if (isInapproiateResponse.isInappropriate) {
+    const text =
+      "You have been blocked. For more information \`terms\` & \`privacy\`.";
+    await Promise.all([
+      originalReply(text),
+      prisma.block.upsert({
+        where: { lid },
+        update: {},
+        create: {
+          lid,
+          mode: msg.author ? "group" : "private",
+          reason: `Inapproiate ${isInapproiateResponse.words.join(", ")}`,
+        },
+      }),
+      prisma.user.update({
+        where: { lid },
+        data: { points: { decrement: 100 } },
+      }),
+    ]);
+
+    log.info("BlockUser", lid);
+    return;
+  }
 
   if (
     /^(--?help|\bhelp\b|-h)$/i.test(
@@ -256,23 +284,7 @@ export default async function (msg: Message, type: string) {
    * Execute the command handler.
    */
   try {
-    await Promise.all([
-      (async () => {
-        if (msg.fromMe) return;
-
-        const chat = await msg.getChat();
-        chat.sendStateTyping();
-      })(),
-
-      handler.exec(msg),
-
-      (async () => {
-        if (!msg.author) return;
-
-        const user = await findOrCreateUser(msg);
-        if (user) await msg.react("✅");
-      })(),
-    ]);
+    await Promise.all([handler.exec(msg), findOrCreateUser(msg)]);
   } catch (error: any) {
     if (error.response) {
       const { status, headers } = error.response;

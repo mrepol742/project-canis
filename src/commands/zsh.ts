@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
@@ -23,18 +23,15 @@ export default async function (msg: Message) {
   const execPromise = util.promisify(exec);
 
   const { stdout, stderr } = await execPromise(query, {
-    timeout: 60000,
+    timeout: 30000,
     maxBuffer: 1024 * 1024,
     shell: process.env.SHELL || "/bin/zsh",
   });
-  let response = stdout || stderr || "No output.";
+  let response = `${stdout} \n\n ${stderr}`;
   if (response.length > 4000) {
     response = response.slice(0, 4000) + "\n\n[Output truncated]";
   }
 
-  await Promise.all([
-    msg.reply(response),
-    logService(msg, query, response),
-    log.warn("zsh", `Executed command: ${query}`),
-  ]);
+  await Promise.all([msg.reply(response), logService(msg, query, response)]);
+  log.warn("zsh", `Executed command: ${query}`);
 }

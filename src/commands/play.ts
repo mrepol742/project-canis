@@ -118,10 +118,6 @@ export default async function play(msg: Message) {
     writeStream.on("error", reject);
   });
 
-  // simulates audio recording
-  const chat = await msg.getChat();
-  chat.sendStateRecording();
-
   await execPromise(`ffmpeg -y -i "${tempPath}" -vn -c:a copy "${savePath}"`);
   const media = MessageMedia.fromFilePath(savePath);
   Promise.all([msg.reply(media), fs.promises.unlink(tempPath)]);
