@@ -17,7 +17,7 @@ export default async function (msg: Message) {
     https://github.com/mrepol742/project-canis
 
     \`Canis for Telegram\`
-    https://github.com/mrepol742/project-canis-ts
+    https://github.com/mrepol742/project-canis-tg
 
     This bot is not affiliated, endorsed, partner, or connected to Meta.
     Use it at your own RISK.

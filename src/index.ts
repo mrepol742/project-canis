@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import "./instrument";
+import { registerCronJobs } from "./cron";
 import { client } from "./components/client";
 import { checkRequirements } from "./components/utils/requirements";
 import log from "./components/utils/log";
@@ -28,6 +29,7 @@ async function main() {
   await Promise.all([
     monitor.start(),
     phishtank.startAutoUpdateLoop(),
+    registerCronJobs(),
     (async () => {
       if (autoUpdateDaily || autoUpdateTimer) return;
       await phishtank.init();
