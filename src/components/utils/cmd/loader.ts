@@ -94,17 +94,28 @@ export async function mapCommands() {
   let allFiles: [string, string][] = [];
 
   for (const dir of commandDirs) {
-    const files = await fs.readdir(dir);
+    try {
+      await fs.access(dir);
+      const files = await fs.readdir(dir);
 
-    const validFiles = files.filter(
-      (f) => f.endsWith(".js") || f.endsWith(".ts"),
-    );
+      const validFiles = files.filter(
+        (f) => f.endsWith(".js") || f.endsWith(".ts"),
+      );
 
-    const tuples: [string, string][] = validFiles.map(
-      (f) => [f, dir] as [string, string],
-    );
+      const tuples: [string, string][] = validFiles.map(
+        (f) => [f, dir] as [string, string],
+      );
 
-    allFiles = [...allFiles, ...tuples];
+      allFiles = [...allFiles, ...tuples];
+    } catch (err: any) {
+      if (err.code === "ENOENT") {
+        console.log("")
+        log.warn("Loader", `Directory not found: ${dir}`);
+      } else {
+        console.log("")
+        log.warn("Loader", `Error reading directory ${dir}:`, err);
+      }
+    }
   }
 
   const total = allFiles.length;
