@@ -61,6 +61,16 @@ export async function rateLimiter(
     );
   }
 
+  if (isStillBlocked || entry.timestamps.length >= LIMIT) {
+    entry = await penalizeUser(lid, entry);
+
+    return {
+      value: entry,
+      status: true,
+      overLimit: entry.timestamps.length >= LIMIT,
+    };
+  }
+
   entry.timestamps.push(now);
   await redis.set(key, JSON.stringify(entry));
 
