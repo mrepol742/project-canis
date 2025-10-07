@@ -59,10 +59,26 @@ export default async function (msg: Message, type: string) {
 
   /*
    * Block users from running commands.
+   * will always return false if its admin
    */
-  const [isRateLimit, isBlockedUser] = await Promise.all([
-    rateLimiter(lid),
-    isBlocked(lid),
+  const [rateLimitResult, isBlockedUser] = await Promise.all([
+    (async () => {
+      if (msg.fromMe) {
+        return {
+          status: false,
+          value: { timestamps: [], penaltyCount: 0, penaltyUntil: 0 },
+        };
+      }
+
+      return rateLimiter(lid);
+    })(),
+    (async () => {
+      if (msg.fromMe) {
+        return false;
+      }
+
+      return isBlocked(lid);
+    })(),
   ]);
 
   if (isBlockedUser) return;
@@ -95,7 +111,7 @@ export default async function (msg: Message, type: string) {
 
   Promise.resolve().then(async () => {
     const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
-    if (!extractUrls || isRateLimit.status) return;
+    if (!extractUrls || rateLimitResult.status) return;
 
     const url = extractUrls[Math.floor(Math.random() * extractUrls.length)];
     const message = msg;
@@ -116,7 +132,7 @@ export default async function (msg: Message, type: string) {
   if (msg.hasQuotedMsg) {
     Promise.resolve().then(async () => {
       const quoted = await msg.getQuotedMessage();
-      if (!quoted.body || isRateLimit.status) return;
+      if (!quoted.body || rateLimitResult.status) return;
 
       await Promise.all([quiz(msg, quoted), riddle(msg, quoted)]);
     });
@@ -155,23 +171,23 @@ export default async function (msg: Message, type: string) {
    */
   if (isMustautoReact && isMustautoReact == "on") {
     Promise.resolve().then(async () => {
-      if (!msg.fromMe) {
-        const emojis = [
-          ...new Set([...msg.body.matchAll(regex)].map((m) => m[0])),
-        ];
-        if (emojis.length > 0) {
-          const react = emojis[Math.floor(Math.random() * emojis.length)];
+      if (msg.fromMe || rateLimitResult.status) return;
 
-          await msg.react(react);
-        } else if (containsAny(msg.body, funD)) {
-          await msg.react("🤣");
-        } else if (containsAny(msg.body, happyEE)) {
-          await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
-        } else if (containsAny(msg.body, sadEE)) {
-          await msg.react("😭");
-        } else if (containsAny(msg.body, loveEE)) {
-          await msg.react("❤️");
-        }
+      const emojis = [
+        ...new Set([...msg.body.matchAll(regex)].map((m) => m[0])),
+      ];
+      if (emojis.length > 0) {
+        const react = emojis[Math.floor(Math.random() * emojis.length)];
+
+        await msg.react(react);
+      } else if (containsAny(msg.body, funD)) {
+        await msg.react("🤣");
+      } else if (containsAny(msg.body, happyEE)) {
+        await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
+      } else if (containsAny(msg.body, sadEE)) {
+        await msg.react("😭");
+      } else if (containsAny(msg.body, loveEE)) {
+        await msg.react("❤️");
       }
     });
   }
@@ -193,7 +209,8 @@ export default async function (msg: Message, type: string) {
     if (
       msg.mentionedIds &&
       msg.mentionedIds.length > 0 &&
-      msg.mentionedIds.includes((await client()).info.wid._serialized)
+      msg.mentionedIds.includes((await client()).info.wid._serialized) &&
+      !rateLimitResult.status
     )
       await msg.reply(
         mentionResponses[Math.floor(Math.random() * mentionResponses.length)],
@@ -201,8 +218,8 @@ export default async function (msg: Message, type: string) {
     return;
   }
 
-  if (isRateLimit.status) {
-    penalizeUser(lid, isRateLimit.value);
+  if (rateLimitResult.status) {
+    penalizeUser(lid, rateLimitResult.value);
     return;
   }
 
