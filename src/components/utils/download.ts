@@ -9,31 +9,24 @@ export async function download(
   url: string,
   format: string,
 ): Promise<MessageMedia> {
-  const response = await axios.get(url, {
-    responseType: "arraybuffer",
-  });
-
   const tempDir = path.resolve(".temp");
   await fs.mkdir(tempDir, { recursive: true });
 
-  const filename = `${crypto.randomUUID()}${format}`;
+  const hash = crypto.createHash("md5").update(url).digest("hex");
+  const filename = `${hash}${format.startsWith(".") ? format : `.${format}`}`;
   const tempPath = path.join(tempDir, filename);
 
   try {
-    await fs.writeFile(tempPath, response.data, "base64");
+    try {
+      await fs.access(tempPath);
+      log.info("Download", `Cache hit: ${filename}`);
+      return MessageMedia.fromFilePath(tempPath);
+    } catch {
+      log.info("Download", `Cache miss: downloading ${url}`);
+    }
 
-    // Schedule deletion after 1 minute
-    setTimeout(async () => {
-      try {
-        await fs.unlink(tempPath);
-        log.info("Download", `Temporary file deleted: ${tempPath}`);
-      } catch (err) {
-        log.error(
-          "Download",
-          `Failed to delete temp file: ${(err as Error).message}`,
-        );
-      }
-    }, 60 * 1000);
+    const response = await axios.get(url, { responseType: "arraybuffer" });
+    await fs.writeFile(tempPath, response.data);
 
     return MessageMedia.fromFilePath(tempPath);
   } catch (err) {
