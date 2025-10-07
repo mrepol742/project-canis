@@ -21,18 +21,17 @@ export default async function (msg: Message) {
 
   const lids = msg.mentionedIds.map((id) => id.split("@")[0]);
 
-  await prisma.block.deleteMany({
-    where: { lid: { in: lids } },
-  });
-
-  await Promise.all(
-    msg.mentionedIds.map((lid) =>
+  await Promise.all([
+    prisma.block.deleteMany({
+      where: { lid: { in: lids } },
+    }),
+    lids.map((lid) =>
       redis.set(
         `rate:${lid}`,
         JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 }),
       ),
     ),
-  );
+  ]);
 
   await msg.react("✅");
 }
