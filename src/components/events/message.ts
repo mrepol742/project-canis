@@ -191,7 +191,7 @@ export default async function (msg: Message, type: string) {
         } else if (containsAny(react.body, funD)) {
           await react.react("🤣");
         } else if (containsAny(react.body, happyEE)) {
-          await react.reply(funD[Math.floor(Math.random() * funD.length)]);
+          await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
         } else if (containsAny(react.body, sadEE)) {
           await react.react("😭");
         } else if (containsAny(react.body, loveEE)) {
