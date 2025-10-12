@@ -33,6 +33,28 @@ const wrong = [
   "Sorry, that's wrong. 🙈",
   "Try once more! 🔁",
 ];
+const helloMessage = [
+  "👋 Hello everyone!",
+  "Listen to me!!!!",
+  "Hope you're all having a great day ☀️",
+  "Don't forget to stay hydrated 💧",
+  "Let's keep the chat active 🔥",
+  "Good vibes only 😎",
+  "Teamwork makes the dream work 💪",
+  "Reminder: be kind and respectful ❤️",
+  "Big shoutout to everyone here 🎉",
+  "Stay focused and keep grinding 🚀",
+  "Anyone up for a quick chat? 💬",
+  "Sending positive energy your way ✨",
+  "You’re all awesome! 🙌",
+  "Let’s make today productive 💼",
+  "Keep smiling, it confuses people 😁",
+  "Don’t forget to take breaks ⏸️",
+  "Let’s get things done! ⚡",
+  "Coffee time, anyone? ☕",
+  "Make every moment count ⏰",
+  "Stay awesome, legends! 👑",
+];
 const personPronouns = ["he", "she", "him", "her", "they", "them"];
 
 export {
@@ -49,4 +71,5 @@ export {
   wrong,
   offensiveWords,
   personPronouns,
+  helloMessage,
 };

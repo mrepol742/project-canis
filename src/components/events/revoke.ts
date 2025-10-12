@@ -3,10 +3,19 @@ import { addMessage, getMessage } from "../services/message";
 import log from "../utils/log";
 import { getSetting } from "../services/settings";
 import path from "path";
+import client from "../client";
 
 export default async function (msg: Message, revoked_msg?: Message) {
   try {
-    if (msg.fromMe || !revoked_msg || revoked_msg.fromMe) return;
+    const myJid = (await client()).info.wid._serialized;
+    if (
+      msg.fromMe ||
+      !revoked_msg ||
+      revoked_msg.fromMe ||
+      revoked_msg?.author === myJid ||
+      revoked_msg?.id?.id === myJid
+    )
+      return;
 
     const lid = (msg.author ?? msg.from).split("@")[0];
 
