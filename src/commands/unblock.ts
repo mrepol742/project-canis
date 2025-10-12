@@ -1,6 +1,7 @@
 import { Message } from "../../types/message";
 import { prisma } from "../components/prisma";
 import redis from "../components/redis";
+import { unblockUser } from "../components/services/user";
 
 export const info = {
   command: "unblock",
@@ -17,14 +18,10 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.react("🔄");
-
   const lids = msg.mentionedIds.map((id) => id.split("@")[0]);
 
   await Promise.all([
-    prisma.block.deleteMany({
-      where: { lid: { in: lids } },
-    }),
+    lids.map((lid) => unblockUser(lid)),
     lids.map((lid) =>
       redis.set(
         `rate:${lid}`,

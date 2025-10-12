@@ -1,45 +1,45 @@
 import { prisma } from "../prisma";
 import log from "../../components/utils/log";
-import { Message } from "whatsapp-web.js";
+import redis from "../redis";
 
 export async function saveSetting(name: string, value: string): Promise<void> {
   try {
-    await prisma.settings.upsert({
-      where: { name },
-      update: {
-        value,
-      },
-      create: {
-        name,
-        value,
-      },
-    });
+    await redis.set(`settings:${name}`, value);
   } catch (error) {
-    log.error("Database", "Failed to add message.", error);
+    log.error("Redis", `Failed to save setting: ${name}`, error);
   }
 }
 
-export async function getSetting(name: string): Promise<string | null> {
+export async function getSetting(name: string): Promise<string> {
   try {
-    const setting = await prisma.settings.findUnique({
-      where: { name },
-    });
-    return setting ? setting.value : null;
+    const value = await redis.get(`settings:${name}`);
+    return value ?? "off";
   } catch (error) {
-    log.error("Database", `Failed to get setting: ${name}`, error);
-    return null;
+    log.error("Redis", `Failed to get setting: ${name}`, error);
+    return "off";
   }
 }
 
 export async function getAllSettings(): Promise<Record<string, string>> {
   try {
-    const settings = await prisma.settings.findMany();
-    return settings.reduce((acc, setting) => {
-      acc[setting.name] = setting.value;
-      return acc;
-    }, {} as Record<string, string>);
+    const keys = await redis.keys("settings:*");
+    if (!keys || keys.length === 0) return {};
+
+    const values = (await redis.mget(keys)) as (string | null)[];
+
+    const settings: Record<string, string> = {};
+
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const name = key.slice("settings:".length);
+      const value = values[i];
+
+      settings[name] = typeof value === "string" ? value : "off";
+    }
+
+    return settings;
   } catch (error) {
-    log.error("Database", "Failed to get all settings.", error);
+    log.error("Redis", "Failed to get all settings.", error);
     return {};
   }
 }

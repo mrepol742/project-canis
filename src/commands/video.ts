@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import { Innertube, UniversalCache, Utils } from "youtubei.js";
 import log from "../components/utils/log";
+import { DownloadOptions } from "youtubei.js/dist/src/types";
 
 export const info = {
   command: "video",
@@ -22,6 +23,28 @@ const fileExists = async (filePath: string) => {
     return false;
   }
 };
+
+async function safeDownload(
+  yt: Innertube,
+  id: string,
+  options: DownloadOptions,
+  retries = 3,
+) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const stream = await yt.download(id, options);
+      return stream;
+    } catch (err) {
+      log.error(
+        "PlayDownload",
+        `Download failed (attempt ${attempt}/${retries}):`,
+        err,
+      );
+      if (attempt === retries) throw err;
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  }
+}
 
 async function search(yt: Innertube, query: string) {
   log.info("Video", `Searching for ${query}`);
@@ -84,7 +107,7 @@ export default async function (msg: Message) {
   }
 
   const [stream] = await Promise.all([
-    yt.download(video.video_id, {
+    safeDownload(yt, video.video_id, {
       type: "video+audio",
       quality: "best",
       format: "mp4",

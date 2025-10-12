@@ -11,7 +11,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^test$/i.test(msg.body)) return;
+  if (!/^test$/.test(msg.body)) return;
 
   const testMessage = `
     \`Hello World\`

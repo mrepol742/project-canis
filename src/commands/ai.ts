@@ -2,6 +2,9 @@ import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
+import { UnexpectedResponseError } from "genius-lyrics";
+
+const PROJECT_CANIS_ALIS = process.env.PROJECT_CANIS_ALIAS || "Canis";
 
 export const info = {
   command: "ai",
@@ -14,7 +17,7 @@ export const info = {
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^ai\b\s*/i, "").trim();
-  if (query.length === 0) {
+  if (query.length === 0 && !msg.hasQuotedMsg) {
     await msg.reply(greetings[Math.floor(Math.random() * greetings.length)]);
     return;
   }
@@ -25,22 +28,15 @@ export default async function (msg: Message) {
     quotedMessage = await msg.getQuotedMessage();
   }
 
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const today = new Date().toUTCString();
+  const mentioned = msg.mentionedIds.length > 0;
 
-  const text = await agentHandler(
-    `You are an AI agent. Today's date is ${today}.
-    Respond to the user's query in no more than 3 sentences.
+  let text = await agentHandler(
+    `You are ${PROJECT_CANIS_ALIS}. Today's date is ${today}.
+    Respond to the user's briefly, no further questions asks, make reflect what the user feelings,
+    ${mentioned && "you can also mentioned user starting with @"} and query in no more than 3 sentences.
     User query: ${query}
-    ${
-      quotedMessage
-        ? `\nQuoted Message: ${quotedMessage.body}`
-        : ""
-    }`,
+    ${quotedMessage ? `\nQuoted Message: ${quotedMessage.body}` : ""}`,
   );
 
   if (!text) {
@@ -49,5 +45,20 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.reply(text);
+  const mentions: string[] = [];
+
+  if (mentioned) {
+    const mentionedContacts = await msg.getMentions();
+
+    for (let i = 0; i < mentionedContacts.length; i++) {
+      const c = mentionedContacts[i];
+      mentions.push(c.id._serialized);
+      text = text.replaceAll(
+        msg.mentionedIds[i].split("@")[0],
+        c.id._serialized.split("@")[0],
+      );
+    }
+  }
+
+  await msg.reply(text, undefined, { mentions });
 }

@@ -1,7 +1,7 @@
-import { Message } from "../../types/message"
-import fs from "fs/promises";
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import logService from "../components/services/log";
+import redis from "../components/redis";
 
 export const info = {
   command: "restart",
@@ -14,15 +14,16 @@ export const info = {
 
 export default async function (msg: Message) {
   if (!/^restart$/i.test(msg.body)) return;
-  await msg.react("🔄");
 
-  const tempDir = "./.temp";
-  await fs.mkdir(tempDir, { recursive: true });
-
-  const tempPath = `${tempDir}/restart`;
-  await fs.writeFile(tempPath, JSON.stringify(msg));
+  await Promise.all([
+    redis.set(
+      "restart",
+      JSON.stringify({ id: msg.id.remote, date: Date.now() }),
+    ),
+    logService(msg, "restart", "Bot is restarting..."),
+    msg.react("🔄"),
+  ]);
 
   log.info("restart", "exiting...");
-  await logService(msg, "restart", "Bot is restarting...");
   process.exit(0);
 }

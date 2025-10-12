@@ -13,7 +13,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^uptime\b/i.test(msg.body)) return;
+  if (!/^uptime$/.test(msg.body)) return;
 
   const waClient = await client();
   const [state, version] = await Promise.all([

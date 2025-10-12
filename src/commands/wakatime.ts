@@ -12,7 +12,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^wakatime/i.test(msg.body)) return;
+  if (!/^wakatime$/.test(msg.body)) return;
 
   const apiKey = process.env.WAKATIME_API_KEY;
   if (!apiKey) {

@@ -11,7 +11,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^wyr$/i.test(msg.body)) return;
+  if (!/^wyr$/.test(msg.body)) return;
 
   const response = wyr[Math.floor(Math.random() * wyr.length)];
   const text = `

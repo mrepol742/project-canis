@@ -54,21 +54,24 @@ export default async function (msg: Message) {
   const removeCommands: string[] = [];
 
   for (const dir of commandDirs) {
-    const files = fs.readdirSync(dir);
-    for (const file of files) {
-      if (/\.js$|\.ts$/.test(file)) {
-        const commandName = file.replace(/\.(js|ts)$/, "");
+    try {
+      fs.accessSync(dir);
+      const files = fs.readdirSync(dir);
+      for (const file of files) {
+        if (/\.js$|\.ts$/.test(file)) {
+          const commandName = file.replace(/\.(js|ts)$/, "");
 
-        if (!commands[commandName]) {
-          newCommands.push(commandName);
-        } else {
-          removeCommands.push(commandName);
+          if (!commands[commandName]) {
+            newCommands.push(commandName);
+          } else {
+            removeCommands.push(commandName);
+          }
+
+          await Loader(file, dir);
+          count++;
         }
-
-        await Loader(file, dir);
-        count++;
       }
-    }
+    } catch {}
   }
 
   let text = `

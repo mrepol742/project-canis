@@ -13,18 +13,41 @@ export default async function (
   _newBody: string,
   prevBody: string,
 ) {
-  if (msg.fromMe) return;
-  const lid = (msg.author ?? msg.from).split("@")[0];
+  try {
+    if (msg.fromMe) return;
 
-  // log
-  log.info("EditMessage", lid, prevBody);
-  await addMessage(msg, prevBody, "edit");
+    const lid = (msg.author ?? msg.from).split("@")[0];
+    log.info("EditMessage", lid, prevBody);
+    await addMessage(lid, prevBody, "edit");
 
-  const isMustResent = await getSetting("resent_edit");
-  if (!isMustResent || isMustResent == "off") return;
+    const isMustResent = await getSetting("resent_edit");
+    if (!isMustResent || isMustResent == "off") return;
 
-  const user = (await getUserbyLid(msg.from)) || "User";
-  await msg.reply(
-    `${msg.author ? user : "Your"} message was edited from "${prevBody}".`,
-  );
+    const [chat, contact, media] = await Promise.all([
+      msg.getChat(),
+      msg.getContact(),
+      msg.hasMedia && msg.downloadMedia(),
+    ]);
+
+    const caption = `${
+      chat.isGroup
+        ? contact
+          ? `@${contact.id._serialized.split("@")[0]} edited this:`
+          : "Someone edited this:"
+        : "You edited this:"
+    }
+
+  ${prevBody ?? ""}
+  `;
+
+    await msg.reply(media || caption, undefined, {
+      caption: media ? caption : undefined,
+      mentions:
+        chat.isGroup && contact
+          ? [...msg.mentionedIds, contact.id._serialized]
+          : msg.mentionedIds,
+    });
+  } catch (error) {
+    log.error("EditMessage", "Failed to process edit message", error);
+  }
 }

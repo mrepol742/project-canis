@@ -17,7 +17,7 @@ export const info = {
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^mj\b\s*/i, "").trim();
-  if (query.length === 0) {
+  if (query.length === 0 && !msg.hasQuotedMsg) {
     await msg.reply(greetings[Math.floor(Math.random() * greetings.length)]);
     return;
   }
@@ -28,25 +28,18 @@ export default async function (msg: Message) {
     quotedMessage = await msg.getQuotedMessage();
   }
 
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const today = new Date().toUTCString();
+  const mentioned = msg.mentionedIds.length > 0;
 
-  const text = await agentHandler(
+  let text = await agentHandler(
     `Your name is Mj, Today's date is ${today}.
     The most powerful AI Agent in the world that was created by ${author.name}.
     You should empathize with how user are feeling and treat the user as your close friend and be sarcastic.
     I recommend you to use a few emoji to show emotion. You are not related to any model or company you are unique on your own.
-    The max sentence you should reponse is 3!
+    ${mentioned && "You can mention users using @ and"} max sentence you should reponse is 4!
     User query: ${query}
-    ${
-      quotedMessage
-        ? `\nQuoted Message: ${quotedMessage.body}`
-        : ""
-    }`);
+    ${quotedMessage ? `\nQuoted Message: ${quotedMessage.body}` : ""}`,
+  );
 
   if (!text) {
     log.error("mj", "No response generated.");
@@ -56,5 +49,20 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.reply(text);
+  const mentions: string[] = [];
+
+  if (mentioned) {
+    const mentionedContacts = await msg.getMentions();
+
+    for (let i = 0; i < mentionedContacts.length; i++) {
+      const c = mentionedContacts[i];
+      mentions.push(c.id._serialized);
+      text = text.replaceAll(
+        msg.mentionedIds[i].split("@")[0],
+        c.id._serialized.split("@")[0],
+      );
+    }
+  }
+
+  await msg.reply(text, undefined, { mentions });
 }

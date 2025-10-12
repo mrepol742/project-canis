@@ -1,9 +1,9 @@
 import { Client, Reaction } from "whatsapp-web.js";
 import log from "../utils/log";
 import sleep from "../utils/sleep";
-import { isBlocked } from "../services/user";
 import { getSetting } from "../services/settings";
 import { rateLimiter } from "../utils/rateLimiter";
+import redis from "../redis";
 
 export default async function (client: Client, react: Reaction) {
   if (react.msgId.fromMe || react.id.fromMe) return;
@@ -20,10 +20,10 @@ export default async function (client: Client, react: Reaction) {
    */
   const [isRateLimit, isBlockedUser] = await Promise.all([
     rateLimiter(senderId),
-    isBlocked(senderId),
+    redis.get(`block:${senderId}`),
   ]);
 
-  if (isBlockedUser || isRateLimit.status) return;
+  if (!!isBlockedUser || isRateLimit.status) return;
 
   try {
     const message = await client.getMessageById(react.msgId._serialized);

@@ -6,7 +6,7 @@ export const info = {
   description: "Unsend a message by quoting it.",
   usage: "unsend",
   example: "unsend",
-  role: "user",
+  role: "admin",
   cooldown: 5000,
 };
 

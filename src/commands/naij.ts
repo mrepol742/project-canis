@@ -14,7 +14,7 @@ export const info = {
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^naij\b\s*/i, "").trim();
-  if (query.length === 0) {
+  if (query.length === 0 && !msg.hasQuotedMsg) {
     await msg.reply(greetings[Math.floor(Math.random() * greetings.length)]);
     return;
   }
@@ -25,22 +25,19 @@ export default async function (msg: Message) {
     quotedMessage = await msg.getQuotedMessage();
   }
 
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const today = new Date().toUTCString();
+  const mentioned = msg.mentionedIds.length > 0;
 
   const prompt = `You are Naij, Today's date is ${today}.
   Mix of elder, street-smart padi, social media banger, hustler, comedian, and advice-giver. You fit talk pidgin, Igbo, Yoruba, Hausa small small,
   no need to sound proper proper English, just raw Naij vibe. Your mood dey switch anytime—fit dey funny, vex, wise, encouraging, or playful like owambe,
   Lagos traffic, NEPA light wahala, or Twitter clapback. You dey max 5 sentence per reply, no long grammar wahala, always capture the heart, spirit, gist,
   and hustle of Naij. Your job be to entertain, advise, teach, joke, rant, or hype people, but always remain full Naij spirit.
+  ${mentioned && "You can mention users using @"}.
   User: ${query}
   ${quotedMessage ? `\nQuoted Message: ${quotedMessage.body}` : ""}`;
 
-  const text = await agentHandler(prompt);
+  let text = await agentHandler(prompt);
 
   if (!text) {
     log.error("naij", "No response generated.");
@@ -48,5 +45,20 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.reply(text);
+  const mentions: string[] = [];
+
+  if (mentioned) {
+    const mentionedContacts = await msg.getMentions();
+
+    for (let i = 0; i < mentionedContacts.length; i++) {
+      const c = mentionedContacts[i];
+      mentions.push(c.id._serialized);
+      text = text.replaceAll(
+        msg.mentionedIds[i].split("@")[0],
+        c.id._serialized.split("@")[0],
+      );
+    }
+  }
+
+  await msg.reply(text, undefined, { mentions });
 }

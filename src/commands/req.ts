@@ -1,9 +1,5 @@
 import { Message } from "../../types/message";
-import {
-  findOrCreateUser,
-  getUserbyLid,
-  isBlocked,
-} from "../components/services/user";
+import { findOrCreateUser } from "../components/services/user";
 import redis from "../components/redis";
 import { client } from "../components/client";
 import { MessageMedia } from "whatsapp-web.js";

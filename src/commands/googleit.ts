@@ -15,16 +15,20 @@ export default async function (msg: Message) {
   const query = msg.body.replace(/^googleit\b\s*/i, "").trim();
   if (query.length === 0) return;
 
-  const url = `https://letmegooglethat.com/?q=${encodeURIComponent(query)}`;
-  const browser = await puppeteer.launch({ headless: true });
+  const url = `https://letmegooglethat.com/?q=${query.replaceAll(" ", "+")}`;
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   const page = await browser.newPage();
+  await page.setUserAgent(
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+  );
 
-  await page.goto(url, { waitUntil: "networkidle0" });
-  await page.setViewport({ width: 800, height: 600 });
+  await page.goto(url, { waitUntil: "domcontentloaded" });
+  await page.setViewport({ width: 1024, height: 768 });
 
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-
-  const buffer = await page.screenshot({ fullPage: true });
+  const buffer = await page.screenshot();
   await browser.close();
 
   const media = new MessageMedia(
@@ -32,5 +36,7 @@ export default async function (msg: Message) {
     buffer.toString("base64"),
     `result.png`,
   );
-  await msg.reply(media, undefined, { caption: url });
+  await msg.reply(media, undefined, {
+    caption: `https://google.com/search?q=${query.replaceAll(" ", "+")}`,
+  });
 }

@@ -2,11 +2,12 @@ import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import os from "os";
 import si from "systeminformation";
-import { getUserCount, getBlockUserCount } from "../components/services/user";
+import { getUserCount } from "../components/services/user";
 import { client } from "../components/client";
 import { commands } from "../components/utils/cmd/loader";
 import timestamp from "../components/utils/timestamp";
 import speedTest from "../components/utils/speedtest";
+import redis from "../components/redis";
 
 export const info = {
   command: "stats",
@@ -54,6 +55,7 @@ export default async function (msg: Message) {
     networkInterfaces,
     userCount,
     blockUserCount,
+    mutedUserCount,
     waStatus,
     waVersion,
     deviceCount,
@@ -65,7 +67,8 @@ export default async function (msg: Message) {
     si.shell(),
     si.networkInterfaces(),
     getUserCount(),
-    getBlockUserCount(),
+    redis.keys("block:*"),
+    redis.keys("rate:*"),
     waClient.getState(),
     waClient.getWWebVersion(),
     waClient.getContactDeviceCount(msg.from),
@@ -90,9 +93,9 @@ export default async function (msg: Message) {
 
     \`Network\`
     Interface: ${networkInterfaces.map((iface) => `${iface.iface} ${iface.speed} Mbps`).join(", ")}
-    Download: ${speedTestResults.download.bandwidth / 125000} Mbps
-    Upload: ${speedTestResults.upload.bandwidth / 125000} Mbps
-    Ping: ${speedTestResults.ping.latency} ms
+    Download: ${speedTestResults?.download?.bandwidth || 0 / 125000} Mbps
+    Upload: ${speedTestResults?.upload?.bandwidth || 0 / 125000} Mbps
+    Ping: ${speedTestResults?.ping.latency} ms
 
     \`Node.js Runtime\`
 
@@ -113,7 +116,8 @@ export default async function (msg: Message) {
 
     Commands: ${Object.keys(commands).length}
     Users: ${userCount}
-    Blocked Users: ${blockUserCount}
+    Blocked Users: ${blockUserCount.length}
+    Muted Users: ${mutedUserCount.length}
 `;
 
   await msg.reply(statsMessage);

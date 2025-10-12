@@ -1,26 +1,23 @@
-import log from "../utils/log";
-import fs from "fs";
-import path from "path";
 import { client } from "../client";
-import sleep from "../utils/sleep";
+import redis from "../redis";
 
 export default async function () {
-  const hotReloadPath = path.resolve(__dirname, "../../../.temp/restart");
-  if (fs.existsSync(hotReloadPath)) {
-    try {
-      const tempData = JSON.parse(fs.readFileSync(hotReloadPath, "utf-8"));
+  const restart = await redis.get("restart");
+  if (!restart) return;
 
-      (await client()).sendMessage(tempData.id.remote, "Restart Finished.");
-    } catch (err) {
-      log.error("Restart", err);
-    } finally {
-      fs.unlink(hotReloadPath, (err) => {
-        if (err) {
-          log.error("Restart", "Failed to delete restart file:", err);
-        } else {
-          log.info("Restart", "Restart file deleted successfully.");
-        }
-      });
-    }
-  }
+  const r: { id: string; date: number } = JSON.parse(restart);
+
+  const timeTook = Date.now() - r.date;
+
+  const seconds = Math.floor(timeTook / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const formatted =
+    minutes > 0
+      ? `${minutes} minute${minutes > 1 ? "s" : ""} and ${seconds % 60} second${seconds % 60 !== 1 ? "s" : ""}`
+      : `${seconds} second${seconds !== 1 ? "s" : ""}`;
+
+  await Promise.all([
+    redis.del("restart"),
+    (await client()).sendMessage(r.id, `Restart finished. Took ${formatted}.`),
+  ]);
 }

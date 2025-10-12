@@ -8,7 +8,9 @@ export interface ContentCheckResult {
 
 export function checkInappropriate(content: string): ContentCheckResult {
   const lower = content.toLowerCase();
-  const wordsFound = offensiveWords.filter((word) => lower.includes(word));
+  const wordsFound = offensiveWords.filter((word) =>
+    lower.split(" ").includes(word),
+  );
 
   const targets: string[] = [];
 

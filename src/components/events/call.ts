@@ -23,7 +23,7 @@ function getRandomResponse(arr: string[]) {
 
 export default async function (call: Call) {
   try {
-    if (call.fromMe) return;
+    if (call.fromMe || call.isGroup) return;
     const isCallMustReject = await getSetting("call_reject");
     if (!isCallMustReject || isCallMustReject == "off") return;
 

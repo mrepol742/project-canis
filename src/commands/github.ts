@@ -18,6 +18,13 @@ export default async function (msg: Message) {
     return;
   }
 
+  if (query.includes("/")) {
+    await msg.reply(
+      "If you want to get repository info, please use the `repo` command.",
+    );
+    return;
+  }
+
   if (query.includes(" ")) {
     await msg.reply("Please provide a single username without spaces.");
     return;

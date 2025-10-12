@@ -13,6 +13,9 @@ export default async function (msg: Message) {
   if (!/^fork$/i.test(msg.body)) return;
 
   const text = `
+    \`Open Source\`
+    Don't forget to leave a star and fork it on Github.
+
     \`Canis for WhatsApp\`
     https://github.com/mrepol742/project-canis
 

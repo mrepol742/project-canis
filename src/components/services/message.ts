@@ -12,15 +12,13 @@ function filterContent(body: string): string {
 }
 
 export async function addMessage(
-  msg: Message,
+  lid: string,
   body: string,
   type: string,
 ): Promise<void> {
   if (!body) return;
 
   try {
-    const lid = (msg.author ?? msg.from).split("@")[0];
-
     await prisma.message.create({
       data: {
         lid,
@@ -31,4 +29,19 @@ export async function addMessage(
   } catch (error) {
     log.error("Database", "Failed to add message.", error);
   }
+}
+
+export async function getMessage(lid: string) {
+  try {
+    const message = await prisma.message.findFirst({
+      where: {
+        lid,
+      },
+    });
+
+    return message;
+  } catch (error) {
+    log.error("Database", "Failed to get message.", error);
+  }
+  return null;
 }

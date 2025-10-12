@@ -14,7 +14,7 @@ export const info = {
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^sim\b\s*/i, "").trim();
-  if (query.length === 0) {
+  if (query.length === 0 && !msg.hasQuotedMsg) {
     await msg.reply(greetings[Math.floor(Math.random() * greetings.length)]);
     return;
   }
@@ -25,24 +25,16 @@ export default async function (msg: Message) {
     quotedMessage = await msg.getQuotedMessage();
   }
 
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const today = new Date().toUTCString();
+  const mentioned = msg.mentionedIds.length > 0;
 
-  const text = await agentHandler(`
+  let text = await agentHandler(`
     You are Sim, Today's date is ${today}.
     Reluctantly replies using sexy, flirty, funny and horny messages.
-    Maximum of 3 sentences only.
+    Maximum of 4 sentences only ${mentioned && "and mention user using @"}.
     User: ${query}
 
-    ${
-      quotedMessage
-        ? `\nQuoted Message: ${quotedMessage.body}`
-        : ""
-    }`);
+    ${quotedMessage ? `\nQuoted Message: ${quotedMessage.body}` : ""}`);
 
   if (!text) {
     log.error("sim", "No response generated.");
@@ -50,5 +42,20 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.reply(text);
+  const mentions: string[] = [];
+
+  if (mentioned) {
+    const mentionedContacts = await msg.getMentions();
+
+    for (let i = 0; i < mentionedContacts.length; i++) {
+      const c = mentionedContacts[i];
+      mentions.push(c.id._serialized);
+      text = text.replaceAll(
+        msg.mentionedIds[i].split("@")[0],
+        c.id._serialized.split("@")[0],
+      );
+    }
+  }
+
+  await msg.reply(text, undefined, { mentions });
 }

@@ -1,6 +1,7 @@
 import { prisma } from "../prisma";
 import log from "../../components/utils/log";
 import { Message } from "whatsapp-web.js";
+import redis from "../redis";
 
 const MAX_LENGTH = 191;
 
@@ -112,37 +113,12 @@ export async function getUserbyLid(lid: string) {
   return null;
 }
 
-export async function isBlocked(lid: string): Promise<boolean> {
-  try {
-    const block = await prisma.block.findUnique({
-      where: {
-        lid,
-      },
-    });
-
-    return block !== null;
-  } catch (error) {
-    log.error("Database", `Failed to check if user is blocked.`, error);
-  }
-  return false;
-}
-
 export async function getUserCount(): Promise<number> {
   try {
     const count = await prisma.user.count();
     return count;
   } catch (error) {
     console.error("Failed to get user count:", error);
-    return 0;
-  }
-}
-
-export async function getBlockUserCount(): Promise<number> {
-  try {
-    const count = await prisma.block.count();
-    return count;
-  } catch (error) {
-    console.error("Failed to get block user count:", error);
     return 0;
   }
 }
@@ -237,5 +213,31 @@ export async function getUsersQuiz(): Promise<any[]> {
   } catch (error) {
     log.error("Database", `Failed to get users.`, error);
     return [];
+  }
+}
+
+export async function getBlockUser(lid: string): Promise<boolean> {
+  try {
+    const isBlocked = await redis.get(`block:${lid}`);
+    return !!isBlocked;
+  } catch (error) {
+    log.error("Redis", `Failed to get block user: ${lid}`, error);
+  }
+  return false;
+}
+
+export async function addBlockUser(lid: string): Promise<void> {
+  try {
+    await redis.set(`block:${lid}`, "1");
+  } catch (error) {
+    log.error("Redis", `Failed to block user: ${lid}`, error);
+  }
+}
+
+export async function unblockUser(lid: string): Promise<void> {
+  try {
+    redis.del(`block:${lid}`);
+  } catch (error) {
+    log.error("Redis", `Failed to block user: ${lid}`, error);
   }
 }

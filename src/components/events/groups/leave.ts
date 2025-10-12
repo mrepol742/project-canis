@@ -10,7 +10,8 @@ export default async function (notif: GroupNotification) {
     const group = await notif.getChat();
     const recipients = await notif.getRecipients();
 
-    const leavers = [];
+    const leavers: string[] = [];
+    const mentionIds: string[] = [];
 
     for (const contact of recipients) {
       const name = contact.pushname || contact.name || contact.id.user;
@@ -18,14 +19,24 @@ export default async function (notif: GroupNotification) {
         contact.id._serialized === (await client()).info.wid._serialized;
       if (!isSelf) {
         log.info("GroupLeave", `${name} left the group ${group.name}`);
-        leavers.push(name);
+        leavers.push(contact.id._serialized.split("@")[0]);
+        mentionIds.push(contact.id._serialized);
       } else {
         log.info("GroupLeave", `the bot left the group ${group.name}`);
+        break;
       }
     }
 
-    if (leavers.length > 0)
-      await notif.reply(getMessage("leaving", `*${leavers.join(", ")}*`));
+    if (leavers.length == 0) return;
+    const message = getMessage(
+      "leaving",
+      leavers.map((n) => `@${n}`).join(", "),
+    );
+
+    // await notif.reply(getMessage("leaving", `*${leavers.join(", ")}*`));
+    (await client()).sendMessage(notif.chatId, message, {
+      mentions: mentionIds,
+    });
   } catch (err) {
     log.error("GroupLeave", "Failed to process group leave event:", err);
   }

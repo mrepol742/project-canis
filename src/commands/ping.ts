@@ -1,5 +1,6 @@
-import { Message } from "../../types/message"
+import { Message } from "../../types/message";
 import log from "../components/utils/log";
+import speedtest from "../components/utils/speedtest";
 
 export const info = {
   command: "ping",
@@ -10,8 +11,9 @@ export const info = {
   cooldown: 5000,
 };
 
-export default function (msg: Message) {
-  if (!/^ping$/i.test(msg.body)) return;
+export default async function (msg: Message) {
+  if (!/^ping$/.test(msg.body)) return;
 
-  msg.reply("pong");
+  const latency = await speedtest();
+  msg.reply(`pong ${latency?.ping && `${latency?.ping}ms`}`);
 }

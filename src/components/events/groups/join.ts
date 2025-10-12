@@ -21,7 +21,8 @@ export default async function (notif: GroupNotification) {
       To list down commands type \`help\`.
     `;
 
-    const newMembers = [];
+    const newMembers: string[] = [];
+    const mentionIds: string[] = [];
 
     for (const contact of recipients) {
       const name = contact.pushname || contact.name || contact.id.user;
@@ -33,17 +34,23 @@ export default async function (notif: GroupNotification) {
       if (isSelf) {
         await notif.reply(text);
       } else {
-        newMembers.push(name);
+        newMembers.push(contact.id._serialized.split("@")[0]);
+        mentionIds.push(contact.id._serialized);
       }
     }
 
     await Promise.all([
       (async () => {
-        if (newMembers.length > 0) {
-          await notif.reply(
-            getMessage("welcome", `*${newMembers.join(", ")}*`),
-          );
-        }
+        if (newMembers.length == 0) return;
+        const message = getMessage(
+          "welcome",
+          newMembers.map((n) => `@${n}`).join(", "),
+        );
+
+        (await client()).sendMessage(notif.chatId, message, {
+          mentions: mentionIds,
+        });
+        // await notif.sendMessage(message, { mentions: mentionIds });
       })(),
       (async () => {
         const chat = await notif.getChat();

@@ -8,7 +8,7 @@ import log from "../utils/log";
 import { commands } from "../utils/cmd/loader";
 import { penalizeUser, rateLimiter } from "../utils/rateLimiter";
 import sleep from "../utils/sleep";
-import { findOrCreateUser, isBlocked } from "../services/user";
+import { findOrCreateUser, getBlockUser } from "../services/user";
 import { client } from "../client";
 import Font from "../utils/font";
 import quiz from "../utils/quiz";
@@ -23,12 +23,15 @@ import { InstantDownloader } from "../utils/instantdl/downloader";
 import riddle from "../utils/riddle";
 import { checkInappropriate } from "../utils/contentChecker";
 import { prisma } from "../prisma";
+import redis from "../redis";
+import DownloadMedia from "../utils/message/download";
 
 const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
 const isPhishtankEnable = process.env.PHISHTANK_ENABLE === "true";
+const autoDownloadMedia = process.env.PROJECT_AUTO_DOWNLOAD_MEDIA === "true";
 const mentionResponses = [
   "👀 Did someone just say my name?",
   "Bruh, why me again? 😂",
@@ -43,10 +46,12 @@ const mentionResponses = [
 ];
 
 export default async function (msg: Message, type: string) {
+  if (autoDownloadMedia) Promise.all([DownloadMedia(msg)]);
+
   // ignore message if it is older than 10 seconds
   if (!msg.body) return;
   if (msg.timestamp < Date.now() / 1000 - 10 && type === "create") return;
-  if (msg.isGif || msg.isStatus || msg.broadcast) return; // ignore them all
+  if (msg.isGif || msg.isStatus || msg.broadcast || msg.isForwarded) return; // ignore them all
   const lid = msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0];
 
   const prefix = !msg.body.startsWith(commandPrefix);
@@ -77,18 +82,18 @@ export default async function (msg: Message, type: string) {
         return false;
       }
 
-      return isBlocked(lid);
+      const isBlocked = await getBlockUser(lid);
+      // If the Redis key exists (non-null), return true
+      return isBlocked;
     })(),
-  ]);
 
-  if (isBlockedUser) return;
+    /*
+     *
+     * Check for scam urls
+     */
+    (async () => {
+      if (!isPhishtankEnable) return;
 
-  /*
-   *
-   * Check for scam urls
-   */
-  if (isPhishtankEnable) {
-    Promise.resolve().then(async () => {
       const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g) || [];
       const urls = extractUrls
         .map((url) => normalize(url))
@@ -104,93 +109,16 @@ export default async function (msg: Message, type: string) {
     Proceed with caution.
     `;
       await msg.reply(text);
-    });
-  }
+    })(),
+  ]);
 
-  if (msg.isForwarded) return;
-
-  Promise.resolve().then(async () => {
-    const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
-    if (!extractUrls || rateLimitResult.status) return;
-
-    const url = extractUrls[Math.floor(Math.random() * extractUrls.length)];
-    const message = msg;
-    message.body = url;
-    await InstantDownloader(message);
-  });
+  if (isBlockedUser) return;
 
   // process normalization
   msg.body = msg.body
     .normalize("NFKC")
     .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
     .trim();
-
-  /*
-   *
-   * Quiz command validation
-   */
-  if (msg.hasQuotedMsg) {
-    Promise.resolve().then(async () => {
-      const quoted = await msg.getQuotedMessage();
-      if (!quoted.body || rateLimitResult.status) return;
-
-      await Promise.all([quiz(msg, quoted), riddle(msg, quoted)]);
-    });
-  }
-
-  /*
-   *
-   * Override the default function
-   *     react(reaction: string) Promise<void>
-   */
-  const [isMustautoReact] = await Promise.all([getSetting("auto_react")]);
-  if (isMustautoReact && isMustautoReact == "on") {
-    const originalReact = msg.react.bind(msg);
-    msg.react = async (reaction: string): Promise<void> => {
-      // add delay for more
-      // humanly like interaction
-      const min = 2000;
-      const max = 6000;
-      const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
-
-      await sleep(randomMs);
-      const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
-      log.info("AutoReact", lid, reaction);
-
-      if (Math.random() < 0.1 && !isEmoji)
-        if (Math.random() < 0.2)
-          (await client()).sendMessage(msg.id.remote, reaction);
-        else await msg.reply(reaction);
-      else await originalReact(reaction);
-    };
-  }
-
-  /*
-   *
-   * Process msg reaction
-   */
-  if (isMustautoReact && isMustautoReact == "on") {
-    Promise.resolve().then(async () => {
-      if (msg.fromMe || rateLimitResult.status) return;
-
-      const emojis = [
-        ...new Set([...msg.body.matchAll(regex)].map((m) => m[0])),
-      ];
-      if (emojis.length > 0) {
-        const react = emojis[Math.floor(Math.random() * emojis.length)];
-
-        await msg.react(react);
-      } else if (containsAny(msg.body, funD)) {
-        await msg.react("🤣");
-      } else if (containsAny(msg.body, happyEE)) {
-        await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
-      } else if (containsAny(msg.body, sadEE)) {
-        await msg.react("😭");
-      } else if (containsAny(msg.body, loveEE)) {
-        await msg.react("❤️");
-      }
-    });
-  }
 
   /*
    * Check if the message starts with the command prefix.
@@ -201,24 +129,89 @@ export default async function (msg: Message, type: string) {
     ? messageBody.slice(commandPrefix.length).trim()
     : messageBody;
   const handler = commands[key.toLowerCase()];
-
-  // no match command
-  // so check if the message mentioned the bot name
-  // and return funny messages HAHAHAHA
   if (!handler) {
-    if (
-      msg.mentionedIds &&
-      msg.mentionedIds.length > 0 &&
-      msg.mentionedIds.includes((await client()).info.wid._serialized) &&
-      !rateLimitResult.status
-    )
-      await msg.reply(
-        mentionResponses[Math.floor(Math.random() * mentionResponses.length)],
-      );
+    Promise.all([
+      /*
+       *
+       * Quiz command validation
+       */
+      (async () => {
+        if (!msg.hasQuotedMsg) return;
+
+        const quoted = await msg.getQuotedMessage();
+        if (!quoted.body || rateLimitResult.status) return;
+
+        Promise.all([quiz(msg, quoted), riddle(msg, quoted)]);
+      })(),
+
+      (async () => {
+        const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
+        if (!extractUrls || rateLimitResult.status) return;
+
+        const url = extractUrls[Math.floor(Math.random() * extractUrls.length)];
+        const message = msg;
+        message.body = url;
+        InstantDownloader(message);
+      })(),
+
+      (async () => {
+        // override the msg!
+        const react = { ...msg };
+        const isMustautoReact = await getSetting("auto_react");
+        if (
+          (!isMustautoReact && isMustautoReact != "on") ||
+          react.fromMe ||
+          rateLimitResult.status
+        )
+          return;
+
+        react.react = async (reaction: string): Promise<void> => {
+          // add delay for more
+          // humanly like interaction
+          const min = 2000;
+          const max = 6000;
+          const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
+
+          await sleep(randomMs);
+          const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
+          log.info("AutoReact", lid, reaction);
+
+          if (Math.random() < 0.1 && !isEmoji)
+            if (Math.random() < 0.2)
+              (await client()).sendMessage(react.id.remote, reaction);
+            else await msg.reply(reaction);
+          else await msg.react(reaction);
+        };
+
+        const emojis = [
+          ...new Set([...react.body.matchAll(regex)].map((m) => m[0])),
+        ];
+        if (emojis.length > 0) {
+          await react.react(emojis[Math.floor(Math.random() * emojis.length)]);
+        } else if (containsAny(react.body, funD)) {
+          await react.react("🤣");
+        } else if (containsAny(react.body, happyEE)) {
+          await react.reply(funD[Math.floor(Math.random() * funD.length)]);
+        } else if (containsAny(react.body, sadEE)) {
+          await react.react("😭");
+        } else if (containsAny(react.body, loveEE)) {
+          await react.react("❤️");
+        } else if (
+          msg.mentionedIds &&
+          msg.mentionedIds.length > 0 &&
+          msg.mentionedIds.includes((await client()).info.wid._serialized)
+        )
+          await msg.reply(
+            mentionResponses[
+              Math.floor(Math.random() * mentionResponses.length)
+            ],
+          );
+      })(),
+    ]);
     return;
   }
 
-  if (rateLimitResult.status) {
+  if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) {
     penalizeUser(lid, rateLimitResult.value);
     return;
   }
@@ -249,34 +242,35 @@ export default async function (msg: Message, type: string) {
     let messageBody = typeof content === "string" ? Font(content) : content;
     log.info("ReplyMessage", lid, content.toString().slice(0, 150));
 
+    if (!msg.fromMe) {
+      const chat = await msg.getChat();
+      chat.sendStateTyping();
+
+      await sleep(1500);
+    }
+
     if (Math.random() < 0.5)
       return (await client()).sendMessage(msg.id.remote, messageBody, options);
     return await originalReply(messageBody, chatId, options);
   };
 
-  const isInapproiateResponse = checkInappropriate(msg.body);
-  if (isInapproiateResponse.isInappropriate) {
-    const text =
-      "You have been blocked. For more information \`terms\` & \`privacy\`.";
-    await Promise.all([
-      originalReply(text),
-      prisma.block.upsert({
-        where: { lid },
-        update: {},
-        create: {
-          lid,
-          mode: msg.author ? "group" : "private",
-          reason: `Inapproiate ${isInapproiateResponse.words.join(", ")}`,
-        },
-      }),
-      prisma.user.update({
-        where: { lid },
-        data: { points: { decrement: 100 } },
-      }),
-    ]);
+  if (!msg.fromMe) {
+    const isInapproiateResponse = checkInappropriate(msg.body);
+    if (isInapproiateResponse.isInappropriate) {
+      const text =
+        "You have been blocked. For more information \`terms\` & \`privacy\`.";
+      await Promise.all([
+        originalReply(text),
+        redis.set(`block:${lid}`, "1"),
+        prisma.user.update({
+          where: { lid },
+          data: { points: { decrement: 100 } },
+        }),
+      ]);
 
-    log.info("BlockUser", lid);
-    return;
+      log.info("BlockUser", lid);
+      return;
+    }
   }
 
   if (

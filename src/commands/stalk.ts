@@ -1,8 +1,9 @@
 import { Message } from "../../types/message";
-import { getUserbyLid, isBlocked } from "../components/services/user";
+import { getUserbyLid } from "../components/services/user";
 import redis from "../components/redis";
 import { client } from "../components/client";
 import { MessageMedia } from "whatsapp-web.js";
+import parsePhoneNumber from "libphonenumber-js";
 
 export const info = {
   command: "stalk",
@@ -31,7 +32,7 @@ export default async function (msg: Message) {
   const [user, isBlockPermanently, isBlockedTemporarily, avatarUrl] =
     await Promise.all([
       getUserbyLid(lid),
-      isBlocked(lid),
+      redis.get(`block:${lid}`),
       redis.get(`rate:${lid}`),
       (await client()).getProfilePicUrl(jid).catch(() => null),
     ]);
@@ -41,13 +42,15 @@ export default async function (msg: Message) {
     return;
   }
 
+  const phoneNumber = parsePhoneNumber(user.number);
+
   const text = `
     \`${user.name}\`
     ${user.about || "No about information available."}
 
     ID: ${user.lid}
     Number: ${user.number}
-    Country Code: ${user.countryCode}
+    Country: ${phoneNumber?.country} ${phoneNumber?.getType()} ${phoneNumber?.carrierCode}
     Type: ${user.type}
     Mode: ${user.mode}
     Command Count: ${user.commandCount}

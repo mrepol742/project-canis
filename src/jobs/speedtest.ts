@@ -2,7 +2,7 @@ import speedTest from "speedtest-net";
 import log from "../components/utils/log";
 import redis from "../components/redis";
 
-const CACHE_KEY = "speedtest:result";
+export const CACHE_KEY = "speedtest:result";
 const CACHE_TTL = 60 * 60; // 1 hour
 
 export const info = {

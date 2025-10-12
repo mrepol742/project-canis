@@ -4,20 +4,33 @@ import log from "../components/utils/log";
 
 export const info = {
   command: "resentunsend",
-  description: "Enable/disable automatically resending of unsend messages.",
-  usage: "resentunsend <on|off>",
-  example: "resentunsend on",
+  description: "Enable/disable automatically resending of unsent messages.",
+  usage: "resentunsend <--on|--off>",
+  example: "resentunsend --on",
   role: "admin",
   cooldown: 5000,
 };
 
 export default async function (msg: Message) {
   const query = msg.body.replace(/^resentunsend\b\s*/i, "").trim();
-  if (query.length === 0 && !/(on|off)/.test(query)) {
-    await msg.reply("Please provide a value its either on or off.");
+
+  // Match flags
+  const enable = /--on/i.test(query);
+  const disable = /--off/i.test(query);
+
+  if (!enable && !disable) {
+    await msg.reply("Please provide a valid flag: `--on` or `--off`.");
     return;
   }
 
-  await saveSetting("resent_unsent", query);
-  await msg.reply(`Resent Unsent successfuly set \`${query}\`.`);
+  const value = enable ? "on" : "off";
+
+  try {
+    await saveSetting("resent_unsent", value);
+    await msg.reply(`Resend Unsent has been successfully set to \`${value}\`.`);
+  } catch (err) {
+    await msg.reply(
+      "Failed to update Resend Unsent setting. Please try again.",
+    );
+  }
 }
