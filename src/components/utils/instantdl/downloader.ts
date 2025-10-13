@@ -16,7 +16,7 @@ function md5FromUrl(url: string) {
 }
 
 const facebookUrlRegex =
-  /^(https?:\/\/)?(www\.)?(facebook\.com\/(watch\/\?v=\d+|[^\/]+\/videos\/\d+|reel\/\d+)|fb\.watch\/[A-Za-z0-9_-]+)\/?$/i;
+  /^(https?:\/\/)?(www\.)?(facebook\.com|fb\.watch)\/[^\s?#]+(\?[^\s#]*)?(#[^\s]*)?$/i;
 const youtubeShortsUrlRegex =
   /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{11})(\?[^\s#]*)?(#[^\s]*)?$/i;
 
