@@ -1,4 +1,4 @@
-import { prisma } from "../prisma";
+import prisma from "../prisma";
 import log from "../utils/log";
 import { Message } from "whatsapp-web.js";
 

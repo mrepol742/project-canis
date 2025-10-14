@@ -11,13 +11,13 @@ import timestamp from "../components/utils/timestamp";
 import fs from "fs";
 import path from "path";
 import log from "../components/utils/log";
-import { RateEntry, rateLimiter } from "../components/utils/rateLimiter";
+import { RateEntry } from "../components/utils/rateLimiter";
 
 export const info = {
-  command: "stalk",
-  description: "Stalk a user (not allowed).",
-  usage: "stalk @user",
-  example: "stalk @user",
+  command: "me",
+  description: "Shows user info.",
+  usage: "me",
+  example: "me",
   role: "user",
   cooldown: 5000,
 };
@@ -47,18 +47,9 @@ function getCurrentTimeByCountryCode(countryCode: string) {
 }
 
 export default async function (msg: Message) {
-  const chat = await msg.getChat();
-  if (!chat.isGroup) {
-    await msg.reply("This only works on group chats");
-    return;
-  }
+  if (!/^me$/i.test(msg.body)) return;
 
-  if (msg.mentionedIds.length === 0) {
-    await msg.reply("Please mention a user to stalk or use the `me` command.");
-    return;
-  }
-
-  const jid = msg.mentionedIds[0];
+  const jid = msg.author ?? msg.from;
   const lid = jid.split("@")[0];
 
   const [user, isBlockPermanently, isBlockedTemporarily, userProfilePicture] =
@@ -100,7 +91,7 @@ export default async function (msg: Message) {
 
   if (!user) {
     await msg.reply(
-      "Unable to find the user info, perhaps the user haven't use the bot before? I have no idea, i rest my case.",
+      "You have not use the bot commands before, now you do! Try again.",
     );
     return;
   }
@@ -115,7 +106,7 @@ export default async function (msg: Message) {
 
   const text = `
     \`${user.name}\`
-    ${user.about || "No about information available."}
+    ${user.about || "No more about you (its private)."}
 
     ID: ${user.lid}
     Number: ${user.number}

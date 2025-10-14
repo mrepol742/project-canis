@@ -5,6 +5,7 @@ import { YoutubeShortsInstantDownloader } from "./youtube";
 import log from "../log";
 import crypto from "crypto";
 import redis from "../../redis";
+import he from "he";
 
 export interface Video {
   video: MessageMedia;
@@ -16,13 +17,16 @@ function md5FromUrl(url: string) {
 }
 
 const facebookUrlRegex =
-  /^(https?:\/\/)?(www\.)?(facebook\.com|fb\.watch)\/[^\s?#]+(\?[^\s#]*)?(#[^\s]*)?$/i;
+  /^(https?:\/\/)?(www\.)?(facebook\.com|fb\.watch)\/[^\s]+$/i;
 const youtubeShortsUrlRegex =
   /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{11})(\?[^\s#]*)?(#[^\s]*)?$/i;
 
 export async function InstantDownloader(msg: Message) {
   try {
-    const query = msg.body;
+    const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
+    if (!extractUrls) return;
+
+    const query = extractUrls[Math.floor(Math.random() * extractUrls.length)];
     const key = `instantdownload:${md5FromUrl(query)}`;
 
     if (facebookUrlRegex.test(query) || youtubeShortsUrlRegex.test(query)) {
@@ -55,9 +59,9 @@ export async function InstantDownloader(msg: Message) {
       return;
     }
 
-    Promise.all([
+    await Promise.all([
       msg.reply(video.video, undefined, {
-        caption: video.title ? video.title : "Instant Download",
+        caption: video.title ? he.decode(video.title) : "Instant Download",
       }),
       redis.del(key),
     ]);

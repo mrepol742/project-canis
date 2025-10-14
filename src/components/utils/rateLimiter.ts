@@ -1,12 +1,12 @@
 import redis from "../redis";
 import log from "./log";
-import { prisma } from "../prisma";
+import prisma from "../prisma";
 
 const LIMIT = 5;
 const BASE_WINDOW_MS = 30 * 1000;
 const PENALTY_INCREMENT_MS = 10 * 1000;
 
-interface RateEntry {
+export interface RateEntry {
   timestamps: number[];
   penaltyCount: number;
   penaltyUntil: number;

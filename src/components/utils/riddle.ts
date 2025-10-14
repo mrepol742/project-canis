@@ -9,6 +9,8 @@ export default async function (
   quoted: Message,
 ): Promise<boolean> {
   try {
+     if (!quoted.body) return false;
+
     const key = `riddle:${quoted.id.id}`;
     const result = await redis.get(key);
     if (!result) return false;

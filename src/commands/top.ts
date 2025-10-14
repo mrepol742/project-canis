@@ -31,7 +31,7 @@ export default async function (msg: Message) {
       .map((u, index) => {
         const displayName =
           u.name.length > 16 ? u.name.slice(0, 16) + ".. " : u.name;
-        return `${index + 1}. ${displayName}: ${u.points} Points`;
+        return `${index + 1}. ${displayName}: ${u.points.toFixed(2)} Points`;
       })
       .join("\n    ")}
 
@@ -42,7 +42,7 @@ export default async function (msg: Message) {
       .map((u, index) => {
         const displayName =
           u.name.length > 16 ? u.name.slice(0, 16) + ".. " : u.name;
-        return `${index + 1}. ${displayName}: ${u.score} Score`;
+        return `${index + 1}. ${displayName}: ${u.score.toFixed(2)} Score`;
       })
       .join("\n    ")}
 
@@ -52,7 +52,7 @@ export default async function (msg: Message) {
       .map((u, index) => {
         const displayName =
           u.name.length > 16 ? u.name.slice(0, 16) + ".. " : u.name;
-        return `${index + 1}. ${displayName}: ${u.commandCount} Rep`;
+        return `${index + 1}. ${displayName}: ${u.commandCount.toFixed(2)} Rep`;
       })
       .join("\n    ")}
     `;

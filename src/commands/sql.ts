@@ -1,7 +1,7 @@
 import { Message } from "../../types/message"
 import axios from "../components/axios";
 import log from "../components/utils/log";
-import { prisma } from "../components/prisma";
+import prisma from "../components/prisma";
 
 export const info = {
   command: "sql",

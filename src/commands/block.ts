@@ -2,7 +2,7 @@ import { Message } from "../../types/message";
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
-import { prisma } from "../components/prisma";
+import prisma from "../components/prisma";
 import redis from "../components/redis";
 import { addBlockUser } from "../components/services/user";
 

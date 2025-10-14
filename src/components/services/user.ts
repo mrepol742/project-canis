@@ -1,4 +1,4 @@
-import { prisma } from "../prisma";
+import prisma from "../prisma";
 import log from "../../components/utils/log";
 import { Message } from "whatsapp-web.js";
 import redis from "../redis";
@@ -143,7 +143,7 @@ export async function getUsersPoints(): Promise<any[]> {
       take: 15,
     });
 
-    return users.map((u) => ({
+    return users.map((u: { name: string; _sum: { points: number } }) => ({
       name: u.name,
       points: u._sum.points,
     }));
@@ -173,7 +173,7 @@ export async function getUsersCommandCount(): Promise<any[]> {
       take: 15,
     });
 
-    return users.map((u) => ({
+    return users.map((u: { name: string; _sum: { commandCount: number } }) => ({
       name: u.name,
       commandCount: ((u._sum.commandCount ?? 0) * 0.5) / 2,
     }));
@@ -202,14 +202,15 @@ export async function getUsersQuiz(): Promise<any[]> {
       take: 15,
     });
 
-    return users.map((u) => {
-      const total =
-        (u._sum.quizAnswered ?? 0) + (u._sum.quizAnsweredWrong ?? 0);
-      return {
+    return users.map(
+      (u: {
+        name: string;
+        _sum: { quizAnswered: number; quizAnsweredWrong: number };
+      }) => ({
         name: u.name,
-        score: total / 2,
-      };
-    });
+        score: (u._sum.quizAnswered ?? 0) + (u._sum.quizAnsweredWrong ?? 0) / 2,
+      }),
+    );
   } catch (error) {
     log.error("Database", `Failed to get users.`, error);
     return [];

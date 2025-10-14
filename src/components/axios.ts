@@ -11,8 +11,8 @@ const instance = axios.create({
   headers: {
     "User-Agent": AXIOS_USER_AGENT,
     "Content-Type": "application/json",
-    "Origin": AXIOS_ORIGIN,
-    "Host": AXIOS_HOST,
+    Origin: AXIOS_ORIGIN,
+    Host: AXIOS_HOST,
   },
 });
 

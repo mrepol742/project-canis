@@ -9,7 +9,7 @@ const PROJECT_MAX_DOWNLOAD_MEDIA = parseInt(
 );
 const MAX_FILE_SIZE = PROJECT_MAX_DOWNLOAD_MEDIA * 1024 * 1024;
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!msg.hasMedia || msg.fromMe) return;
   const media = await msg.downloadMedia();
   if (!media) return;

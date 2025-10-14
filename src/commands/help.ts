@@ -5,8 +5,8 @@ import { commands } from "../components/utils/cmd/loader";
 export const info = {
   command: "help",
   description: "List available commands and their usage.",
-  usage: "help [page] | [role] | [command]",
-  example: "help",
+  usage: "help [page] | --[role] | [command]",
+  example: "help --admin",
   role: "user",
   cooldown: 5000,
 };
@@ -29,11 +29,10 @@ function buildUserPage(
   totalPages: number,
 ): string {
   let response = `
-    \`help [page] | [role] | [command]\` for more details on a specific command.
+    \`Help ${page}\`
+    help [command] for more details on a specific command.
 
-    | ─────────── >
     |  •  ${userCommands.join("\n    |  •  ") || "_None_"}
-    | ─────────── >
 
     \`Page ${page} of ${totalPages}\`
   `;
@@ -42,17 +41,18 @@ function buildUserPage(
 
 function buildAdminPage(adminCommands: string[]): string {
   let response = `
-    \`help [page] | [role] | [command]\` for more details on a specific command.
+    \`Help Admin\`
+    help [command] for more details on a specific command.
 
-    | ─────────── >
     |  •  ${adminCommands.join("\n    |  •  ") || "_None_"}
-    | ─────────── >
-
   `;
   return response;
 }
 
 export default async function (msg: Message) {
+  const match = /^help(?:\s+(?:--admin|\w+))?$/i.exec(msg.body.trim());
+  if (!match) return;
+
   const query = msg.body
     .replace(/^help\b\s*/i, "")
     .trim()
@@ -77,7 +77,7 @@ export default async function (msg: Message) {
   }
 
   // help admin
-  if (/^admin$/i.test(query)) {
+  if (/^--admin$/i.test(query)) {
     const adminCommands = Object.values(commands)
       .filter((cmd: CommandType) => cmd.role === "admin")
       .map((cmd: CommandType) => cmd.command)
@@ -92,13 +92,24 @@ export default async function (msg: Message) {
   }
 
   // help [page]
-  const match = query.match(/(\d+)?/i);
-  const page = Math.max(1, match && match[1] ? parseInt(match[1], 10) : 1);
+  const matchPage = query.match(/(\d+)?/i);
+  const page = Math.max(
+    1,
+    matchPage && matchPage[1] ? parseInt(matchPage[1], 10) : 1,
+  );
 
   const userCommands = Object.values(commands)
     .filter((cmd: CommandType) => cmd.role === "user")
     .map((cmd: CommandType) => cmd.command)
     .sort((a, b) => a.localeCompare(b));
+
+  userCommands.unshift("--admin");
+  userCommands.unshift("--super-admin");
+
+  if (userCommands.length == 0) {
+    await msg.reply(`The *${page}* is obviously is not our bot bounds.`);
+    return;
+  }
 
   const totalPages = Math.ceil(userCommands.length / PAGE_SIZE);
   const userPage = paginate(userCommands, page, PAGE_SIZE);

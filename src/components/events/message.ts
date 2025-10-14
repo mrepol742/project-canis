@@ -22,16 +22,15 @@ import { normalize } from "../utils/url";
 import { InstantDownloader } from "../utils/instantdl/downloader";
 import riddle from "../utils/riddle";
 import { checkInappropriate } from "../utils/contentChecker";
-import { prisma } from "../prisma";
+import prisma from "../prisma";
 import redis from "../redis";
-import DownloadMedia from "../utils/message/download";
+import queue from "../queue";
 
 const regex = emojiRegex();
 const commandPrefix = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
 const debug = process.env.DEBUG === "true";
 const isPhishtankEnable = process.env.PHISHTANK_ENABLE === "true";
-const autoDownloadMedia = process.env.PROJECT_AUTO_DOWNLOAD_MEDIA === "true";
 const mentionResponses = [
   "👀 Did someone just say my name?",
   "Bruh, why me again? 😂",
@@ -46,8 +45,6 @@ const mentionResponses = [
 ];
 
 export default async function (msg: Message, type: string) {
-  if (autoDownloadMedia) Promise.all([DownloadMedia(msg)]);
-
   // ignore message if it is older than 10 seconds
   if (!msg.body) return;
   if (msg.timestamp < Date.now() / 1000 - 10 && type === "create") return;
@@ -75,7 +72,7 @@ export default async function (msg: Message, type: string) {
         };
       }
 
-      return rateLimiter(lid);
+      return await rateLimiter(lid);
     })(),
     (async () => {
       if (msg.fromMe) {
@@ -85,30 +82,6 @@ export default async function (msg: Message, type: string) {
       const isBlocked = await getBlockUser(lid);
       // If the Redis key exists (non-null), return true
       return isBlocked;
-    })(),
-
-    /*
-     *
-     * Check for scam urls
-     */
-    (async () => {
-      if (!isPhishtankEnable) return;
-
-      const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g) || [];
-      const urls = extractUrls
-        .map((url) => normalize(url))
-        .filter((u): u is string => Boolean(u));
-      const spamUrls = urls.filter((url) => phishingSet.has(url));
-      if (spamUrls.length == 0) return;
-
-      const text = `
-    \`Phishing Alert\`
-
-    We've found that this url(s): \`${spamUrls.join(", ")}\`
-    to be phishing site/page.
-    Proceed with caution.
-    `;
-      await msg.reply(text);
     })(),
   ]);
 
@@ -130,30 +103,15 @@ export default async function (msg: Message, type: string) {
     : messageBody;
   const handler = commands[key.toLowerCase()];
   if (!handler) {
-    Promise.all([
-      /*
-       *
-       * Quiz command validation
-       */
-      (async () => {
-        if (!msg.hasQuotedMsg) return;
+    if (!msg.hasQuotedMsg) return;
 
-        const quoted = await msg.getQuotedMessage();
-        if (!quoted.body || rateLimitResult.status) return;
+    const quoted = await msg.getQuotedMessage();
+    if (rateLimitResult.status) return;
 
-        Promise.all([quiz(msg, quoted), riddle(msg, quoted)]);
-      })(),
-
-      (async () => {
-        const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
-        if (!extractUrls || rateLimitResult.status) return;
-
-        const url = extractUrls[Math.floor(Math.random() * extractUrls.length)];
-        const message = msg;
-        message.body = url;
-        InstantDownloader(message);
-      })(),
-
+    await Promise.allSettled([
+      quiz(msg, quoted),
+      riddle(msg, quoted),
+      queue.add(() => InstantDownloader(msg)),
       (async () => {
         // override the msg!
         const react = { ...msg };
@@ -212,7 +170,7 @@ export default async function (msg: Message, type: string) {
   }
 
   if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) {
-    penalizeUser(lid, rateLimitResult.value);
+    await penalizeUser(lid, rateLimitResult.value);
     return;
   }
 
@@ -245,8 +203,6 @@ export default async function (msg: Message, type: string) {
     if (!msg.fromMe) {
       const chat = await msg.getChat();
       chat.sendStateTyping();
-
-      await sleep(1500);
     }
 
     if (Math.random() < 0.5)
@@ -259,7 +215,7 @@ export default async function (msg: Message, type: string) {
     if (isInapproiateResponse.isInappropriate) {
       const text =
         "You have been blocked. For more information \`terms\` & \`privacy\`.";
-      await Promise.all([
+      await Promise.allSettled([
         originalReply(text),
         redis.set(`block:${lid}`, "1"),
         prisma.user.update({
@@ -295,7 +251,7 @@ export default async function (msg: Message, type: string) {
    * Execute the command handler.
    */
   try {
-    await Promise.all([handler.exec(msg), findOrCreateUser(msg)]);
+    await Promise.allSettled([handler.exec(msg), findOrCreateUser(msg)]);
   } catch (error: any) {
     if (error.response) {
       const { status, headers } = error.response;

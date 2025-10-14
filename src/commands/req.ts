@@ -3,7 +3,7 @@ import { findOrCreateUser } from "../components/services/user";
 import redis from "../components/redis";
 import { client } from "../components/client";
 import { MessageMedia } from "whatsapp-web.js";
-import { prisma } from "../components/prisma";
+import prisma from "../components/prisma";
 import timestamp from "../components/utils/timestamp";
 
 export const info = {

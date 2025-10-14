@@ -12,7 +12,7 @@ export const info = {
 };
 
 export default async function (msg: Message) {
-  if (!/^pair/i.test(msg.body)) return;
+  if (!/^pair$/.test(msg.body)) return;
 
   const chat = await msg.getChat();
   if (!chat.isGroup) {

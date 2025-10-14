@@ -17,10 +17,14 @@ import reaction from "./events/reaction";
 import ready from "./events/ready";
 import revoke from "./events/revoke";
 import callEvent from "./events/call";
+import DownloadMedia from "./utils/message/download";
+import CheckSpamLink from "./utils/phishtank/checkSpam";
+import queue from "./queue";
 
 let instance: Client | null = null;
 let isLoadingBarStarted = false;
 const loadingBar = LoadingBar("Loading Client   | {bar} | {value}%");
+const autoDownloadMedia = process.env.PROJECT_AUTO_DOWNLOAD_MEDIA === "true";
 
 async function client(): Promise<Client> {
   if (instance) return instance; // prevent re-creating
@@ -64,13 +68,19 @@ function registerEvents(client: Client) {
 
   client.on("message_reaction", (react: Reaction) => reaction(client, react));
 
-  client.on("message_create", (msg: Message) => messageEvent(msg, "create"));
+  client.on("message_create", async (msg: Message) => {
+    await Promise.allSettled([
+      CheckSpamLink(msg),
+      queue.add(() => DownloadMedia(msg)),
+      messageEvent(msg, "create"),
+    ]);
+  });
 
   client.on(
     "message_edit",
-    (msg: Message, newBody: string, prevBody: string) => {
+    async (msg: Message, newBody: string, prevBody: string) => {
       msg.body = newBody;
-      Promise.all([
+      await Promise.allSettled([
         messageEdit(msg, newBody, prevBody),
         messageEvent(msg, "edit"),
       ]);

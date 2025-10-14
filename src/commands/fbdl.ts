@@ -5,6 +5,7 @@ import crypto from "crypto";
 import log from "../components/utils/log";
 import axios from "../components/axios";
 import fs from "fs";
+import he from "he";
 
 export const info = {
   command: "fbdl",
@@ -42,9 +43,8 @@ export default async function (msg: Message) {
     return;
   }
 
-  await msg.react("🔍");
+  const [result] = await Promise.all([getFbVideoInfo(query), msg.react("🔍")]);
 
-  const result = await getFbVideoInfo(query);
   if (!result.url) {
     await Promise.all([
       msg.reply("No video found at the provided URL."),
@@ -61,7 +61,7 @@ export default async function (msg: Message) {
     const media = MessageMedia.fromFilePath(tempPath);
     await Promise.all([
       msg.reply(media, undefined, {
-        caption: result.title,
+        caption: he.decode(result.title),
       }),
       msg.react(""),
     ]);
@@ -77,6 +77,6 @@ export default async function (msg: Message) {
 
   const media = MessageMedia.fromFilePath(tempPath);
   await msg.reply(media, undefined, {
-    caption: result.title,
+    caption: he.decode(result.title),
   });
 }

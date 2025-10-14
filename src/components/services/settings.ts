@@ -1,4 +1,4 @@
-import { prisma } from "../prisma";
+import prisma from "../prisma";
 import log from "../../components/utils/log";
 import redis from "../redis";
 

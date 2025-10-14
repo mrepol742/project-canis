@@ -4,6 +4,7 @@ import path from "path";
 import { pipeline } from "stream/promises";
 import bz2 from "unbzip2-stream";
 import log from "./utils/log";
+import axios from "./axios";
 
 interface PhishEntry {
   phish_id?: string;
@@ -74,15 +75,10 @@ export default class PhishTankClient {
 
   private async fetchRemoteEtag(): Promise<string | null> {
     try {
-      const res = await fetch(this.dataUrl);
-      if (!res.ok) {
-        log.warn(
-          "PhishTankClient",
-          `HEAD returned ${res.status} ${res.statusText}`,
-        );
-        return null;
-      }
-      const etag = res.headers.get("etag") || res.headers.get("ETag");
+      const res = await axios.head(this.dataUrl);
+
+      const etag = res.headers["etag"] || res.headers["ETag"] || null;
+
       return etag;
     } catch (err: any) {
       log.error(
