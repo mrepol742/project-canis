@@ -143,10 +143,12 @@ export async function getUsersPoints(): Promise<any[]> {
       take: 15,
     });
 
-    return users.map((u: { name: string; _sum: { points: number } }) => ({
-      name: u.name,
-      points: u._sum.points,
-    }));
+    return users.map(
+      (u: { name: string; _sum: { points: number | null } }) => ({
+        name: u.name,
+        points: u._sum.points,
+      }),
+    );
   } catch (error) {
     log.error("Database", `Failed to get users.`, error);
     return [];
@@ -173,10 +175,12 @@ export async function getUsersCommandCount(): Promise<any[]> {
       take: 15,
     });
 
-    return users.map((u: { name: string; _sum: { commandCount: number } }) => ({
-      name: u.name,
-      commandCount: ((u._sum.commandCount ?? 0) * 0.5) / 2,
-    }));
+    return users.map(
+      (u: { name: string; _sum: { commandCount: number | null } }) => ({
+        name: u.name,
+        commandCount: ((u._sum.commandCount ?? 0) * 0.5) / 2,
+      }),
+    );
   } catch (error) {
     log.error("Database", `Failed to get users.`, error);
     return [];
@@ -205,7 +209,7 @@ export async function getUsersQuiz(): Promise<any[]> {
     return users.map(
       (u: {
         name: string;
-        _sum: { quizAnswered: number; quizAnsweredWrong: number };
+        _sum: { quizAnswered: number | null; quizAnsweredWrong: number | null };
       }) => ({
         name: u.name,
         score: (u._sum.quizAnswered ?? 0) + (u._sum.quizAnsweredWrong ?? 0) / 2,

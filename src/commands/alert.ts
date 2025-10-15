@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import { download } from "../components/utils/download";
 
 export const info = {
@@ -10,7 +10,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^alert\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide a text.");

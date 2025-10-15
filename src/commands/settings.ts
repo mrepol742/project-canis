@@ -1,18 +1,18 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import { getAllSettings } from "../components/services/settings";
 import log from "../components/utils/log";
 
 export const info = {
-  command: "printsettings",
+  command: "settings",
   description: "Send all settings value",
-  usage: "printsettings",
-  example: "printsettings",
+  usage: "settings",
+  example: "settings",
   role: "admin",
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
-  if (!/^printsettings/i.test(msg.body)) return;
+export default async function (msg: Message): Promise<void> {
+  if (!/^settings/i.test(msg.body)) return;
 
   const allSettings = await getAllSettings();
 

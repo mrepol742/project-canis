@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../types/message"
 import axios from "../components/axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
@@ -13,7 +13,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^(npm(?:\s+install)?)\s+/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide a search query.");
@@ -26,11 +26,14 @@ export default async function (msg: Message) {
   }
 
   const response = await axios.get(
-    `https://registry.npmjs.org/${encodeURIComponent(query)}`
+    `https://registry.npmjs.org/${encodeURIComponent(query)}`,
   );
 
   const data = response.data;
-  if (data.error) return await msg.reply(`No package found for "${query}".`);
+  if (data.error) {
+    await msg.reply(`No package found for "${query}".`);
+    return;
+  }
 
   // Get latest version
   const latestVersion = data["dist-tags"]?.latest;

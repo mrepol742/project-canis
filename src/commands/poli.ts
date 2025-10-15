@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message"
+import { Message } from "../types/message"
 import axios from "../components/axios";
 import log from "../components/utils/log";
 import fs from "fs/promises";
@@ -14,7 +14,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^poli\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide a prompt.");

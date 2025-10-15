@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import logService from "../components/services/log";
 import redis from "../components/redis";
@@ -12,7 +12,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^restart$/i.test(msg.body)) return;
 
   await Promise.all([

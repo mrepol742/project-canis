@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import { commands } from "../components/utils/cmd/loader";
 
@@ -49,7 +49,7 @@ function buildAdminPage(adminCommands: string[]): string {
   return response;
 }
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const match = /^help(?:\s+(?:--admin|\w+))?$/i.exec(msg.body.trim());
   if (!match) return;
 

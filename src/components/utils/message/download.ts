@@ -1,13 +1,13 @@
-import { Message } from "../../../../types/message";
+import { Message } from "../../../types/message"
 import path from "path";
 import fs from "fs";
 import log from "../log";
 import { addMessage } from "../../services/message";
 
-const PROJECT_MAX_DOWNLOAD_MEDIA = parseInt(
+const PROJECT_MAX_DOWNLOAD_MEDIA: number = parseInt(
   process.env.PROJECT_MAX_DOWNLOAD_MEDIA || "25",
 );
-const MAX_FILE_SIZE = PROJECT_MAX_DOWNLOAD_MEDIA * 1024 * 1024;
+const MAX_FILE_SIZE: number = PROJECT_MAX_DOWNLOAD_MEDIA * 1024 * 1024;
 
 export default async function (msg: Message): Promise<void> {
   if (!msg.hasMedia || msg.fromMe) return;

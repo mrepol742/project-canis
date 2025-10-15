@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import os from "os";
 import timestamp from "../components/utils/timestamp";
 import { client } from "../components/client";
@@ -12,7 +12,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^uptime$/.test(msg.body)) return;
 
   const waClient = await client();

@@ -4,7 +4,7 @@ import log from "../log";
 import path from "path";
 import { commandDirs } from "./loader";
 
-export default async function () {
+export default async function (): Promise<void> {
   for (const dir of commandDirs) {
     const watcher = watch(dir, { recursive: false });
 

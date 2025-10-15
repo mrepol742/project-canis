@@ -1,7 +1,7 @@
 import { client } from "../client";
 import redis from "../redis";
 
-export default async function () {
+export default async function (): Promise<void> {
   const restart = await redis.get("restart");
   if (!restart) return;
 

@@ -1,7 +1,7 @@
 import http from "http";
 import log from "./utils/log";
+import * as Sentry from "@sentry/node";
 
-const DEFAULT_PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 const MAX_PORT_TRIES = 10;
 
 function startServer(port: number, tries = 0) {
@@ -22,12 +22,13 @@ function startServer(port: number, tries = 0) {
       log.error("Server", `Failed to start server: ${err.message}`);
       process.exit(1);
     }
+    Sentry.captureException(err);
   });
 
   return server;
 }
 
-const port = Number(process.env.PORT) || DEFAULT_PORT;
-const server = startServer(port);
+const PORT: number = parseInt(process.env.PORT || "3000");
+const server = startServer(PORT);
 
 export default server;

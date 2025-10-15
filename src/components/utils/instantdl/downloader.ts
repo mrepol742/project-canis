@@ -1,18 +1,19 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../../../types/message";
+import { Message } from "../../../types/message"
 import { FacebookInstantDownloader } from "./facebook";
 import { YoutubeShortsInstantDownloader } from "./youtube";
 import log from "../log";
 import crypto from "crypto";
 import redis from "../../redis";
 import he from "he";
+import * as Sentry from "@sentry/node";
 
 export interface Video {
   video: MessageMedia;
   title: string | undefined;
 }
 
-function md5FromUrl(url: string) {
+function md5FromUrl(url: string): string {
   return crypto.createHash("md5").update(url).digest("hex");
 }
 
@@ -21,7 +22,7 @@ const facebookUrlRegex =
 const youtubeShortsUrlRegex =
   /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{11})(\?[^\s#]*)?(#[^\s]*)?$/i;
 
-export async function InstantDownloader(msg: Message) {
+export async function InstantDownloader(msg: Message): Promise<void> {
   try {
     const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
     if (!extractUrls) return;
@@ -65,7 +66,8 @@ export async function InstantDownloader(msg: Message) {
       }),
       redis.del(key),
     ]);
-  } catch (error) {
-    log.error("InstantDownload", "Failed to download the video:", error);
+  } catch (err) {
+    Sentry.captureException(err);
+    log.error("InstantDownload", "Failed to download the video:", err);
   }
 }

@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
@@ -68,7 +68,7 @@ async function search(yt: Innertube, query: string) {
   return await search(yt, didYouMean.corrected_query.text);
 }
 
-export default async function play(msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^play\b\s*/i, "").trim();
   if (!query) {
     await msg.reply("Please provide a search query.");

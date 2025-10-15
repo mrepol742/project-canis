@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
-const nodeEnv = process.env.NODE_ENV || "development";
+declare global {
+  var _sharedPrisma: PrismaClient;
+}
 
 if (!global._sharedPrisma) {
   global._sharedPrisma = new PrismaClient({

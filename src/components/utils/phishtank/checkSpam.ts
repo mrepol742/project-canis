@@ -1,19 +1,19 @@
 import { phishingSet } from "../../..";
-import { Message } from "../../../../types/message";
+import { Message } from "../../../types/message"
 import log from "../log";
 import { normalize } from "../url";
 
 const isPhishtankEnable = process.env.PHISHTANK_ENABLE === "true";
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!isPhishtankEnable) return;
   try {
     const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g) || [];
     if (!extractUrls || extractUrls.length === 0) return;
 
     const urls = extractUrls
-      .map((url) => normalize(url))
-      .filter((u): u is string => Boolean(u));
+      .map((url: string) => normalize(url))
+      .filter((u: string | null): u is string => Boolean(u));
     const spamUrls = urls.filter((url) => phishingSet.has(url));
     if (spamUrls.length == 0) return;
 

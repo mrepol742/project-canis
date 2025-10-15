@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import * as GoogleTTS from "google-tts-api";
 import fs from "fs";
@@ -15,7 +15,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^say\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide something to say.");

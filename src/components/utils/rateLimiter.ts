@@ -1,6 +1,7 @@
 import redis from "../redis";
 import log from "./log";
 import prisma from "../prisma";
+import * as Sentry from "@sentry/node";
 
 const LIMIT = 5;
 const BASE_WINDOW_MS = 30 * 1000;
@@ -12,9 +13,9 @@ export interface RateEntry {
   penaltyUntil: number;
 }
 
-export async function resetRateLimit(lid: string) {
+export async function resetRateLimit(lid: string): Promise<void> {
   try {
-    redis.set(
+    await redis.set(
       `rate:${lid}`,
       JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 }),
     );
@@ -52,8 +53,9 @@ export async function penalizeUser(
     ]);
 
     return entry;
-  } catch (error) {
-    log.error("RateLimiter", `Failed to penalize user: ${lid}`, error);
+  } catch (err) {
+    Sentry.captureException(err);
+    log.error("RateLimiter", `Failed to penalize user: ${lid}`, err);
   }
   return entry;
 }
@@ -94,8 +96,9 @@ export async function rateLimiter(
       status: isStillBlocked,
       overLimit: entry.timestamps.length >= LIMIT,
     };
-  } catch (error) {
-    log.error("RateLimiter", `Failed to rate limit: ${lid}`, error);
+  } catch (err) {
+    Sentry.captureException(err);
+    log.error("RateLimiter", `Failed to rate limit: ${lid}`, err);
   }
   return {
     value: { timestamps: [], penaltyCount: 0, penaltyUntil: 0 },

@@ -1,6 +1,8 @@
-import { Message } from "../../types/message";
-import puppeteer from "puppeteer";
+import { Message } from "../types/message";
+import log from "../components/utils/log";
+import * as Sentry from "@sentry/node";
 import { MessageMedia } from "whatsapp-web.js";
+import client from "../components/client";
 
 export const info = {
   command: "googleit",
@@ -11,32 +13,54 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^googleit\b\s*/i, "").trim();
-  if (query.length === 0) return;
+  if (query.length === 0) {
+    await msg.reply("Please provide a search query.");
+    return;
+  }
 
-  const url = `https://letmegooglethat.com/?q=${query.replaceAll(" ", "+")}`;
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+  const browser = (await client()).pupBrowser;
+  if (!browser) {
+    throw Error("Unable to access browser instance");
+  }
+
   const page = await browser.newPage();
-  await page.setUserAgent(
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
-  );
 
-  await page.goto(url, { waitUntil: "domcontentloaded" });
-  await page.setViewport({ width: 1024, height: 768 });
+  try {
+    await Promise.allSettled([
+      page.setUserAgent(
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+      ),
+      page.evaluateOnNewDocument(() => {
+        Object.defineProperty(navigator, "webdriver", {
+          get: () => undefined,
+        });
 
-  const buffer = await page.screenshot();
-  await browser.close();
+        Object.defineProperty(navigator, "languages", {
+          get: () => ["en-US", "en"],
+        });
+      }),
+      page.setViewport({ width: 1366, height: 768 }),
+    ]);
+    await page.goto(query, { waitUntil: "domcontentloaded", timeout: 15000 });
 
-  const media = new MessageMedia(
-    "image/png",
-    buffer.toString("base64"),
-    `result.png`,
-  );
-  await msg.reply(media, undefined, {
-    caption: `https://google.com/search?q=${query.replaceAll(" ", "+")}`,
-  });
+    const buffer = await page.screenshot();
+
+    const media = new MessageMedia(
+      "image/png",
+      buffer.toString("base64"),
+      `screenshot.png`,
+    );
+
+    await msg.reply(media, undefined, {
+      caption: "Here, i google it for you.",
+    });
+  } catch (err) {
+    Sentry.captureException(err);
+    await msg.reply("Failed to take screenshot, somebody took the camera!");
+    log.error("Screenshot", "Failed to take screenshot:", err);
+  } finally {
+    await page.close();
+  }
 }

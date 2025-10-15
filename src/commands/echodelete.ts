@@ -1,18 +1,18 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import { saveSetting } from "../components/services/settings";
 import log from "../components/utils/log";
 
 export const info = {
-  command: "resentunsend",
-  description: "Enable/disable automatically resending of unsent messages.",
-  usage: "resentunsend <--on|--off>",
-  example: "resentunsend --on",
+  command: "echodelete",
+  description: "Echo deleted messages.",
+  usage: "echodelete <--on|--off>",
+  example: "echodelete --on",
   role: "admin",
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
-  const query = msg.body.replace(/^resentunsend\b\s*/i, "").trim();
+export default async function (msg: Message): Promise<void> {
+  const query = msg.body.replace(/^echodelete\b\s*/i, "").trim();
 
   // Match flags
   const enable = /--on/i.test(query);

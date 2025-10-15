@@ -4,7 +4,7 @@ import path from "path";
 import { exec } from "child_process";
 import LoadingBar from "../loadingBar";
 import util from "util";
-import { Message } from "../../../../types/message";
+import { Message } from "../../../types/message";
 const execPromise = util.promisify(exec);
 const basePath = path.join(__dirname, "..", "..", "..", "commands");
 
@@ -24,7 +24,7 @@ export const commands: Record<
 
 async function ensureDependencies(
   dependencies: { name: string; version: string }[],
-) {
+): Promise<void> {
   for (const dep of dependencies) {
     try {
       require.resolve(dep.name);
@@ -51,7 +51,10 @@ async function ensureDependencies(
   }
 }
 
-export default async function loader(file: string, customPath: string) {
+export default async function loader(
+  file: string,
+  customPath: string,
+): Promise<void> {
   if (/\.js$|\.ts$/.test(file)) {
     const filePath = path.join(customPath, file);
 
@@ -90,7 +93,7 @@ export default async function loader(file: string, customPath: string) {
   }
 }
 
-export async function mapCommands() {
+export async function mapCommands(): Promise<void> {
   let allFiles: [string, string][] = [];
 
   for (const dir of commandDirs) {
@@ -109,10 +112,10 @@ export async function mapCommands() {
       allFiles = [...allFiles, ...tuples];
     } catch (err: any) {
       if (err.code === "ENOENT") {
-        console.log("")
+        console.log("");
         log.warn("Loader", `Directory not found: ${dir}`);
       } else {
-        console.log("")
+        console.log("");
         log.warn("Loader", `Error reading directory ${dir}:`, err);
       }
     }

@@ -1,8 +1,11 @@
 import * as Sentry from "@sentry/node";
 import log from "./utils/log";
 import { client } from "./client";
+import redis from "./redis";
+import queue from "./queue";
+import prisma from "./prisma";
 
-async function gracefulShutdown(signal: string) {
+async function gracefulShutdown(signal: string): Promise<void> {
   log.info("Process", `Received ${signal}, shutting down...`);
 
   try {
@@ -11,15 +14,22 @@ async function gracefulShutdown(signal: string) {
       await popupBrowser.close();
       log.info("Browser", "Puppeteer browser closed successfully.");
     }
+    redis.sendCommand(["SAVE"]);
+    await Promise.allSettled([
+      redis.quit(),
+      queue.onIdle(),
+      prisma.$disconnect(),
+    ]);
   } catch (err) {
+    Sentry.captureException(err);
     log.error("Browser", `Error closing browser: ${(err as Error).message}`);
+  } finally {
+    process.exit(0);
   }
-
-  process.exit(0);
 }
 
 ["SIGINT", "SIGTERM", "SIGHUP"].forEach((signal) => {
-  process.on(signal, () => gracefulShutdown(signal));
+  process.on(signal, async () => await gracefulShutdown(signal));
 });
 
 process.on("uncaughtException", (err, origin) => {

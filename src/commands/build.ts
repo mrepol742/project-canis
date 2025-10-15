@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
@@ -15,7 +15,7 @@ export const info = {
 
 const execPromise = util.promisify(exec);
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const match = /^build(?:\s+--clean)?$/i.exec(msg.body.trim());
   if (!match) return;
 

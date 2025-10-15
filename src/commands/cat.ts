@@ -1,4 +1,4 @@
-import { Message } from "../../types/message"
+import { Message } from "../types/message"
 import { cat } from "../components/utils/data";
 
 export const info = {
@@ -10,10 +10,8 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^cat$/i.test(msg.body)) return;
 
-  const response = cat[Math.floor(Math.random() * cat.length)];
-  if (response.length === 0) return await msg.reply("Cat is silent...");
-  await msg.reply(response);
+  await msg.reply(cat[Math.floor(Math.random() * cat.length)]);
 }

@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import prisma from "../components/prisma";
 import redis from "../components/redis";
 import { unblockUser } from "../components/services/user";
@@ -12,7 +12,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (msg.mentionedIds.length === 0) {
     await msg.reply("Please mention a user to unblock.");
     return;

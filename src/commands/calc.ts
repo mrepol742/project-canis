@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import { create, all } from "mathjs";
 
@@ -13,7 +13,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const prefix = /^calc\s+/i;
   if (!prefix.test(msg.body)) return;
 

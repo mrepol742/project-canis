@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import { phishingSet } from "..";
 import { normalize } from "../components/utils/url";
 import log from "../components/utils/log";
@@ -12,7 +12,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^phishing/i.test(msg.body)) return;
 
   if (!msg.hasQuotedMsg) {

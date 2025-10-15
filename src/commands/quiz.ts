@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import { quiz } from "../components/utils/data";
 import log from "../components/utils/log";
 import redis from "../components/redis";
@@ -12,7 +12,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^quiz$/i.test(msg.body)) return;
 
   const id = Math.floor(Math.random() * quiz.length);

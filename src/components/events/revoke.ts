@@ -3,15 +3,23 @@ import { addMessage, getMessage } from "../services/message";
 import log from "../utils/log";
 import { getSetting } from "../services/settings";
 import path from "path";
+import * as Sentry from "@sentry/node";
+import { getBlockUser } from "../services/user";
 
-export default async function (msg: Message, revoked_msg?: Message) {
+export default async function (
+  msg: Message,
+  revoked_msg?: Message,
+): Promise<void> {
   try {
     if (msg.fromMe || !revoked_msg || revoked_msg.fromMe) return;
 
     const lid = (msg.author ?? msg.from).split("@")[0];
 
-    const isMustResent = await getSetting("resent_unsent");
-    if (!isMustResent || isMustResent === "off") return;
+    const [isBlocked, isMustResent] = await Promise.all([
+      getBlockUser(lid),
+      getSetting("resent_unsent"),
+    ]);
+    if (isBlocked || !isMustResent || isMustResent === "off") return;
 
     const [chat, contact, mediaMessage] = await Promise.all([
       revoked_msg ? revoked_msg.getChat() : msg.getChat(),
@@ -52,7 +60,8 @@ export default async function (msg: Message, revoked_msg?: Message) {
         sendVideoAsGif: msg.isGif,
       }),
     ]);
-  } catch (error) {
-    log.error("RevokeMessage", "Failed to process revoked message", error);
+  } catch (err) {
+    Sentry.captureException(err);
+    log.error("RevokeMessage", "Failed to process revoked message", err);
   }
 }

@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
@@ -16,7 +16,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^toimg/i.test(msg.body)) return;
 
   const quoted = await msg.getQuotedMessage();

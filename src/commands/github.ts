@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import axios from "../components/axios";
 import { download } from "../components/utils/download";
 
@@ -11,7 +11,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^github\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide a search query.");

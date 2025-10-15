@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import os from "os";
 import si from "systeminformation";
@@ -18,7 +18,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^stats$/i.test(msg.body)) return;
 
   const waClient = await client();
@@ -88,11 +88,11 @@ export default async function (msg: Message) {
       .join(", ")}
     GPU: ${gpuInfo.controllers.map((c: { model: string }) => c.model).join(", ")}
     RAM: ${(stats.usedMemory / 1024 ** 3).toFixed(2)} GB / ${(stats.totalMemory / 1024 ** 3).toFixed(2)} GB
-    VRAM: ${gpuInfo.controllers.map((c: { vram: string }) => c.vram).join(", ")} MB
+    VRAM: ${gpuInfo.controllers.map((c: { vram: number | null }) => c.vram).join(", ")} MB
     Shell: ${shell}
 
     \`Network\`
-    Interface: ${networkInterfaces.map((iface: { iface: string; speed: string }) => `${iface.iface} ${iface.speed} Mbps`).join(", ")}
+    Interface: ${networkInterfaces.map((iface: { iface: string; speed: number | null }) => `${iface.iface} ${iface.speed} Mbps`).join(", ")}
     Download: ${(speedTestResults?.download?.bandwidth || 0) / 125000} Mbps
     Upload: ${(speedTestResults?.upload?.bandwidth || 0) / 125000} Mbps
     Ping: ${speedTestResults?.ping.latency} ms

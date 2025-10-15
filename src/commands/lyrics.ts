@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 // for i dont know reasons
 // using the ESM outputs to Client not found
 // so i recommend using `require` for now...
@@ -16,7 +16,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^lyrics\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide a search query.");

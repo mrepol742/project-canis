@@ -1,7 +1,8 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message";
-import puppeteer from "puppeteer";
-import fs from "fs/promises";
+import { Message } from "../types/message";
+import client from "../components/client";
+import log from "../components/utils/log";
+import * as Sentry from "@sentry/node";
 
 export const info = {
   command: "screenshot",
@@ -12,7 +13,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   let query = msg.body.replace(/^screenshot\b\s*/i, "").trim();
 
   // Check for --full-page flag
@@ -32,29 +33,47 @@ export default async function (msg: Message) {
     return;
   }
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+  const browser = (await client()).pupBrowser;
+  if (!browser) {
+    throw Error("Unable to access browser instance");
+  }
+
   const page = await browser.newPage();
-  await page.setUserAgent(
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
-  );
 
-  await page.goto(query, { waitUntil: "domcontentloaded" });
-  await page.setViewport({ width: 1024, height: 768 });
+  try {
+    await Promise.allSettled([
+      page.setUserAgent(
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+      ),
+      page.evaluateOnNewDocument(() => {
+        Object.defineProperty(navigator, "webdriver", {
+          get: () => undefined,
+        });
 
-  const tempDir = "./.temp";
-  await fs.mkdir(tempDir, { recursive: true });
+        Object.defineProperty(navigator, "languages", {
+          get: () => ["en-US", "en"],
+        });
+      }),
+      page.setViewport({ width: 1366, height: 768 }),
+    ]);
+    await page.goto(query, { waitUntil: "domcontentloaded", timeout: 15000 });
 
-  const buffer = await page.screenshot({ fullPage });
-  await browser.close();
+    const buffer = await page.screenshot({ fullPage });
 
-  const media = new MessageMedia(
-    "image/png",
-    buffer.toString("base64"),
-    `screenshot.png`,
-  );
+    const media = new MessageMedia(
+      "image/png",
+      buffer.toString("base64"),
+      `screenshot.png`,
+    );
 
-  await msg.reply(media);
+    await msg.reply(media, undefined, {
+      caption: "Here's your screenshot of the site you requested.",
+    });
+  } catch (err) {
+    Sentry.captureException(err);
+    await msg.reply("Failed to take screenshot, somebody took the camera!");
+    log.error("Screenshot", "Failed to take screenshot:", err);
+  } finally {
+    await page.close();
+  }
 }

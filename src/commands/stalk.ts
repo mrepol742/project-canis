@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message";
 import { getUserbyLid } from "../components/services/user";
 import redis from "../components/redis";
 import { client } from "../components/client";
@@ -46,7 +46,7 @@ function getCurrentTimeByCountryCode(countryCode: string) {
   return { countryCode, timezone, localTime };
 }
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const chat = await msg.getChat();
   if (!chat.isGroup) {
     await msg.reply("This only works on group chats");

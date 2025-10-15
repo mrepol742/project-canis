@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import axios from "../components/axios";
 import log from "../components/utils/log";
 import fs from "fs";
@@ -15,7 +15,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^reload\b\s*/i, "").trim();
 
   if (query.length !== 0) {
@@ -34,18 +34,21 @@ export default async function (msg: Message) {
       }
     }
 
-    if (!found)
-      return await msg.reply(`
+    if (!found) {
+      await msg.reply(`
     \`Failed to load\`
 
     ${query}
       `);
+      return;
+    }
 
-    return await msg.reply(`
+    await msg.reply(`
     \`Successfully reloaded\`
 
     ${query}
     `);
+    return;
   }
 
   // Reload all commands

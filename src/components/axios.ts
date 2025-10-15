@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 const AXIOS_MAX_RETRY = process.env.AXIOS_MAX_RETRY || 3;
 const AXIOS_USER_AGENT = process.env.AXIOS_USER_AGENT || "Canis/11.0.0";
@@ -6,7 +6,7 @@ const AXIOS_TIMEOUT = parseInt(process.env.AXIOS_TIMEOUT || "3000");
 const AXIOS_ORIGIN = process.env.ORIGIN || "";
 const AXIOS_HOST = process.env.HOST || "";
 
-const instance = axios.create({
+const instance: AxiosInstance = axios.create({
   timeout: AXIOS_TIMEOUT,
   headers: {
     "User-Agent": AXIOS_USER_AGENT,

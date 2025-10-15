@@ -15,7 +15,7 @@ const fileExists = async (filePath: string) => {
   }
 };
 
-function md5FromUrl(url: string) {
+function md5FromUrl(url: string): string {
   return crypto.createHash("md5").update(url).digest("hex");
 }
 

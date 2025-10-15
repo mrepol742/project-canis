@@ -12,46 +12,32 @@ import { findOrCreateUser, getBlockUser } from "../services/user";
 import { client } from "../client";
 import Font from "../utils/font";
 import quiz from "../utils/quiz";
-import { errors } from "../utils/data";
-import emojiRegex from "emoji-regex";
+import riddle from "../utils/quiz";
+import { getSetting } from "../services/settings";
+import { errors, mentionResponses } from "../utils/data";
 import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
 import { containsAny } from "../utils/string";
-import { phishingSet } from "../../index";
-import { getSetting } from "../services/settings";
-import { normalize } from "../utils/url";
 import { InstantDownloader } from "../utils/instantdl/downloader";
-import riddle from "../utils/riddle";
 import { checkInappropriate } from "../utils/contentChecker";
 import prisma from "../prisma";
 import redis from "../redis";
 import queue from "../queue";
+import regex from "../emoji";
+import * as Sentry from "@sentry/node";
 
-const regex = emojiRegex();
-const commandPrefix = process.env.COMMAND_PREFIX || "!";
-const commandPrefixLess = process.env.COMMAND_PREFIX_LESS === "true";
-const debug = process.env.DEBUG === "true";
-const isPhishtankEnable = process.env.PHISHTANK_ENABLE === "true";
-const mentionResponses = [
-  "👀 Did someone just say my name?",
-  "Bruh, why me again? 😂",
-  "Oh no… not me 😭",
-  "You called? Or just summoning me like Voldemort?",
-  "Here I am, what’s the emergency? 🚨",
-  "Why always me tho 🤔",
-  "Plot twist: I was just about to mention YOU.",
-  "Careful… mention me three times and I appear 👻",
-  "My ears were burning 🔥",
-  "Did you just @ me for vibes, or do I owe you money? 💸",
-];
+const commandPrefix: string = process.env.COMMAND_PREFIX || "!";
+const commandPrefixLess: boolean = process.env.COMMAND_PREFIX_LESS === "true";
 
-export default async function (msg: Message, type: string) {
+export default async function (msg: Message, type: string): Promise<void> {
   // ignore message if it is older than 10 seconds
   if (!msg.body) return;
   if (msg.timestamp < Date.now() / 1000 - 10 && type === "create") return;
   if (msg.isGif || msg.isStatus || msg.broadcast || msg.isForwarded) return; // ignore them all
-  const lid = msg.author ? msg.author.split("@")[0] : msg.from.split("@")[0];
+  const lid: string = msg.author
+    ? msg.author.split("@")[0]
+    : msg.from.split("@")[0];
 
-  const prefix = !msg.body.startsWith(commandPrefix);
+  const prefix: boolean = !msg.body.startsWith(commandPrefix);
 
   /*
    * Prefix
@@ -106,7 +92,8 @@ export default async function (msg: Message, type: string) {
     if (!msg.hasQuotedMsg) return;
 
     const quoted = await msg.getQuotedMessage();
-    if (rateLimitResult.status) return;
+    if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5)
+      return;
 
     await Promise.allSettled([
       quiz(msg, quoted),
@@ -116,11 +103,7 @@ export default async function (msg: Message, type: string) {
         // override the msg!
         const react = { ...msg };
         const isMustautoReact = await getSetting("auto_react");
-        if (
-          (!isMustautoReact && isMustautoReact != "on") ||
-          react.fromMe ||
-          rateLimitResult.status
-        )
+        if ((!isMustautoReact && isMustautoReact != "on") || react.fromMe)
           return;
 
         react.react = async (reaction: string): Promise<void> => {
@@ -253,6 +236,7 @@ export default async function (msg: Message, type: string) {
   try {
     await Promise.allSettled([handler.exec(msg), findOrCreateUser(msg)]);
   } catch (error: any) {
+    Sentry.captureException(error);
     if (error.response) {
       const { status, headers } = error.response;
       const statusMessages: Record<number, string> = {

@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import { getFbVideoInfo } from "fb-downloader-scrapper";
 import crypto from "crypto";
 import log from "../components/utils/log";
@@ -29,7 +29,7 @@ function md5FromUrl(url: string) {
   return crypto.createHash("md5").update(url).digest("hex");
 }
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^fbdl\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide a facebook url.");

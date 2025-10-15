@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
@@ -13,7 +13,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^run\b\s*/i, "").trim();
   if (query.length !== 0) {
     if (!/^(py|java|c|js|php)$/i.test(query)) {

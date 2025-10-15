@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import {
   getUsersPoints,
@@ -15,7 +15,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^top$/.test(msg.body)) return;
 
   const [usersPoints, usersCommandCount, usersQuiz] = await Promise.all([

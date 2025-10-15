@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import spagehettiCode from "is-spaghetti-code";
 
 export const info = {
@@ -11,7 +11,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^noodles/i.test(msg.body)) return;
 
   if (!msg.hasQuotedMsg) {

@@ -3,16 +3,16 @@ import { saveSetting } from "../components/services/settings";
 import log from "../components/utils/log";
 
 export const info = {
-  command: "callreject",
-  description: "Automatically declined call.",
-  usage: "callreject <--on|--off>",
-  example: "callreject --on",
+  command: "paused",
+  description: "Paused the bot operations.",
+  usage: "paused <--on|--off>",
+  example: "paused --on",
   role: "admin",
   cooldown: 5000,
 };
 
 export default async function (msg: Message): Promise<void> {
-  const query = msg.body.replace(/^callreject\b\s*/i, "").trim();
+  const query = msg.body.replace(/^paused\b\s*/i, "").trim();
 
   // Match flags
   const enable = /--on/i.test(query);
@@ -26,9 +26,9 @@ export default async function (msg: Message): Promise<void> {
   const value = enable ? "on" : "off";
 
   try {
-    await saveSetting("call_reject", value);
-    await msg.reply(`Call Reject successfuly set \`${query}\`.`);
+    await saveSetting("resent_edit", value);
+    await msg.reply(`Paused has been successfully set to \`${value}\`.`);
   } catch (err) {
-    await msg.reply("Failed to update Call Reject setting. Please try again.");
+    await msg.reply("Failed to update Paused setting. Please try again.");
   }
 }

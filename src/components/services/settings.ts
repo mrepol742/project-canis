@@ -13,7 +13,7 @@ export async function saveSetting(name: string, value: string): Promise<void> {
 export async function getSetting(name: string): Promise<string> {
   try {
     const value = await redis.get(`settings:${name}`);
-    return value ?? "off";
+    return value || "off";
   } catch (error) {
     log.error("Redis", `Failed to get setting: ${name}`, error);
     return "off";
@@ -25,7 +25,7 @@ export async function getAllSettings(): Promise<Record<string, string>> {
     const keys = await redis.keys("settings:*");
     if (!keys || keys.length === 0) return {};
 
-    const values = (await redis.mget(keys)) as (string | null)[];
+    const values = (await redis.mGet(keys)) as (string | null)[];
 
     const settings: Record<string, string> = {};
 

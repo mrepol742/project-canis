@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import axios from "../components/axios";
 import { download } from "../components/utils/download";
 import log from "../components/utils/log";
@@ -12,7 +12,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^wiki\b\s*/i, "").trim();
   if (query.length === 0) {
     await msg.reply("Please provide a search query.");
@@ -39,7 +39,8 @@ export default async function (msg: Message) {
 
   if (data?.thumbnail?.source) {
     const downloadedFile = await download(data.thumbnail.source, ".png");
-    return await msg.reply(downloadedFile, undefined, { caption: info });
+    await msg.reply(downloadedFile, undefined, { caption: info });
+    return;
   }
 
   await msg.reply(info);

@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ quiet: true, debug: process.env.DEBUG === "true" });
 
 import "./instrument";
 import { registerCronJobs } from "./cron";

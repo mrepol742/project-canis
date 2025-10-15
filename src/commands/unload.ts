@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import { commands, commandDirs } from "../components/utils/cmd/loader";
 import Loader from "../components/utils/cmd/loader";
 import path from "path";
@@ -12,7 +12,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^unload\b\s*/i, "").trim().toLowerCase();
 
   if (!query) {

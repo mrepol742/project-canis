@@ -1,10 +1,9 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
-import { UnexpectedResponseError } from "genius-lyrics";
 
-const PROJECT_CANIS_ALIS = process.env.PROJECT_CANIS_ALIAS || "Canis";
+const PROJECT_CANIS_ALIS: string = process.env.PROJECT_CANIS_ALIAS || "Canis";
 
 export const info = {
   command: "ai",
@@ -15,7 +14,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^ai\b\s*/i, "").trim();
   if (query.length === 0 && !msg.hasQuotedMsg) {
     await msg.reply(greetings[Math.floor(Math.random() * greetings.length)]);

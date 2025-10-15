@@ -1,5 +1,15 @@
+/**
+ * ⚠️ WARNING: This file contains commands or features that may involve explicit,
+ * adult, or otherwise sensitive content.
+ *
+ * Intended for 18+ audiences or environments where such content is legally and
+ * ethically permitted.
+ *
+ * File: hwaifu.ts
+ */
+
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message";
+import { Message } from "../types/message";
 import axios from "../components/axios";
 import fs from "fs/promises";
 import { exec } from "child_process";
@@ -10,15 +20,15 @@ const execPromise = util.promisify(exec);
 export const info = {
   command: "hwaifu",
   description: "Generate a waifu image with optional categories.",
-  usage: "hwaifu [neko|trap|blowjob]",
+  usage: "hwaifu [type]",
   example: "hwaifu neko",
   role: "admin",
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^hwaifu\b\s*/i, "").trim();
-  if (query.length !== 0) {
+  if (query.length === 0) {
     if (!/^(neko|trap|blowjob)$/i.test(query)) {
       await msg.reply(
         "Invalid argument. Please use one of the following:\n\nneko, trap, blowjob",
@@ -46,9 +56,12 @@ export default async function (msg: Message) {
   );
 
   const media = MessageMedia.fromFilePath(tempPath.replace(".gif", ".mp4"));
-  await msg.reply(media, undefined, {
-    sendVideoAsGif: true,
-  });
-  await fs.unlink(tempPath);
-  await fs.unlink(tempPath.replace(".gif", ".mp4"));
+
+  await Promise.allSettled([
+    msg.reply(media, undefined, {
+      sendVideoAsGif: true,
+    }),
+    fs.unlink(tempPath),
+    fs.unlink(tempPath.replace(".gif", ".mp4")),
+  ]);
 }

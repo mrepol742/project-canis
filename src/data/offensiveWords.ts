@@ -1,4 +1,14 @@
-[
+/**
+ * ⚠️ WARNING: This file contains commands or features that may involve explicit,
+ * adult, or otherwise sensitive content.
+ *
+ * Intended for 18+ audiences or environments where such content is legally and
+ * ethically permitted.
+ *
+ * File: offensiveWords.ts
+ */
+
+const offensiveWords = [
   "dick",
   "idiot",
   "stupid",
@@ -53,5 +63,7 @@
   "twerp",
   "twatface",
   "shitbag",
-  "moronical"
-]
+  "moronical",
+];
+
+export { offensiveWords };

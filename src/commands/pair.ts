@@ -1,5 +1,5 @@
 import { Contact, GroupChat } from "whatsapp-web.js";
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import client from "../components/client";
 
 export const info = {
@@ -11,7 +11,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^pair$/.test(msg.body)) return;
 
   const chat = await msg.getChat();

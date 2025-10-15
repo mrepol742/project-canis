@@ -12,7 +12,7 @@
     "strict": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types", "./types"]
+    "typeRoots": ["./node_modules/@types", "src/typeses"]
   },
   "include": ["src", "src/commands/..ts", "..ts"]
 }

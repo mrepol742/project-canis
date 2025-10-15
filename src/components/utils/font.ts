@@ -63,7 +63,7 @@ const mathSansMap: Record<string, string> = {
   // 0: "𝟢",
 };
 
-export default function (text: string) {
+export default function (text: string): string {
   const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
   let result = "";
   let lastIndex = 0;

@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../types/message";
+import { Message } from "../types/message";
 import axios from "../components/axios";
 import fs from "fs/promises";
 import { exec } from "child_process";
@@ -16,9 +16,9 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const query = msg.body.replace(/^waifu\b\s*/i, "").trim();
-  if (query.length !== 0) {
+  if (query.length === 0) {
     if (
       !/^(neko|shinobu|megumin|bully|cuddle|cry|hug|awoo|kiss|lick|pat|smug|bonk|yeet|blush|smile|wave|highfive|handhold|nom|bite|glomp|slap|kill|kick|happy|wink|poke|dance|cringe)$/i.test(
         query,
@@ -50,9 +50,12 @@ export default async function (msg: Message) {
   );
 
   const media = MessageMedia.fromFilePath(tempPath.replace(".gif", ".mp4"));
-  await msg.reply(media, undefined, {
-    sendVideoAsGif: true,
-  });
-  await fs.unlink(tempPath);
-  await fs.unlink(tempPath.replace(".gif", ".mp4"));
+
+  await Promise.allSettled([
+    msg.reply(media, undefined, {
+      sendVideoAsGif: true,
+    }),
+    fs.unlink(tempPath),
+    fs.unlink(tempPath.replace(".gif", ".mp4")),
+  ]);
 }

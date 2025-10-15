@@ -1,4 +1,4 @@
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 
 export const info = {
   command: "fork",
@@ -9,7 +9,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   if (!/^fork$/i.test(msg.body)) return;
 
   const text = `

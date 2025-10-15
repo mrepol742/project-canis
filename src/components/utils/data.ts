@@ -7,7 +7,7 @@ import quiz from "../../data/quiz.json";
 import wyr from "../../data/wyr.json";
 import errors from "../../data/errors.json";
 import riddles from "../../data/riddles.json";
-import offensiveWords from "../../data/offensiveWords.json";
+import { offensiveWords } from "../../data/offensiveWords";
 
 const done = [
   "Correct! 🎉",
@@ -56,6 +56,30 @@ const helloMessage = [
   "Stay awesome, legends! 👑",
 ];
 const personPronouns = ["he", "she", "him", "her", "they", "them"];
+const voiceResponses = [
+  "Sorry, I can't take voice calls right now.",
+  "I'm unavailable for a voice call at the moment.",
+  "Not able to answer your call right now, please text me instead.",
+  "I'm currently busy, please try later for a voice call.",
+];
+const videoResponses = [
+  "Sorry, I can’t do video calls right now.",
+  "I’m not available for a video call at the moment.",
+  "Please send me a message instead of a video call.",
+  "I can’t pick up your video call right now, let’s chat instead.",
+];
+const mentionResponses = [
+  "👀 Did someone just say my name?",
+  "Bruh, why me again? 😂",
+  "Oh no… not me 😭",
+  "You called? Or just summoning me like Voldemort?",
+  "Here I am, what’s the emergency? 🚨",
+  "Why always me tho 🤔",
+  "Plot twist: I was just about to mention YOU.",
+  "Careful… mention me three times and I appear 👻",
+  "My ears were burning 🔥",
+  "Did you just @ me for vibes, or do I owe you money? 💸",
+];
 
 export {
   greetings,
@@ -72,4 +96,7 @@ export {
   offensiveWords,
   personPronouns,
   helloMessage,
+  voiceResponses,
+  videoResponses,
+  mentionResponses,
 };

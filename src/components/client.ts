@@ -24,7 +24,6 @@ import queue from "./queue";
 let instance: Client | null = null;
 let isLoadingBarStarted = false;
 const loadingBar = LoadingBar("Loading Client   | {bar} | {value}%");
-const autoDownloadMedia = process.env.PROJECT_AUTO_DOWNLOAD_MEDIA === "true";
 
 async function client(): Promise<Client> {
   if (instance) return instance; // prevent re-creating

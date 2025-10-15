@@ -1,5 +1,5 @@
 import { GroupChat } from "whatsapp-web.js";
-import { Message } from "../../types/message";
+import { Message } from "../types/message"
 import log from "../components/utils/log";
 import sleep from "../components/utils/sleep";
 import { helloMessage } from "../components/utils/data";
@@ -14,7 +14,7 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message) {
+export default async function (msg: Message): Promise<void> {
   const match = /^everyone(?:\s+--admin)?$/i.exec(msg.body.trim());
   if (!match) return;
 
