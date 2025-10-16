@@ -18,6 +18,9 @@ export async function resetRateLimit(lid: string): Promise<void> {
     await redis.set(
       `rate:${lid}`,
       JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 }),
+      {
+        EX: 3600, // 1 hour
+      },
     );
   } catch (error) {
     log.error("RateLimiter", `Failed to reset rate limit: ${lid}`, error);
@@ -44,8 +47,9 @@ export async function penalizeUser(
       `User ${lid} penalized until ${new Date(entry.penaltyUntil)}`,
     );
 
+    const ttl = Math.max(1, Math.floor((entry.penaltyUntil - now) / 1000));
     await Promise.all([
-      redis.set(`rate:${lid}`, JSON.stringify(entry)),
+      redis.set(`rate:${lid}`, JSON.stringify(entry), { EX: ttl }),
       prisma.user.update({
         where: { lid },
         data: { points: { decrement: 10 } },
@@ -89,7 +93,8 @@ export async function rateLimiter(
     }
 
     entry.timestamps.push(now);
-    await redis.set(key, JSON.stringify(entry));
+    const ttl = Math.max(1, Math.floor((entry.penaltyUntil - now) / 1000));
+    await redis.set(key, JSON.stringify(entry), { EX: ttl });
 
     return {
       value: entry,

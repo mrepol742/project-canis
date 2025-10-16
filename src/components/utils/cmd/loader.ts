@@ -18,7 +18,7 @@ export const commands: Record<
     example: string;
     role: string;
     cooldown: number;
-    exec: (msg: Message) => void;
+    exec: (msg: Message) => Promise<void>;
   }
 > = {};
 

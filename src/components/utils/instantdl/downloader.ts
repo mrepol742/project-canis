@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../../../types/message"
+import { Message } from "../../../types/message";
 import { FacebookInstantDownloader } from "./facebook";
 import { YoutubeShortsInstantDownloader } from "./youtube";
 import log from "../log";
@@ -51,7 +51,7 @@ export async function InstantDownloader(msg: Message): Promise<void> {
           return await YoutubeShortsInstantDownloader(query);
         }
       })(),
-      redis.set(key, "1"),
+      redis.set(key, "1", { EX: 3600 }),
     ]);
 
     if (!video) {

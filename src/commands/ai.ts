@@ -2,6 +2,7 @@ import { Message } from "../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
+import { commands } from "../components/utils/cmd/loader";
 
 const PROJECT_CANIS_ALIS: string = process.env.PROJECT_CANIS_ALIAS || "Canis";
 
@@ -27,17 +28,23 @@ export default async function (msg: Message): Promise<void> {
     quotedMessage = await msg.getQuotedMessage();
   }
 
-  const today = new Date().toUTCString();
   const mentioned = msg.mentionedIds.length > 0;
+  let prompt = `You are ${PROJECT_CANIS_ALIS}. Today's date is %_TODAY_%.
+  Respond to the user naturally and briefly. Avoid asking follow-up questions unless necessary.
+  If the user's message clearly matches the intent of a command listed below, respond strictly using the corresponding usage format.
+  If there is no clear match, reply normally in your own words.
+  ${mentioned ? "You may also mention users using @." : ""}
+  ${quotedMessage ? `Quoted Message:\n${quotedMessage.body}\n` : ""}
+  Available Commands:
+  `;
 
-  let text = await agentHandler(
-    `You are ${PROJECT_CANIS_ALIS}. Today's date is ${today}.
-    Respond to the user's briefly, no further questions asks, make reflect what the user feelings,
-    ${mentioned && "you can also mentioned user starting with @"} and query in no more than 3 sentences.
-    User query: ${query}
-    ${quotedMessage ? `\nQuoted Message: ${quotedMessage.body}` : ""}`,
-  );
+  for (const key in commands) {
+    const cmd = commands[key];
+    if (cmd.role === "user")
+      prompt += `\n${cmd.command} - ${cmd.description}\n${cmd.usage}\n`;
+  }
 
+  let text = await agentHandler(`${prompt}\nUser query: ${query}`);
   if (!text) {
     log.error("ai", "No response generated.");
     await msg.reply("Sorry, I couldn't generate a response. Please try again.");
@@ -59,5 +66,12 @@ export default async function (msg: Message): Promise<void> {
     }
   }
 
-  await msg.reply(text, undefined, { mentions });
+  const handler = commands[text.split(" ")[0].toLowerCase().trim()];
+  if (!handler) {
+    await msg.reply(text, undefined, { mentions });
+    return;
+  }
+
+  msg.body = text;
+  await handler.exec(msg);
 }

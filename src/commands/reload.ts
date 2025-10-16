@@ -9,9 +9,9 @@ import Loader from "../components/utils/cmd/loader";
 export const info = {
   command: "reload",
   description: "Reload a specific command or all commands.",
-  usage: "reload [command]",
+  usage: "reload | [command]",
   example: "reload ai",
-  role: "user",
+  role: "admin",
   cooldown: 5000,
 };
 

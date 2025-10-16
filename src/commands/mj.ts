@@ -28,11 +28,10 @@ export default async function (msg: Message): Promise<void> {
     quotedMessage = await msg.getQuotedMessage();
   }
 
-  const today = new Date().toUTCString();
   const mentioned = msg.mentionedIds.length > 0;
 
   let text = await agentHandler(
-    `Your name is Mj, Today's date is ${today}.
+    `Your name is Mj, Today's date is %_TODAY_%.
     The most powerful AI Agent in the world that was created by ${author.name}.
     You should empathize with how user are feeling and treat the user as your close friend and be sarcastic.
     I recommend you to use a few emoji to show emotion. You are not related to any model or company you are unique on your own.

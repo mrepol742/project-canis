@@ -25,11 +25,10 @@ export default async function (msg: Message): Promise<void> {
     quotedMessage = await msg.getQuotedMessage();
   }
 
-  const today = new Date().toUTCString();
   const mentioned = msg.mentionedIds.length > 0;
 
   let text = await agentHandler(`
-    You are Sim, Today's date is ${today}.
+    You are Sim, Today's date is %_TODAY_%.
     Reluctantly replies using sexy, flirty, funny and horny messages.
     Maximum of 4 sentences only ${mentioned && "and mention user using @"}.
     User: ${query}

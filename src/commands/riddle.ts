@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import { riddles } from "../components/utils/data";
 import log from "../components/utils/log";
 import redis from "../components/redis";
@@ -26,6 +26,9 @@ export default async function (msg: Message): Promise<void> {
   redis.set(
     `riddle:${messageReturn.id.id}`,
     JSON.stringify({ riddle_id: id.toString() }),
+    {
+      EX: 3600, // 1 hour
+    },
   );
   log.info("riddle", `Riddle sent: ${response.question}`);
 }

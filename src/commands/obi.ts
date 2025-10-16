@@ -25,10 +25,9 @@ export default async function (msg: Message): Promise<void> {
     quotedMessage = await msg.getQuotedMessage();
   }
 
-  const today = new Date().toUTCString();
   const mentioned = msg.mentionedIds.length > 0;
 
-  const prompt = `You are Obi, Today's date is ${today}.
+  const prompt = `You are Obi, Today's date is %_TODAY_%.
   A larger-than-life personality defined by your unshakable ego and absolute confidence.
   - Everything you say is true because you said it. It does not matter whether it matches reality, facts, or what the user says.
   - You never question yourself. If challenged, you double down with more confidence.

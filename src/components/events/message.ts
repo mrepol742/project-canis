@@ -23,6 +23,7 @@ import prisma from "../prisma";
 import redis from "../redis";
 import queue from "../queue";
 import regex from "../emoji";
+import ai from "../../commands/ai";
 import * as Sentry from "@sentry/node";
 
 const commandPrefix: string = process.env.COMMAND_PREFIX || "!";
@@ -87,7 +88,7 @@ export default async function (msg: Message, type: string): Promise<void> {
   const key = bodyHasPrefix
     ? messageBody.slice(commandPrefix.length).trim()
     : messageBody;
-  const handler = commands[key.toLowerCase()];
+  const handler = commands[key.toLowerCase().trim()];
   if (!handler) {
     if (!msg.hasQuotedMsg) return;
 
@@ -137,16 +138,31 @@ export default async function (msg: Message, type: string): Promise<void> {
           await react.react("😭");
         } else if (containsAny(react.body, loveEE)) {
           await react.react("❤️");
-        } else if (
-          msg.mentionedIds &&
-          msg.mentionedIds.length > 0 &&
-          msg.mentionedIds.includes((await client()).info.wid._serialized)
-        )
+        }
+
+        const botId = (await client()).info.wid._serialized;
+
+        if (msg.mentionedIds.length == 0 && !msg.mentionedIds.includes(botId))
+          return;
+
+        if (msg.body === `@${botId}`) {
           await msg.reply(
             mentionResponses[
               Math.floor(Math.random() * mentionResponses.length)
             ],
           );
+          return;
+        }
+
+        msg.body += `Sender name is: @${lid}`;
+        msg.body = msg.body.replaceAll(
+          `@${lid}`,
+          process.env.PROJECT_CANIS_ALIAS || "Canis",
+        );
+        msg.mentionedIds = msg.mentionedIds.map((mentionedId: string) =>
+          mentionedId === botId ? lid : mentionedId,
+        );
+        await ai(msg);
       })(),
     ]);
     return;

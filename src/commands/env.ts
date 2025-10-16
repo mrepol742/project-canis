@@ -8,7 +8,7 @@ export const info = {
     "Get all new process.env and append them into the project without restarting.",
   usage: "env",
   example: "env",
-  role: "user",
+  role: "admin",
   cooldown: 5000,
 };
 

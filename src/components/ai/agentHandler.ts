@@ -39,6 +39,8 @@ export default async function (
   model?: string,
 ): Promise<string | null> {
   const cacheKey = getCacheKey(prompt);
+  const today = new Date().toUTCString();
+  prompt = prompt.replace("%_TODAY_%", today);
 
   if (isQueryCachingEnabled) {
     const cached = await redis.get(cacheKey);

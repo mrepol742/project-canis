@@ -30,7 +30,26 @@ async function client(): Promise<Client> {
 
   const newClient = new Client({
     puppeteer: {
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
+      args: [
+        "--window-size=1280,800",
+        "--disable-crash-reporter",
+        "--disable-breakpad",
+        "--disable-infobars",
+        "--no-default-browser-check",
+        "--disable-extensions",
+        "--disable-component-extensions-with-background-pages",
+        "--noerrdialogs",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-background-timer-throttling",
+        "--disable-renderer-backgrounding",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-sync",
+        "--metrics-recording-only",
+        "--disable-hang-monitor",
+      ],
       executablePath:
         process.env.PUPPETEER_EXEC_PATH || "/opt/google/chrome/google-chrome",
     },
