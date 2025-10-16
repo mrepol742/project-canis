@@ -13,9 +13,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^env/i.test(msg.body)) return;
-
   dotenv.config({ override: true });
-
   await msg.reply("Dotenv override successfully.");
 }

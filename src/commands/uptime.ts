@@ -13,8 +13,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^uptime$/.test(msg.body)) return;
-
   const waClient = await client();
   const [state, version] = await Promise.all([
     waClient.getState(),

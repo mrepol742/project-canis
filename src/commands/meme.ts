@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^meme$/i.test(msg.body)) return;
-
   const downloadedFile = await download(
     "https://api.popcat.xyz/meme",
     ".png",

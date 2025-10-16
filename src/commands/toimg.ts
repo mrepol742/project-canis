@@ -17,8 +17,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^toimg/i.test(msg.body)) return;
-
   const quoted = await msg.getQuotedMessage();
   const targetMsg = msg.hasMedia
     ? msg

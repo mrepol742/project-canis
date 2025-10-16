@@ -12,8 +12,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^.$/.test(msg.body)) return;
-
   if (!msg.hasQuotedMsg) {
     await msg.reply(
       "You need to reply to a message to rerun the commands again.",

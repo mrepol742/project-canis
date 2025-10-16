@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^license/i.test(msg.body)) return;
-
   const text = `
     \`License\`
     Copyright 2025 Melvin Jones Repol

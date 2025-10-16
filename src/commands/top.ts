@@ -16,8 +16,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^top$/.test(msg.body)) return;
-
   const [usersPoints, usersCommandCount, usersQuiz] = await Promise.all([
     getUsersPoints(),
     getUsersCommandCount(),

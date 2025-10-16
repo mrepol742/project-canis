@@ -12,8 +12,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^pair$/.test(msg.body)) return;
-
   const chat = await msg.getChat();
   if (!chat.isGroup) {
     await msg.reply("This only works on group chats");

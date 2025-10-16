@@ -1,5 +1,4 @@
 import { Message } from "../types/message"
-import log from "../components/utils/log";
 
 export const info = {
   command: "test",
@@ -11,8 +10,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^test$/.test(msg.body)) return;
-
   const testMessage = `
     \`Hello World\`
 

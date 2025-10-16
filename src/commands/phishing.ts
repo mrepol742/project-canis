@@ -13,14 +13,11 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^phishing/i.test(msg.body)) return;
-
   if (!msg.hasQuotedMsg) {
     const testMessage = `
     \`Phishtank\`
 
-    Found ${phishingSet.size} phishing pages.
-    Hint: You can reply this command to messages.
+    Has ${phishingSet.size} list of known active phishing sites/pages.
   `;
 
     await msg.reply(testMessage);

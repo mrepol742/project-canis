@@ -11,7 +11,5 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^cat$/i.test(msg.body)) return;
-
   await msg.reply(cat[Math.floor(Math.random() * cat.length)]);
 }

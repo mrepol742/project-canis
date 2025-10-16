@@ -10,11 +10,7 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^event/i.test(msg.body)) return;
-
   let event: Message = msg;
-
   if (msg.hasQuotedMsg) event = await msg.getQuotedMessage();
-
   await msg.reply("```" + JSON.stringify(event, null, 2) + "```");
 }

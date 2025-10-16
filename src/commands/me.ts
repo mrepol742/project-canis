@@ -47,8 +47,6 @@ function getCurrentTimeByCountryCode(countryCode: string) {
 }
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^me$/i.test(msg.body)) return;
-
   const jid = msg.author ?? msg.from;
   const lid = jid.split("@")[0];
 

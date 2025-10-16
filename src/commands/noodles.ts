@@ -12,8 +12,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^noodles/i.test(msg.body)) return;
-
   if (!msg.hasQuotedMsg) {
     await msg.reply("This only works on qouted messages.");
     return;

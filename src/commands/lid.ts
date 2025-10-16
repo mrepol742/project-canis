@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^lid/i.test(msg.body)) return;
-
   let message: Message = msg;
   if (msg.hasQuotedMsg) message = await msg.getQuotedMessage();
 

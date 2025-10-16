@@ -76,7 +76,7 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
       : "null";
     const about = contact ? await contact.getAbout().catch(() => null) : null;
 
-    await Promise.all([
+    await Promise.allSettled([
       msg.react("✅"),
       prisma.user.create({
         data: {

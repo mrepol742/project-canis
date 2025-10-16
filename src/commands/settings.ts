@@ -12,8 +12,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^settings/i.test(msg.body)) return;
-
   const allSettings = await getAllSettings();
 
   if (!allSettings || Object.keys(allSettings).length === 0) {

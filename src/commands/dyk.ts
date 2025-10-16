@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^dyk$/i.test(msg.body)) return;
-
   const response = dyk[Math.floor(Math.random() * dyk.length)];
   await msg.reply(response);
 }

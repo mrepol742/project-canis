@@ -13,8 +13,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^riddle/i.test(msg.body)) return;
-
   const id = Math.floor(Math.random() * riddles.length);
   const response = riddles[id];
 

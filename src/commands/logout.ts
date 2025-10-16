@@ -12,8 +12,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^logout$/i.test(msg.body)) return;
-
   try {
     (await client()).logout();
     log.info("Logout", "Client logged out successfully.");

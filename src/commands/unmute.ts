@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^unmute/i.test(msg.body)) return;
-
   const chat = await msg.getChat();
   await chat.unmute();
 

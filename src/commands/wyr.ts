@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^wyr$/.test(msg.body)) return;
-
   const response = wyr[Math.floor(Math.random() * wyr.length)];
   const text = `
     \`Would you rather?\`

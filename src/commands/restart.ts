@@ -13,9 +13,7 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^restart$/i.test(msg.body)) return;
-
-  await Promise.all([
+  await Promise.allSettled([
     redis.set(
       "restart",
       JSON.stringify({ id: msg.id.remote, date: Date.now() }),

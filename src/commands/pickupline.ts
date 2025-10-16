@@ -1,9 +1,5 @@
 import { Message } from "../types/message"
 import axios from "../components/axios";
-import log from "../components/utils/log";
-import fs from "fs/promises";
-import { client } from "../components/client";
-import Font from "../components/utils/font";
 
 export const info = {
   command: "pickupline",
@@ -15,9 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^pickupline$/i.test(msg.body)) return;
-
   const response = await axios.get(`https://api.popcat.xyz/pickuplines`);
-
   await msg.reply(response.data.pickupline);
 }

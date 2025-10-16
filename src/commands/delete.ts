@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^delete/i.test(msg.body)) return;
-
   if (!msg.hasQuotedMsg) {
     await msg.reply("Please reply the message you want to delete.");
     return;

@@ -11,10 +11,7 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^mute/i.test(msg.body)) return;
-
   const chat = await msg.getChat();
   await chat.mute();
-
   await msg.reply("This chat is now muted.");
 }

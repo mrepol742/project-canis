@@ -16,8 +16,6 @@ export const info = {
 const execPromise = util.promisify(exec);
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^update$/.test(msg.body)) return;
-
   const { stdout, stderr } = await execPromise("git pull");
   if (stdout) log.info("Update", `git pull stdout:\n${stdout}`);
   if (stderr) log.warn("Update", `git pull stderr:\n${stderr}`);

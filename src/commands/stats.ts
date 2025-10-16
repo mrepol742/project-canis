@@ -19,8 +19,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^stats$/i.test(msg.body)) return;
-
   const waClient = await client();
   // Node.js runtime stats
   const mem = process.memoryUsage();

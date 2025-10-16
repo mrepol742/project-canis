@@ -77,18 +77,38 @@ export default async function (msg: Message, type: string): Promise<void> {
   // process normalization
   msg.body = msg.body
     .normalize("NFKC")
-    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "")
+    .replace(/[\u0300-\u036f\u00b4\u0060\u005e\u007e]/g, "") // diacritics
+    .replace(/[\u200B-\u200D\uFEFF\u2060]/g, "") // zero-width chars
     .trim();
 
   /*
    * Check if the message starts with the command prefix.
    */
-  const messageBody = msg.body.split(" ")[0];
-  const bodyHasPrefix = messageBody.startsWith(commandPrefix);
-  const key = bodyHasPrefix
-    ? messageBody.slice(commandPrefix.length).trim()
-    : messageBody;
-  const handler = commands[key.toLowerCase().trim()];
+
+  const rawBody = msg.body;
+
+  const prefixRegex = new RegExp(`^(${commandPrefix})\\s*`, "i");
+  const bodyHasPrefix = prefixRegex.test(rawBody);
+  const cleanedBody = bodyHasPrefix
+    ? rawBody.replace(prefixRegex, "")
+    : rawBody;
+
+  const normalizedBody = cleanedBody.replace(/\s+/g, " ").trim();
+  const [command, ...rest] = normalizedBody.split(" ");
+  const key = command.toLocaleLowerCase("en");
+
+  msg.body = [command, ...rest].join(" ").toLocaleLowerCase("en");
+  const handler = commands[key];
+
+  // stop here
+  // the command matched to the usage but the input aint
+  if (
+    handler &&
+    handler.usage === handler.command &&
+    handler.command !== msg.body
+  )
+    return;
+
   if (!handler) {
     if (!msg.hasQuotedMsg) return;
 
@@ -227,68 +247,55 @@ export default async function (msg: Message, type: string): Promise<void> {
     }
   }
 
-  if (
-    /^(--?help|\bhelp\b|-h)$/i.test(
-      msg.body.trim().replace(handler.command, "").trim(),
-    )
-  ) {
-    const response = `
-    \`${handler.command}\`
-    ${handler.description || "No description"}
+  await Promise.allSettled([
+    (async () => {
+      /*
+       * Execute the command handler.
+       */
+      try {
+        handler.exec(msg);
+      } catch (error: any) {
+        Sentry.captureException(error);
+        if (error.response) {
+          const { status, headers } = error.response;
+          const statusMessages: Record<number, string> = {
+            429: "Rate limit exceeded",
+            524: "timed out",
+            500: "Internal server error",
+            404: "Not found",
+            403: "Forbidden",
+            400: "Bad request",
+            503: "Service unavailable",
+            408: "Request timeout",
+            401: "Unauthorized",
+            422: "Unprocessable entity",
+            504: "Gateway timeout",
+            502: "Bad gateway",
+            301: "Moved permanently",
+          };
 
-    *Usage:* ${handler.usage || "No usage"}
-    *Example:* ${handler.example || "No example"}
-    *Role:* ${handler.role || "user"}
-    *Cooldown:* ${handler.cooldown || 5000}ms
-    `;
-    await msg.reply(response);
-    return;
-  }
+          if (statusMessages[status]) {
+            const logFn = status === 500 ? log.error : log.warn;
+            log.error(key, error);
+            const text = `
+            \`${errors[Math.floor(Math.random() * errors.length)]}\`\`
 
-  /*
-   * Execute the command handler.
-   */
-  try {
-    await Promise.allSettled([handler.exec(msg), findOrCreateUser(msg)]);
-  } catch (error: any) {
-    Sentry.captureException(error);
-    if (error.response) {
-      const { status, headers } = error.response;
-      const statusMessages: Record<number, string> = {
-        429: "Rate limit exceeded",
-        524: "timed out",
-        500: "Internal server error",
-        404: "Not found",
-        403: "Forbidden",
-        400: "Bad request",
-        503: "Service unavailable",
-        408: "Request timeout",
-        401: "Unauthorized",
-        422: "Unprocessable entity",
-        504: "Gateway timeout",
-        502: "Bad gateway",
-        301: "Moved permanently",
-      };
-
-      if (statusMessages[status]) {
-        const logFn = status === 500 ? log.error : log.warn;
+            We encountered an error while processing ${key}.
+            Provider returned an error ${statusMessages[status]}.
+            `;
+            await msg.reply(text);
+            return;
+          }
+        }
         log.error(key, error);
         const text = `
-        \`${errors[Math.floor(Math.random() * errors.length)]}\`\`
+        \`${errors[Math.floor(Math.random() * errors.length)]}\`
 
         We encountered an error while processing ${key}.
-        Provider returned an error ${statusMessages[status]}.
         `;
         await msg.reply(text);
-        return;
       }
-    }
-    log.error(key, error);
-    const text = `
-    \`${errors[Math.floor(Math.random() * errors.length)]}\`
-
-    We encountered an error while processing ${key}.
-    `;
-    await msg.reply(text);
-  }
+    })(),
+    findOrCreateUser(msg),
+  ]);
 }

@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^legal$/i.test(msg.body)) return;
-
   const text = `
     \`Legal Commands\`
 

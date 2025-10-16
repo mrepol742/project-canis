@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^terms$/i.test(msg.body)) return;
-
   const text = `
     \`Terms of Service\`
     By using this bot, you agree to the following terms:

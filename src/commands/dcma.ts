@@ -11,8 +11,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^dcma$/i.test(msg.body)) return;
-
   const text = `
     \`DCMA\`
 

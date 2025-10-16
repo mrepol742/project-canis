@@ -12,8 +12,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^wakatime$/.test(msg.body)) return;
-
   const apiKey = process.env.WAKATIME_API_KEY;
   if (!apiKey) {
     await msg.reply("WakaTime API key is not configured.");

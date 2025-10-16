@@ -14,8 +14,6 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!/^ping$/.test(msg.body)) return;
-
   const [networkLatency, redisLatency, prismaLatency] = await Promise.all([
     speedtest(),
     (async () => {
