@@ -34,7 +34,7 @@ export default async function (
     }
 
     if (isCorrect) {
-      await Promise.all([
+      await Promise.allSettled([
         redis.del(key),
         msg.reply(done[Math.floor(Math.random() * done.length)]),
         addUserQuizPoints(msg, true, 20),
@@ -42,7 +42,7 @@ export default async function (
         log.info("RiddleAnswered", "Correct", quoted.body),
       ]);
     } else {
-      await Promise.all([
+      await Promise.allSettled([
         redis.del(key),
         msg.reply(wrong[Math.floor(Math.random() * wrong.length)]),
         addUserQuizPoints(msg, false, 0.2),

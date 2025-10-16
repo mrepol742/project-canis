@@ -7,6 +7,7 @@ import util from "util";
 import { Message } from "../../../types/message";
 const execPromise = util.promisify(exec);
 const basePath = path.join(__dirname, "..", "..", "..", "commands");
+import * as Sentry from "@sentry/node";
 
 export const commandDirs = [basePath, path.join(basePath, "private")];
 export const commands: Record<
@@ -41,6 +42,7 @@ async function ensureDependencies(
         if (stdout) log.info("npm", stdout);
         if (stderr) log.error("npm", stderr);
       } catch (err) {
+        Sentry.captureException(err);
         log.error(
           "Loader",
           `Failed to install ${dep.name}@${dep.version}`,
@@ -55,92 +57,102 @@ export default async function loader(
   file: string,
   customPath: string,
 ): Promise<void> {
-  if (/\.js$|\.ts$/.test(file)) {
-    const filePath = path.join(customPath, file);
+  try {
+    if (/\.js$|\.ts$/.test(file)) {
+      const filePath = path.join(customPath, file);
 
-    const resolvedPath = path.resolve(filePath);
-    if (require.cache[resolvedPath]) {
-      delete require.cache[resolvedPath];
-    }
-
-    try {
-      await fs.access(resolvedPath);
-    } catch {
-      return;
-    }
-
-    const commandModule = await import(filePath);
-
-    if (
-      typeof commandModule.default === "function" &&
-      commandModule.info &&
-      commandModule.info.command
-    ) {
-      if (Array.isArray(commandModule.info.dependencies)) {
-        await ensureDependencies(commandModule.info.dependencies);
+      const resolvedPath = path.resolve(filePath);
+      if (require.cache[resolvedPath]) {
+        delete require.cache[resolvedPath];
       }
 
-      commands[commandModule.info.command] = {
-        command: commandModule.info.command,
-        description: commandModule.info.description || "No description",
-        usage: commandModule.info.usage || "No usage",
-        example: commandModule.info.example || "No example",
-        role: commandModule.info.role || "user",
-        cooldown: commandModule.info.cooldown || 5000,
-        exec: commandModule.default,
-      };
+      try {
+        await fs.access(resolvedPath);
+      } catch {
+        return;
+      }
+
+      const commandModule = await import(filePath);
+
+      if (
+        typeof commandModule.default === "function" &&
+        commandModule.info &&
+        commandModule.info.command
+      ) {
+        if (Array.isArray(commandModule.info.dependencies)) {
+          await ensureDependencies(commandModule.info.dependencies);
+        }
+
+        commands[commandModule.info.command] = {
+          command: commandModule.info.command,
+          description: commandModule.info.description || "No description",
+          usage: commandModule.info.usage || "No usage",
+          example: commandModule.info.example || "No example",
+          role: commandModule.info.role || "user",
+          cooldown: commandModule.info.cooldown || 5000,
+          exec: commandModule.default,
+        };
+      }
     }
+  } catch (err) {
+    Sentry.captureException(err);
+    log.error("Loader", `Failed to load: ${file}`, err);
   }
 }
 
 export async function mapCommands(): Promise<void> {
   let allFiles: [string, string][] = [];
 
-  for (const dir of commandDirs) {
-    try {
-      await fs.access(dir);
-      const files = await fs.readdir(dir);
+  try {
+    for (const dir of commandDirs) {
+      try {
+        await fs.access(dir);
+        const files = await fs.readdir(dir);
 
-      const validFiles = files.filter(
-        (f) => f.endsWith(".js") || f.endsWith(".ts"),
-      );
+        const validFiles = files.filter(
+          (f) => f.endsWith(".js") || f.endsWith(".ts"),
+        );
 
-      const tuples: [string, string][] = validFiles.map(
-        (f) => [f, dir] as [string, string],
-      );
+        const tuples: [string, string][] = validFiles.map(
+          (f) => [f, dir] as [string, string],
+        );
 
-      allFiles = [...allFiles, ...tuples];
-    } catch (err: any) {
-      if (err.code === "ENOENT") {
-        console.log("");
-        log.warn("Loader", `Directory not found: ${dir}`);
-      } else {
-        console.log("");
-        log.warn("Loader", `Error reading directory ${dir}:`, err);
+        allFiles = [...allFiles, ...tuples];
+      } catch (err: any) {
+        if (err.code === "ENOENT") {
+          console.log("");
+          log.warn("Loader", `Directory not found: ${dir}`);
+        } else {
+          console.log("");
+          log.warn("Loader", `Error reading directory ${dir}:`, err);
+        }
       }
     }
-  }
 
-  const total = allFiles.length;
-  if (total === 0) {
-    log.info("Loader", "No commands found.");
-    return;
-  }
-
-  const bar = LoadingBar(
-    "Loading Commands | {bar} | {value}/{total} {command}",
-  );
-  bar.start(total, 0, { command: "" });
-
-  for (const [file, dir] of allFiles) {
-    try {
-      await loader(file, dir);
-      bar.increment({ command: file });
-    } catch (err) {
-      log.error("Loader", `Failed to load ${file}`, err);
-      bar.increment({ command: file });
+    const total = allFiles.length;
+    if (total === 0) {
+      log.info("Loader", "No commands found.");
+      return;
     }
-  }
 
-  bar.stop();
+    const bar = LoadingBar(
+      "Loading Commands | {bar} | {value}/{total} {command}",
+    );
+    bar.start(total, 0, { command: "" });
+
+    for (const [file, dir] of allFiles) {
+      try {
+        await loader(file, dir);
+        bar.increment({ command: file });
+      } catch (err) {
+        log.error("Loader", `Failed to load ${file}`, err);
+        bar.increment({ command: file });
+      }
+    }
+
+    bar.stop();
+  } catch (err) {
+    Sentry.captureException(err);
+    log.error("Loader", "Failed to map commands:", err);
+  }
 }

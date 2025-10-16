@@ -23,22 +23,23 @@ const youtubeShortsUrlRegex =
   /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{11})(\?[^\s#]*)?(#[^\s]*)?$/i;
 
 export async function InstantDownloader(msg: Message): Promise<void> {
+  const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
+  if (!extractUrls || extractUrls.length == 0) return;
+
+  const query = extractUrls[0];
+  if (!facebookUrlRegex.test(query) && !youtubeShortsUrlRegex.test(query))
+    return;
+
+  const key = `instantdownload:${md5FromUrl(query)}`;
+
   try {
-    const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);
-    if (!extractUrls) return;
-
-    const query = extractUrls[Math.floor(Math.random() * extractUrls.length)];
-    const key = `instantdownload:${md5FromUrl(query)}`;
-
-    if (facebookUrlRegex.test(query) || youtubeShortsUrlRegex.test(query)) {
-      const isPending = await redis.get(key);
-      if (isPending) {
-        log.warn(
-          "InstantDownload",
-          `The video is already in pending: ${query}, key: ${key}`,
-        );
-        return;
-      }
+    const isPending = await redis.get(key);
+    if (isPending) {
+      log.warn(
+        "InstantDownload",
+        `The video is already in pending: ${query}, key: ${key}`,
+      );
+      return;
     }
 
     const [video]: [Video | undefined, any] = await Promise.all([
@@ -60,13 +61,14 @@ export async function InstantDownloader(msg: Message): Promise<void> {
       return;
     }
 
-    await Promise.all([
+    await Promise.allSettled([
       msg.reply(video.video, undefined, {
         caption: video.title ? he.decode(video.title) : "Instant Download",
       }),
       redis.del(key),
     ]);
   } catch (err) {
+    await redis.del(key);
     Sentry.captureException(err);
     log.error("InstantDownload", "Failed to download the video:", err);
   }

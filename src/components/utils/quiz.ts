@@ -30,7 +30,7 @@ export default async function (
       userInput === answer ||
       (question.choices && userInput === answerIndex.toString())
     ) {
-      await Promise.all([
+      await Promise.allSettled([
         redis.del(key),
         msg.reply(done[Math.floor(Math.random() * done.length)]),
         addUserQuizPoints(msg, true),
@@ -38,7 +38,7 @@ export default async function (
         log.info("QuizAnswered", "Correct", quoted.body),
       ]);
     } else {
-      await Promise.all([
+      await Promise.allSettled([
         redis.del(key),
         msg.reply(wrong[Math.floor(Math.random() * wrong.length)]),
         addUserQuizPoints(msg, false),

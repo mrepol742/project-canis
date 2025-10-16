@@ -63,7 +63,7 @@ async function client(): Promise<Client> {
   return newClient;
 }
 
-function registerEvents(client: Client) {
+function registerEvents(client: Client): void {
   client.on("loading_screen", (percent: number, message: string) => {
     if (!isLoadingBarStarted) {
       loadingBar.start(100, 0, { message });

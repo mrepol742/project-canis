@@ -30,9 +30,9 @@ const commandPrefix: string = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess: boolean = process.env.COMMAND_PREFIX_LESS === "true";
 
 export default async function (msg: Message, type: string): Promise<void> {
-  // ignore message if it is older than 10 seconds
+  // ignore message if it is older than 60 seconds
   if (!msg.body) return;
-  if (msg.timestamp < Date.now() / 1000 - 10 && type === "create") return;
+  if (msg.timestamp < Date.now() / 1000 - 60 && type === "create") return;
   if (msg.isGif || msg.isStatus || msg.broadcast || msg.isForwarded) return; // ignore them all
   const lid: string = msg.author
     ? msg.author.split("@")[0]
@@ -141,8 +141,7 @@ export default async function (msg: Message, type: string): Promise<void> {
         }
 
         const botId = (await client()).info.wid._serialized;
-
-        if (msg.mentionedIds.length == 0 && !msg.mentionedIds.includes(botId))
+        if (msg.mentionedIds.length == 0 || !msg.mentionedIds.includes(botId))
           return;
 
         if (msg.body === `@${botId}`) {

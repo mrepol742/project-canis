@@ -39,9 +39,9 @@ async function main() {
   phishingSet = phishtank.getPhishingSet();
   await client();
 
-  mapCommands();
+  await mapCommands();
   // Watch for changes
-  if (autoReload) watcher();
+  if (autoReload) await watcher();
 }
 
 main();
