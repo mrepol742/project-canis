@@ -52,7 +52,12 @@ export async function InstantDownloader(msg: Message): Promise<void> {
           return await YoutubeShortsInstantDownloader(query);
         }
       })(),
-      redis.set(key, "1", { EX: 3600 }),
+      redis.set(key, "1", {
+        expiration: {
+          type: "EX",
+          value: 3600, // 1 hour
+        },
+      }),
     ]);
 
     if (!video) {

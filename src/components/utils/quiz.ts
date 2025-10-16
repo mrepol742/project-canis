@@ -4,16 +4,16 @@ import { quiz, done, wrong } from "../utils/data";
 import log from "../utils/log";
 import redis from "../redis";
 
-export default async function (
-  msg: Message,
-  quoted: Message,
-): Promise<boolean> {
+export default async function (msg: Message): Promise<void> {
   try {
-    if (!quoted.body) return false;
+    if (!msg.hasQuotedMsg) return;
+
+    const quoted: Message = await msg.getQuotedMessage();
+    if (!quoted.body) return;
 
     const key = `quiz:${quoted.id.id}`;
     const result = await redis.get(key);
-    if (!result) return false;
+    if (!result) return;
 
     const quizAttempt = JSON.parse(result);
     const question = quiz[parseInt(quizAttempt.quiz_id)];
@@ -46,8 +46,5 @@ export default async function (
         log.info("QuizAnswered", "Wrong", quoted.body),
       ]);
     }
-    return true;
   } catch (error: any) {}
-
-  return false;
 }

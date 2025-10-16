@@ -15,7 +15,7 @@ export const info = {
 export default async function () {
   try {
     const results = await speedTest({ acceptLicense: true, acceptGdpr: true });
-    console.log("")// to create new line
+    console.log(""); // to create new line
     log.info(
       "SpeedTestJob",
       `Download: ${results.download.bandwidth / 125000} Mbps`,
@@ -25,7 +25,12 @@ export default async function () {
       `Upload: ${results.upload.bandwidth / 125000} Mbps`,
     );
     log.info("SpeedTestJob", `Ping: ${results.ping.latency} ms`);
-    await redis.set(CACHE_KEY, JSON.stringify(results), { EX: CACHE_TTL });
+    await redis.set(CACHE_KEY, JSON.stringify(results), {
+      expiration: {
+        type: "EX",
+        value: CACHE_TTL,
+      },
+    });
   } catch (err) {
     log.error("SpeedTestJob", err);
   }

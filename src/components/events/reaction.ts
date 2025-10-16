@@ -9,8 +9,8 @@ import * as Sentry from "@sentry/node";
 export default async function (client: Client, react: Reaction): Promise<void> {
   if (react.msgId.fromMe || react.id.fromMe) return;
   if (!react.reaction?.trim()) return;
-  // ignore react if it is older than 10 seconds
-  if (react.timestamp < Date.now() / 1000 - 10) return;
+  // ignore react if it is older than 60 seconds
+  if (react.timestamp < Date.now() / 1000 - 60) return;
 
   const senderId = react.senderId.split("@")[0];
   /*

@@ -4,16 +4,16 @@ import { riddles, done, wrong } from "../utils/data";
 import log from "../utils/log";
 import redis from "../redis";
 
-export default async function (
-  msg: Message,
-  quoted: Message,
-): Promise<boolean> {
+export default async function (msg: Message): Promise<void> {
   try {
-     if (!quoted.body) return false;
+    if (!msg.hasQuotedMsg) return;
+
+    const quoted: Message = await msg.getQuotedMessage();
+    if (!quoted.body) return;
 
     const key = `riddle:${quoted.id.id}`;
     const result = await redis.get(key);
-    if (!result) return false;
+    if (!result) return;
 
     const riddleAttempt = JSON.parse(result);
     const riddle = riddles[parseInt(riddleAttempt.riddle_id)];
@@ -50,8 +50,5 @@ export default async function (
         log.info("RiddleAnsweredWrong", "Wrong", quoted.body),
       ]);
     }
-    return true;
   } catch (error: any) {}
-
-  return false;
 }

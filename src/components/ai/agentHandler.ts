@@ -113,7 +113,12 @@ export default async function (
   }
 
   if (isQueryCachingEnabled && result) {
-    await redis.set(cacheKey, result, { EX: queryCachingTTL });
+    await redis.set(cacheKey, result, {
+      expiration: {
+        type: "EX",
+        value: queryCachingTTL,
+      },
+    });
   }
   return result;
 }

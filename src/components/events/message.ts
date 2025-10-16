@@ -12,7 +12,7 @@ import { findOrCreateUser, getBlockUser } from "../services/user";
 import { client } from "../client";
 import Font from "../utils/font";
 import quiz from "../utils/quiz";
-import riddle from "../utils/quiz";
+import riddle from "../utils/riddle";
 import { getSetting } from "../services/settings";
 import { errors, mentionResponses } from "../utils/data";
 import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
@@ -110,15 +110,12 @@ export default async function (msg: Message, type: string): Promise<void> {
     return;
 
   if (!handler) {
-    if (!msg.hasQuotedMsg) return;
-
-    const quoted = await msg.getQuotedMessage();
     if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5)
       return;
 
     await Promise.allSettled([
-      quiz(msg, quoted),
-      riddle(msg, quoted),
+      quiz(msg),
+      riddle(msg),
       queue.add(() => InstantDownloader(msg)),
       (async () => {
         // override the msg!

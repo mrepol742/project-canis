@@ -30,12 +30,14 @@ export default async function (msg: Message): Promise<void> {
   }
 
   const messageReturn = await msg.reply(text);
-  redis.set(
+  await redis.set(
     `quiz:${messageReturn.id.id}`,
     JSON.stringify({ quiz_id: id.toString() }),
     {
-      EX: 3600, // 1 hour
+      expiration: {
+        type: "EX",
+        value: 3600, // 1 hour
+      },
     },
   );
-  log.info("quiz", `Quiz question sent: ${response.question}`);
 }
