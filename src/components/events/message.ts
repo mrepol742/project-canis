@@ -96,8 +96,7 @@ export default async function (msg: Message, type: string): Promise<void> {
   const normalizedBody = cleanedBody.replace(/\s+/g, " ").trim();
   const [command, ...rest] = normalizedBody.split(" ");
   const key = command.toLocaleLowerCase("en");
-
-  msg.body = [command, ...rest].join(" ").toLocaleLowerCase("en");
+  const newMessageBody = [key, ...rest].join(" ");
   const handler = commands[key];
 
   // stop here
@@ -105,13 +104,15 @@ export default async function (msg: Message, type: string): Promise<void> {
   if (
     handler &&
     handler.usage === handler.command &&
-    handler.command !== msg.body
+    handler.command !== newMessageBody
   )
     return;
 
   if (!handler) {
     if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5)
       return;
+
+    msg.body = normalizedBody;
 
     await Promise.allSettled([
       quiz(msg),
@@ -197,6 +198,7 @@ export default async function (msg: Message, type: string): Promise<void> {
   }
 
   log.info("Message", lid, msg.body.slice(0, 150));
+  msg.body = newMessageBody;
 
   /*
    *

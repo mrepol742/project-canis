@@ -17,7 +17,7 @@ export default async function (msg: Message): Promise<void> {
 
     const quizAttempt = JSON.parse(result);
     const question = quiz[parseInt(quizAttempt.quiz_id)];
-    const userInput = msg.body.trim().toLowerCase().replace(/!/g, "");
+    const userInput = msg.body.trim().toLowerCase();
     const answer = question.answer.replace(/\s+/g, "").toLowerCase();
     // Find the index of the correct answer in choices
     const answerIndex = question.choices

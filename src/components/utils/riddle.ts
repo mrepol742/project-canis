@@ -20,7 +20,6 @@ export default async function (msg: Message): Promise<void> {
     const userInput = msg.body
       .trim()
       .toLowerCase()
-      .replace(/!/g, "")
       .split(/\s+/);
     const answer = riddle.answer.toLowerCase();
 
