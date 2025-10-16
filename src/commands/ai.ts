@@ -42,7 +42,7 @@ export default async function (msg: Message): Promise<void> {
 
   for (const key in commands) {
     const cmd = commands[key];
-    if (cmd.role === "user" && excludeAiCommands.includes(cmd.command)) {
+    if (cmd.role === "user" && !excludeAiCommands.includes(cmd.command)) {
       prompt += `\n${cmd.command} - ${cmd.description}\n${cmd.usage}\n`;
     }
   }
