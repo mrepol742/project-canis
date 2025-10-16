@@ -85,7 +85,7 @@ export default async function (msg: Message, type: string): Promise<void> {
    * Check if the message starts with the command prefix.
    */
 
-  const rawBody = msg.body;
+  const rawBody = msg.body.replace(regex, '');
 
   const prefixRegex = new RegExp(`^(${commandPrefix})\\s*`, "i");
   const bodyHasPrefix = prefixRegex.test(rawBody);
