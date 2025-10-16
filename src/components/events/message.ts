@@ -197,7 +197,6 @@ export default async function (msg: Message, type: string): Promise<void> {
   }
 
   log.info("Message", lid, msg.body.slice(0, 150));
-  msg.body = !bodyHasPrefix ? msg.body : msg.body.slice(commandPrefix.length);
 
   /*
    *
