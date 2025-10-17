@@ -2,11 +2,11 @@ import { Message } from "../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
-import { commands } from "../components/utils/cmd/loader";
+import { Command, commands } from "../components/utils/cmd/loader";
 
 const PROJECT_CANIS_ALIS: string = process.env.PROJECT_CANIS_ALIAS || "Canis";
 
-export const info = {
+export const info: Command = {
   command: "ai",
   description: "Interact with the AI agent.",
   usage: "ai <query>",
@@ -42,7 +42,11 @@ export default async function (msg: Message): Promise<void> {
 
   for (const key in commands) {
     const cmd = commands[key];
-    if (cmd.role === "user" && !excludeAiCommands.includes(cmd.command)) {
+    if (
+      cmd.role === "user" &&
+      !excludeAiCommands.includes(cmd.command) &&
+      !(cmd.optOutAI ?? false)
+    ) {
       prompt += `\n${cmd.command} - ${cmd.description}\n${cmd.usage}\n`;
     }
   }
