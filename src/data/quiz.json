@@ -1908,5 +1908,1383 @@
     "choices": ["Ford", "Toyota", "Chevrolete", "Dodge"],
     "answer": "chevrolet",
     "topic": "cars"
-  }
-]
+  },
+  {
+    "question": "What is the chemical symbol for Carbon?",
+    "choices": ["C", "O", "N", "H"],
+    "answer": "C",
+    "topic": "chemistry"
+  },
+  {
+    "question": "What is the powerhouse of the cell?",
+    "choices": ["Chloroplast", "Mitochondria", "Nucleus", "Ribosome"],
+    "answer": "Mitochondria",
+    "topic": "biology"
+  },
+  {
+    "question": "Who was the first President of the United States?",
+    "choices": [
+      "George Washington",
+      "Abraham Lincoln",
+      "Thomas Jefferson",
+      "John Adams"
+    ],
+    "answer": "George Washington",
+    "topic": "history"
+  },
+  {
+    "question": "The unit of force is ___.",
+    "answer": "newton",
+    "topic": "physics"
+  },
+  {
+    "question": "Which animal is a mammal?",
+    "choices": ["Frog", "Penguin", "Dolphin", "Shark"],
+    "answer": "Dolphin",
+    "topic": "zoology"
+  },
+  {
+    "question": "The Moon produces its own light.",
+    "answer": "False",
+    "topic": "astronomy"
+  },
+  {
+    "question": "Who wrote 'Romeo and Juliet'?",
+    "choices": [
+      "Leo Tolstoy",
+      "Jane Austen",
+      "Mark Twain",
+      "William Shakespeare"
+    ],
+    "answer": "William Shakespeare",
+    "topic": "literature"
+  },
+  {
+    "question": "What is 38 + 14?",
+    "choices": ["52", "50", "55", "49"],
+    "answer": "52",
+    "topic": "mathematics"
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "choices": ["Jupiter", "Earth", "Venus", "Mars"],
+    "answer": "Mars",
+    "topic": "astronomy"
+  },
+  {
+    "question": "A group of lions is called a ___.",
+    "answer": "pride",
+    "topic": "zoology"
+  },
+  {
+    "question": "What is the square root of 49?",
+    "choices": ["8", "6", "7", "9"],
+    "answer": "7",
+    "topic": "mathematics"
+  },
+  {
+    "question": "Which continent is Brazil located in?",
+    "choices": ["Africa", "South America", "Europe", "Asia"],
+    "answer": "South America",
+    "topic": "geography"
+  },
+  {
+    "question": "What is the capital city of Germany?",
+    "choices": ["Berlin", "Madrid", "Rome", "Paris"],
+    "answer": "Berlin",
+    "topic": "geography"
+  },
+  {
+    "question": "Light travels faster than sound.",
+    "answer": "True",
+    "topic": "physics"
+  },
+  {
+    "question": "What is the chemical symbol for Oxygen?",
+    "choices": ["O", "C", "H", "N"],
+    "answer": "O",
+    "topic": "chemistry"
+  },
+  {
+    "question": "Which organ pumps blood throughout the human body?",
+    "choices": ["Brain", "Liver", "Heart", "Lungs"],
+    "answer": "Heart",
+    "topic": "biology"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "choices": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Leonardo da Vinci",
+      "Pablo Picasso"
+    ],
+    "answer": "Leonardo da Vinci",
+    "topic": "art"
+  },
+  {
+    "question": "The largest mammal is the ___.",
+    "answer": "blue whale",
+    "topic": "zoology"
+  },
+  {
+    "question": "Water boils at 100°C at sea level.",
+    "answer": "True",
+    "topic": "chemistry"
+  },
+  {
+    "question": "Which country is home to the kangaroo?",
+    "choices": ["Canada", "Brazil", "Australia", "India"],
+    "answer": "Australia",
+    "topic": "geography"
+  },
+  {
+    "question": "What is 7 × 8?",
+    "choices": ["54", "56", "58", "64"],
+    "answer": "56",
+    "topic": "mathematics"
+  },
+  {
+    "question": "The Sun is a ___.",
+    "answer": "star",
+    "topic": "astronomy"
+  },
+  {
+    "question": "Which gas do humans exhale?",
+    "choices": ["Oxygen", "Carbon dioxide", "Helium", "Nitrogen"],
+    "answer": "Carbon dioxide",
+    "topic": "biology"
+  },
+  {
+    "question": "What is the capital of Spain?",
+    "choices": ["Barcelona", "Madrid", "Valencia", "Seville"],
+    "answer": "Madrid",
+    "topic": "geography"
+  },
+  {
+    "question": "A triangle always has 3 sides.",
+    "answer": "True",
+    "topic": "mathematics"
+  },
+  {
+    "question": "The freezing point of water is_______degrees Celsius.",
+    "answer": "0",
+    "topic": "chemistry"
+  },
+  {
+    "question": "What is the main gas found in the air we breathe?",
+    "choices": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+    "answer": "Nitrogen",
+    "topic": "chemistry"
+  },
+  {
+    "question": "Which year did World War I start?",
+    "choices": ["1914", "1918", "1939", "1925"],
+    "answer": "1914",
+    "topic": "history"
+  },
+  {
+    "question": "Mercury is the closest planet to the Sun.",
+    "answer": "True",
+    "topic": "astronomy"
+  },
+  {
+    "question": "What is 11 × 11?",
+    "choices": ["121", "111", "101", "131"],
+    "answer": "121",
+    "topic": "mathematics"
+  },
+  {
+    "question": "Which planet has rings around it?",
+    "choices": ["Mars", "Venus", "Saturn", "Mercury"],
+    "answer": "Saturn",
+    "topic": "astronomy"
+  },
+  {
+    "question": "Who is the author of '1984'?",
+    "choices": ["George Orwell", "Aldous Huxley", "J.K. Rowling", "Mark Twain"],
+    "answer": "George Orwell",
+    "topic": "literature"
+  },
+  {
+    "question": "The Pacific Ocean is the largest ocean on Earth.",
+    "answer": "True",
+    "topic": "geography"
+  },
+  {
+    "question": "What is the result of 90 ÷ 10?",
+    "choices": ["9", "10", "8", "7"],
+    "answer": "9",
+    "topic": "mathematics"
+  },
+  {
+    "question": "Plants absorb_______gas and release oxygen.",
+    "answer": "carbon dioxide",
+    "topic": "biology"
+  },
+  {
+    "question": "Which metal is liquid at room temperature?",
+    "choices": ["Gold", "Mercury", "Aluminum", "Copper"],
+    "answer": "Mercury",
+    "topic": "chemistry"
+  },
+  {
+    "question": "The Earth revolves around the Sun.",
+    "answer": "True",
+    "topic": "astronomy"
+  },
+  {
+    "question": "What is 100 minus 37?",
+    "choices": ["63", "73", "67", "62"],
+    "answer": "63",
+    "topic": "mathematics"
+  },
+  {
+    "question": "The opposite of 'hot' is ___.",
+    "answer": "cold",
+    "topic": "english"
+  },
+  {
+    "question": "Which continent is Japan part of?",
+    "choices": ["Europe", "Asia", "Africa", "South America"],
+    "answer": "Asia",
+    "topic": "geography"
+  },
+  {
+    "question": "Reply true",
+    "answer": "false",
+    "topic": "nonsense"
+  },
+  {
+    "question": "Reply false",
+    "answer": "true",
+    "topic": "nonsense"
+  },
+  {
+    "question": "The correct answer is correct.",
+    "answer": "correct",
+    "topic": "nonsense"
+  },
+  {
+    "question": "What does CPU stand for?",
+    "choices": [
+      "Central Program Unit",
+      "Central Processing Unit",
+      "Computer Processing Unit",
+      "Central Power Unit"
+    ],
+    "answer": "Central Processing Unit",
+    "topic": "technology"
+  },
+  {
+    "question": "HTML is a programming language.",
+    "answer": "False",
+    "topic": "technology"
+  },
+  {
+    "question": "The opposite of 'light' is ___.",
+    "answer": "dark",
+    "topic": "english"
+  },
+  {
+    "question": "'They're', 'there', and 'their' are homophones.",
+    "answer": "True",
+    "topic": "english"
+  },
+  {
+    "question": "Which country won the 2018 FIFA World Cup?",
+    "choices": ["France", "Brazil", "Germany", "Argentina"],
+    "answer": "France",
+    "topic": "sports"
+  },
+  {
+    "question": "The sport played at Wimbledon is ___.",
+    "answer": "tennis",
+    "topic": "sports"
+  },
+  {
+    "question": "Who is the king of the Greek gods?",
+    "choices": ["Zeus", "Apollo", "Poseidon", "Hades"],
+    "answer": "Zeus",
+    "topic": "mythology"
+  },
+  {
+    "question": "Thor is a Norse god.",
+    "answer": "True",
+    "topic": "mythology"
+  },
+  {
+    "question": "What is 84 + 16?",
+    "choices": ["98", "100", "101", "96"],
+    "answer": "100",
+    "topic": "mathematics"
+  },
+  {
+    "question": "What is the square root of 225?",
+    "choices": ["14", "15", "16", "13"],
+    "answer": "15",
+    "topic": "mathematics"
+  },
+  {
+    "question": "Which element has the chemical symbol 'H'?",
+    "choices": ["Hydrogen", "Helium", "Iron", "Hafnium"],
+    "answer": "Hydrogen",
+    "topic": "chemistry"
+  },
+  {
+    "question": "The process of cell division is called ___.",
+    "answer": "mitosis",
+    "topic": "biology"
+  },
+  {
+    "question": "Which planet is the largest in our solar system?",
+    "choices": ["Earth", "Neptune", "Jupiter", "Saturn"],
+    "answer": "Jupiter",
+    "topic": "astronomy"
+  },
+  {
+    "question": "Who wrote 'Pride and Prejudice'?",
+    "choices": [
+      "Jane Austen",
+      "Emily Brontë",
+      "Mary Shelley",
+      "Virginia Woolf"
+    ],
+    "answer": "Jane Austen",
+    "topic": "literature"
+  },
+  {
+    "question": "Water expands when it freezes.",
+    "answer": "True",
+    "topic": "physics"
+  },
+  {
+    "question": "Which gas is most abundant in Earth's atmosphere?",
+    "choices": ["Oxygen", "Hydrogen", "Carbon dioxide", "Nitrogen"],
+    "answer": "Nitrogen",
+    "topic": "chemistry"
+  },
+  {
+    "question": "The first ten amendments to the U.S. Constitution are called the ___.",
+    "answer": "bill of rights",
+    "topic": "history"
+  },
+  {
+    "question": "What is 65 × 2?",
+    "choices": ["120", "130", "135", "125"],
+    "answer": "130",
+    "topic": "mathematics"
+  },
+  {
+    "question": "Light has mass.",
+    "answer": "False",
+    "topic": "physics"
+  },
+  {
+    "question": "What is the capital city of Canada?",
+    "choices": ["Toronto", "Ottawa", "Montreal", "Vancouver"],
+    "answer": "Ottawa",
+    "topic": "geography"
+  },
+  {
+    "question": "Who is the Norse god of mischief?",
+    "choices": ["Loki", "Thor", "Odin", "Freyr"],
+    "answer": "Loki",
+    "topic": "mythology"
+  },
+  {
+    "question": "Which sport uses the term 'home run'?",
+    "choices": ["Baseball", "Cricket", "Soccer", "Tennis"],
+    "answer": "Baseball",
+    "topic": "sports"
+  },
+  {
+    "question": "A synonym for 'fast' is ___.",
+    "answer": "quick",
+    "topic": "english"
+  },
+  {
+    "question": "A byte is equal to 8 bits.",
+    "answer": "True",
+    "topic": "technology"
+  },
+  {
+    "question": "What is 9³ (9 cubed)?",
+    "choices": ["729", "81", "243", "512"],
+    "answer": "729",
+    "topic": "mathematics"
+  },
+  {
+    "question": "Mount Everest is part of the_______mountain range.",
+    "answer": "himalayas",
+    "topic": "geography"
+  },
+  {
+    "question": "Which vitamin is primarily produced when exposed to sunlight?",
+    "choices": ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin E"],
+    "answer": "Vitamin D",
+    "topic": "biology"
+  },
+  {
+    "question": "Sound cannot travel through a vacuum.",
+    "answer": "True",
+    "topic": "physics"
+  },
+  {
+    "question": "What is the boiling point of water in Fahrenheit?",
+    "choices": ["100°F", "180°F", "212°F", "220°F"],
+    "answer": "212°F",
+    "topic": "chemistry"
+  },
+  {
+    "question": "Who discovered gravity when he saw an apple fall from a tree?",
+    "choices": [
+      "Isaac Newton",
+      "Albert Einstein",
+      "Galileo Galilei",
+      "Nikola Tesla"
+    ],
+    "answer": "Isaac Newton",
+    "topic": "physics"
+  },
+  {
+    "question": "Is the term Java in JavaScript is coined after Java?",
+    "answer": "true",
+    "topic": "programming"
+  },
+  {
+    "question": "What does HTML stand for?",
+    "choices": [
+      "Hyper Text Markup Language",
+      "Highlevel Text Machine Language",
+      "Hyperlink and Text Markup Language",
+      "Hyper Tool Multi Language"
+    ],
+    "answer": "Hyper Text Markup Language",
+    "topic": "programming"
+  },
+  {
+    "question": "JavaScript is the same as Java.",
+    "answer": "False",
+    "topic": "programming"
+  },
+  {
+    "question": "Which language is primarily used for styling web pages?",
+    "choices": ["HTML", "JavaScript", "CSS", "Python"],
+    "answer": "CSS",
+    "topic": "programming"
+  },
+  {
+    "question": "The keyword used to define a function in Python is ___.",
+    "answer": "def",
+    "topic": "programming"
+  },
+  {
+    "question": "Which of the following is a Python data type?",
+    "choices": ["float", "decimal", "real", "char"],
+    "answer": "float",
+    "topic": "programming"
+  },
+  {
+    "question": "What symbol is used for comments in Python?",
+    "choices": ["//", "#", "/* */", "<!-- -->"],
+    "answer": "#",
+    "topic": "programming"
+  },
+  {
+    "question": "Which of the following is NOT a programming language?",
+    "choices": ["Ruby", "React", "Python", "Java"],
+    "answer": "React",
+    "topic": "programming"
+  },
+  {
+    "question": "'if', 'else', and 'elif' are conditional statements in Python.",
+    "answer": "True",
+    "topic": "programming"
+  },
+  {
+    "question": "In JavaScript, arrays are defined using ___.",
+    "answer": "square brackets",
+    "topic": "programming"
+  },
+  {
+    "question": "Which of these is a loop structure in most programming languages?",
+    "choices": ["repeat", "check", "for", "case"],
+    "answer": "for",
+    "topic": "programming"
+  },
+  {
+    "question": "What is the result of 3 + '3' in JavaScript?",
+    "choices": ["6", "33", "Error", "undefined"],
+    "answer": "33",
+    "topic": "programming"
+  },
+  {
+    "question": "Python is an interpreted language.",
+    "answer": "True",
+    "topic": "programming"
+  },
+  {
+    "question": "Which character is used to end statements in JavaScript?",
+    "choices": [";", ".", ":", "!"],
+    "answer": ";",
+    "topic": "programming"
+  },
+  {
+    "question": "What does JSON stand for?",
+    "choices": [
+      "JavaScript Object Notation",
+      "Java Syntax Object Notation",
+      "Java Structured Output Name",
+      "Java Source Object Notation"
+    ],
+    "answer": "JavaScript Object Notation",
+    "topic": "programming"
+  },
+  {
+    "question": "The command to initialize a Git repository is ___.",
+    "answer": "git init",
+    "topic": "programming"
+  },
+  {
+    "question": "SQL is used for designing websites.",
+    "answer": "False",
+    "topic": "programming"
+  },
+  {
+    "question": "Which HTML tag is used to create a hyperlink?",
+    "choices": ["<link>", "<a>", "<href>", "<hyperlink>"],
+    "answer": "<a>",
+    "topic": "programming"
+  },
+  {
+    "question": "Which HTTP method is used to retrieve data from a server?",
+    "choices": ["POST", "GET", "PUT", "DELETE"],
+    "answer": "GET",
+    "topic": "programming"
+  },
+  {
+    "question": "In CSS, to select an element with the id 'main', you use ___.",
+    "answer": "#main",
+    "topic": "programming"
+  },
+  {
+    "question": "C++ supports object-oriented programming.",
+    "answer": "True",
+    "topic": "programming"
+  },
+  {
+    "question": "This bot is powered by what client?",
+    "choices": [
+      "@whiskeysockets/baileys",
+      "baileys",
+      "whatsapp-web.js",
+      "whatsapp"
+    ],
+    "answer": "whatsapp-web.js",
+    "topic": "programming"
+  },
+  {
+    "question": "This bot is powered by what client?",
+    "choices": ["evolution-api", "baileys", "whatsapp-web", "not mention"],
+    "answer": "whatsapp-web",
+    "topic": "programming"
+  },
+  {
+    "question": "You have a function that sometimes returns 'undefined' instead of a value. What is the most likely cause?",
+    "choices": [
+      "The function is missing a return statement",
+      "The variable is declared with 'let'",
+      "The function is asynchronous",
+      "The function has too many parameters"
+    ],
+    "answer": "The function is missing a return statement",
+    "topic": "programming"
+  },
+  {
+    "question": "You push code to production and users report the app is crashing on startup. What is your first step?",
+    "choices": [
+      "Check the error logs for runtime errors",
+      "Immediately rollback the deployment",
+      "Add more features to fix the problem",
+      "Ignore the reports and wait"
+    ],
+    "answer": "Check the error logs for runtime errors",
+    "topic": "programming"
+  },
+  {
+    "question": "You are optimizing a slow database query. What would you try first?",
+    "choices": [
+      "Add appropriate indexes",
+      "Rewrite the query in another language",
+      "Restart the database server",
+      "Increase server RAM"
+    ],
+    "answer": "Add appropriate indexes",
+    "topic": "programming"
+  },
+  {
+    "question": "Your frontend application shows stale data after an API update. What might be causing this?",
+    "choices": [
+      "Browser caching old API responses",
+      "The API endpoint URL changed",
+      "The backend database is down",
+      "The server time is incorrect"
+    ],
+    "answer": "Browser caching old API responses",
+    "topic": "programming"
+  },
+  {
+    "question": "You find a memory leak in your application. Which action is most useful to identify the leak?",
+    "choices": [
+      "Use a memory profiler tool",
+      "Restart the app frequently",
+      "Increase server disk space",
+      "Add more logging statements"
+    ],
+    "answer": "Use a memory profiler tool",
+    "topic": "programming"
+  },
+  {
+    "question": "What would you expect to happen if you call an async function but forget to use 'await' in JavaScript?",
+    "choices": [
+      "The function runs synchronously",
+      "You get a syntax error",
+      "A promise is returned but may not be resolved immediately",
+      "The program crashes"
+    ],
+    "answer": "A promise is returned but may not be resolved immediately",
+    "topic": "programming"
+  },
+  {
+    "question": "You receive a '404 Not Found' error after deploying your web app. What is a likely cause?",
+    "choices": [
+      "Incorrect routing configuration",
+      "Server is overloaded",
+      "DNS not resolving",
+      "Network cable unplugged"
+    ],
+    "answer": "Incorrect routing configuration",
+    "topic": "programming"
+  },
+  {
+    "question": "You want to ensure your API only accepts authenticated requests. What would you implement?",
+    "choices": [
+      "Authentication middleware",
+      "Logging middleware",
+      "Static file server",
+      "Rate limiting"
+    ],
+    "answer": "Authentication middleware",
+    "topic": "programming"
+  },
+  {
+    "question": "Your CSS changes aren't showing up in the browser even after saving. What is a common fix?",
+    "choices": [
+      "Clear browser cache or use hard reload",
+      "Restart your computer",
+      "Reinstall the browser",
+      "Delete your CSS file"
+    ],
+    "answer": "Clear browser cache or use hard reload",
+    "topic": "programming"
+  },
+  {
+    "question": "When collaborating on a Git project, what's the best way to avoid merge conflicts?",
+    "choices": [
+      "Pull and merge frequently from the main branch",
+      "Never push your changes",
+      "Use different repositories",
+      "Commit directly to the main branch"
+    ],
+    "answer": "Pull and merge frequently from the main branch",
+    "topic": "programming"
+  },
+  {
+    "question": "What do you need to scan on WhatsApp Web to log in?",
+    "choices": [
+      "A QR code from your phone's WhatsApp app",
+      "A barcode from the website",
+      "Your phone number",
+      "An email verification code"
+    ],
+    "answer": "A QR code from your phone's WhatsApp app",
+    "topic": "programming"
+  },
+  {
+    "question": "WhatsApp Web requires your phone to be online and connected to the internet.",
+    "answer": "True",
+    "topic": "programming"
+  },
+  {
+    "question": "Which protocol does WhatsApp Web primarily use to sync messages between your phone and browser?",
+    "choices": ["WebSocket", "HTTP/2", "SMTP", "FTP"],
+    "answer": "WebSocket",
+    "topic": "programming"
+  },
+  {
+    "question": "When building a WhatsApp bot, the API that is officially supported by WhatsApp is the_______API.",
+    "answer": "WhatsApp Business",
+    "topic": "programming"
+  },
+  {
+    "question": "What is a common library used for building WhatsApp bots in Node.js?",
+    "choices": ["Baileys", "Express", "React", "Socket.io"],
+    "answer": "Baileys",
+    "topic": "programming"
+  },
+  {
+    "question": "If a WhatsApp bot doesn’t respond, what should you check first?",
+    "choices": [
+      "API connection or authentication token",
+      "Your phone’s battery level",
+      "The user’s WhatsApp status",
+      "Wi-Fi speed"
+    ],
+    "answer": "API connection or authentication token",
+    "topic": "programming"
+  },
+  {
+    "question": "WhatsApp bots can send messages to users who have not initiated a chat first.",
+    "answer": "False",
+    "topic": "programming"
+  },
+  {
+    "question": "What is the maximum file size allowed for media messages sent via WhatsApp Web or bots?",
+    "choices": ["100 MB", "64 MB", "16 MB", "256 MB"],
+    "answer": "64 MB",
+    "topic": "programming"
+  },
+  {
+    "question": "WhatsApp Web synchronizes messages in real time using a __ connection to your phone.",
+    "answer": "persistent",
+    "topic": "programming"
+  },
+  {
+    "question": "Which of the following is NOT a feature of WhatsApp bots?",
+    "choices": [
+      "Automated replies",
+      "User authentication",
+      "Video call hosting",
+      "Order tracking"
+    ],
+    "answer": "Video call hosting",
+    "topic": "programming"
+  },
+  {
+    "question": "What is the capital city of Nigeria?",
+    "choices": ["Lagos", "Abuja", "Kano", "Port Harcourt"],
+    "answer": "Abuja",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Who was the first President of Nigeria?",
+    "choices": [
+      "Nnamdi Azikiwe",
+      "Olusegun Obasanjo",
+      "Goodluck Jonathan",
+      "Muhammadu Buhari"
+    ],
+    "answer": "Nnamdi Azikiwe",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Nigeria is the most populous country in Africa.",
+    "answer": "True",
+    "topic": "nigeria"
+  },
+  {
+    "question": "What is the official language of Nigeria?",
+    "choices": ["Hausa", "Igbo", "Yoruba", "English"],
+    "answer": "English",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Which Nigerian city is known as the 'Oil Capital of Nigeria'?",
+    "choices": ["Lagos", "Port Harcourt", "Kano", "Benin City"],
+    "answer": "Port Harcourt",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Nigeria gained independence from Britain in the year ___.",
+    "answer": "1960",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Which river is the longest in Nigeria?",
+    "choices": ["Niger River", "Benue River", "Cross River", "Kaduna River"],
+    "answer": "Niger River",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Which of these is a traditional Nigerian dish?",
+    "choices": ["Jollof Rice", "Sushi", "Tacos", "Paella"],
+    "answer": "Jollof Rice",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Lagos is the capital city of Nigeria.",
+    "answer": "False",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Which Nigerian author wrote the famous book 'Things Fall Apart'?",
+    "choices": [
+      "Chinua Achebe",
+      "Wole Soyinka",
+      "Chimamanda Ngozi Adichie",
+      "Ben Okri"
+    ],
+    "answer": "Chinua Achebe",
+    "topic": "nigeria"
+  },
+  {
+    "question": "Which is the largest country by land area in Africa?",
+    "choices": ["Nigeria", "Sudan", "Algeria", "Egypt"],
+    "answer": "Algeria",
+    "topic": "africa"
+  },
+  {
+    "question": "The Sahara Desert is the largest hot desert in the world.",
+    "answer": "True",
+    "topic": "africa"
+  },
+  {
+    "question": "Which river is the longest in Africa?",
+    "choices": ["Nile", "Congo", "Zambezi", "Niger"],
+    "answer": "Nile",
+    "topic": "africa"
+  },
+  {
+    "question": "What is the capital city of Kenya?",
+    "choices": ["Nairobi", "Lagos", "Accra", "Addis Ababa"],
+    "answer": "Nairobi",
+    "topic": "africa"
+  },
+  {
+    "question": "Which African country is known as the 'Rainbow Nation'?",
+    "choices": ["South Africa", "Egypt", "Morocco", "Ghana"],
+    "answer": "South Africa",
+    "topic": "africa"
+  },
+  {
+    "question": "Mount Kilimanjaro is located in ___.",
+    "answer": "Tanzania",
+    "topic": "africa"
+  },
+  {
+    "question": "Which ancient civilization built the pyramids in Africa?",
+    "choices": ["Nubians", "Egyptians", "Carthaginians", "Mali Empire"],
+    "answer": "Egyptians",
+    "topic": "africa"
+  },
+  {
+    "question": "Madagascar is an island country located off the east coast of Africa.",
+    "answer": "True",
+    "topic": "africa"
+  },
+  {
+    "question": "What is the official language of the majority of African countries?",
+    "choices": [
+      "English",
+      "French",
+      "Arabic",
+      "There is no single official language"
+    ],
+    "answer": "There is no single official language",
+    "topic": "africa"
+  },
+  {
+    "question": "Which African country was formerly known as Abyssinia?",
+    "choices": ["Ethiopia", "Sudan", "Somalia", "Kenya"],
+    "answer": "Ethiopia",
+    "topic": "africa"
+  },
+  {
+    "question": "What is the currency of South Africa?",
+    "choices": ["Rand", "Dollar", "Shilling", "Cedi"],
+    "answer": "Rand",
+    "topic": "africa"
+  },
+  {
+    "question": "Which of these animals is native to Africa?",
+    "choices": ["Panda", "Kangaroo", "Elephant", "Bald Eagle"],
+    "answer": "Elephant",
+    "topic": "africa"
+  },
+  {
+    "question": "Africa is home to the Great Rift Valley.",
+    "answer": "True",
+    "topic": "africa"
+  },
+  {
+    "question": "Which African country is famous for the ancient city of Timbuktu?",
+    "choices": ["Mali", "Niger", "Chad", "Algeria"],
+    "answer": "Mali",
+    "topic": "africa"
+  },
+  {
+    "question": "The Serengeti National Park is located in ___.",
+    "answer": "Tanzania",
+    "topic": "africa"
+  },
+  {
+    "question": "Which African leader was imprisoned for 27 years before becoming president?",
+    "choices": [
+      "Nelson Mandela",
+      "Kwame Nkrumah",
+      "Julius Nyerere",
+      "Haile Selassie"
+    ],
+    "answer": "Nelson Mandela",
+    "topic": "africa"
+  },
+  {
+    "question": "The Nile River flows northward.",
+    "answer": "True",
+    "topic": "africa"
+  },
+  {
+    "question": "Which African country is the world's largest cocoa producer?",
+    "choices": ["Ivory Coast", "Ghana", "Nigeria", "Cameroon"],
+    "answer": "Ivory Coast",
+    "topic": "africa"
+  },
+  {
+    "question": "What is the main religion in North Africa?",
+    "choices": ["Christianity", "Islam", "Hinduism", "Buddhism"],
+    "answer": "Islam",
+    "topic": "africa"
+  },
+  {
+    "question": "Which sea lies between Africa and the Arabian Peninsula?",
+    "choices": ["Red Sea", "Mediterranean Sea", "Black Sea", "Caspian Sea"],
+    "answer": "Red Sea",
+    "topic": "africa"
+  },
+  {
+    "question": "What is 'machine learning' in the context of Artificial Intelligence?",
+    "choices": [
+      "A process where computers learn from data without being explicitly programmed",
+      "A type of computer hardware",
+      "A programming language used for AI",
+      "A database system for storing AI models"
+    ],
+    "answer": "A process where computers learn from data without being explicitly programmed",
+    "topic": "ai"
+  },
+  {
+    "question": "Which of the following is a common type of machine learning?",
+    "choices": [
+      "Supervised learning",
+      "Unsupervised learning",
+      "Reinforcement learning",
+      "All of the above"
+    ],
+    "answer": "All of the above",
+    "topic": "ai"
+  },
+  {
+    "question": "Deep learning is a subset of machine learning.",
+    "answer": "True",
+    "topic": "ai"
+  },
+  {
+    "question": "Which of these is NOT an example of AI application?",
+    "choices": [
+      "Image recognition",
+      "Chatbots",
+      "Weather forecasting",
+      "Cooking recipes manually"
+    ],
+    "answer": "Cooking recipes manually",
+    "topic": "ai"
+  },
+  {
+    "question": "The ___ is a type of neural network designed to process sequential data.",
+    "answer": "Recurrent Neural Network",
+    "topic": "ai"
+  },
+  {
+    "question": "What is the term for the AI challenge where a model performs well on training data but poorly on unseen data?",
+    "choices": ["Overfitting", "Underfitting", "Generalization", "Bias"],
+    "answer": "Overfitting",
+    "topic": "ai"
+  },
+  {
+    "question": "Natural Language Processing (NLP) allows computers to understand human language.",
+    "answer": "True",
+    "topic": "ai"
+  },
+  {
+    "question": "Which programming language is most commonly used for AI development?",
+    "choices": ["Python", "JavaScript", "C#", "Ruby"],
+    "answer": "Python",
+    "topic": "ai"
+  },
+  {
+    "question": "What is the main purpose of a 'training dataset' in AI?",
+    "choices": [
+      "To teach the model patterns in data",
+      "To test the model's accuracy",
+      "To store the final model",
+      "To deploy the AI system"
+    ],
+    "answer": "To teach the model patterns in data",
+    "topic": "ai"
+  },
+  {
+    "question": "A ___ is a mathematical model inspired by the human brain used in deep learning.",
+    "answer": "neural network",
+    "topic": "ai"
+  },
+  {
+    "question": "Reinforcement learning involves an agent learning by receiving rewards or penalties.",
+    "answer": "True",
+    "topic": "ai"
+  },
+  {
+    "question": "Which AI concept involves generating new data similar to a training set?",
+    "choices": [
+      "Generative AI",
+      "Discriminative AI",
+      "Supervised AI",
+      "Unsupervised AI"
+    ],
+    "answer": "Generative AI",
+    "topic": "ai"
+  },
+  {
+    "question": "What is 'bias' in AI models?",
+    "choices": [
+      "Systematic errors in the model due to training data or design",
+      "The model's ability to learn",
+      "A type of neural network",
+      "Random noise in data"
+    ],
+    "answer": "Systematic errors in the model due to training data or design",
+    "topic": "ai"
+  },
+  {
+    "question": "Which of the following is a popular AI framework?",
+    "choices": ["TensorFlow", "React", "Django", "Laravel"],
+    "answer": "TensorFlow",
+    "topic": "ai"
+  },
+  {
+    "question": "___ is the AI technique used for recognizing objects in images.",
+    "answer": "Computer vision",
+    "topic": "ai"
+  },
+  {
+    "question": "AI systems can only operate with large amounts of labeled data.",
+    "answer": "False",
+    "topic": "ai"
+  },
+  {
+    "question": "What does GPT stand for in AI language models like ChatGPT?",
+    "choices": [
+      "Generative Pre-trained Transformer",
+      "General Purpose Technology",
+      "Graph Processing Tool",
+      "Global Programming Translator"
+    ],
+    "answer": "Generative Pre-trained Transformer",
+    "topic": "ai"
+  },
+  {
+    "question": "Which AI term describes the ability of a model to perform well on new, unseen data?",
+    "choices": [
+      "Generalization",
+      "Memorization",
+      "Regularization",
+      "Augmentation"
+    ],
+    "answer": "Generalization",
+    "topic": "ai"
+  },
+  {
+    "question": "AI that can perform any intellectual task a human can is called ___.",
+    "answer": "Artificial General Intelligence",
+    "topic": "ai"
+  },
+  {
+    "question": "Ethical concerns in AI include privacy, bias, and job displacement.",
+    "answer": "True",
+    "topic": "ai"
+  },
+  {
+    "question": "Which AI technique is commonly used in recommendation systems like Netflix or Amazon?",
+    "choices": [
+      "Collaborative filtering",
+      "Clustering",
+      "Decision trees",
+      "Linear regression"
+    ],
+    "answer": "Collaborative filtering",
+    "topic": "ai"
+  },
+  {
+    "question": "What command is used to list files and directories in Linux?",
+    "choices": ["ls", "cd", "mkdir", "rm"],
+    "answer": "ls",
+    "topic": "linux"
+  },
+  {
+    "question": "Which command is used to change the current directory in Linux?",
+    "choices": ["pwd", "cd", "ls", "mv"],
+    "answer": "cd",
+    "topic": "linux"
+  },
+  {
+    "question": "Arch Linux uses the pacman package manager.",
+    "answer": "True",
+    "topic": "archlinux"
+  },
+  {
+    "question": "Which file contains user account information in most Linux systems?",
+    "choices": ["/etc/passwd", "/etc/shadow", "/etc/group", "/etc/hosts"],
+    "answer": "/etc/passwd",
+    "topic": "linux"
+  },
+  {
+    "question": "The default shell in most Linux distributions is ___.",
+    "answer": "bash",
+    "topic": "linux"
+  },
+  {
+    "question": "What does the 'sudo' command do?",
+    "choices": [
+      "Runs a command with superuser privileges",
+      "Switches user",
+      "Starts a service",
+      "Displays system logs"
+    ],
+    "answer": "Runs a command with superuser privileges",
+    "topic": "linux"
+  },
+  {
+    "question": "Gentoo Linux uses a package management system called Portage.",
+    "answer": "True",
+    "topic": "gentoo"
+  },
+  {
+    "question": "Which command in Arch Linux updates all installed packages?",
+    "choices": ["pacman -Syu", "apt-get update", "emerge --sync", "yum update"],
+    "answer": "pacman -Syu",
+    "topic": "archlinux"
+  },
+  {
+    "question": "In Gentoo, what is the file used to configure system-wide USE flags?",
+    "choices": [
+      "/etc/portage/make.conf",
+      "/etc/gentoo/use.conf",
+      "/etc/portage/use.local",
+      "/etc/make.conf"
+    ],
+    "answer": "/etc/portage/make.conf",
+    "topic": "gentoo"
+  },
+  {
+    "question": "What does the 'chmod' command do in Linux?",
+    "choices": [
+      "Changes file permissions",
+      "Changes file owner",
+      "Changes directory",
+      "Changes file name"
+    ],
+    "answer": "Changes file permissions",
+    "topic": "linux"
+  },
+  {
+    "question": "Which Arch Linux tool is used to install packages from the Arch User Repository (AUR)?",
+    "choices": ["yay", "pacman", "emerge", "apt"],
+    "answer": "yay",
+    "topic": "archlinux"
+  },
+  {
+    "question": "In Gentoo, the __ command is used to compile and install packages.",
+    "answer": "emerge",
+    "topic": "gentoo"
+  },
+  {
+    "question": "What Linux directory contains device files?",
+    "choices": ["/dev", "/etc", "/usr", "/var"],
+    "answer": "/dev",
+    "topic": "linux"
+  },
+  {
+    "question": "Arch Linux follows a rolling release model.",
+    "answer": "True",
+    "topic": "archlinux"
+  },
+  {
+    "question": "Which file lists systemd services to be started at boot time in Arch Linux?",
+    "choices": [
+      "/etc/systemd/system",
+      "/etc/init.d",
+      "/etc/rc.local",
+      "/usr/lib/systemd/system"
+    ],
+    "answer": "/etc/systemd/system",
+    "topic": "archlinux"
+  },
+  {
+    "question": "What command shows currently running processes in Linux?",
+    "choices": ["ps", "top", "kill", "ls"],
+    "answer": "ps",
+    "topic": "linux"
+  },
+  {
+    "question": "In Gentoo, what does the command 'emerge --sync' do?",
+    "choices": [
+      "Synchronizes the local Portage tree with the remote repository",
+      "Installs a package",
+      "Removes a package",
+      "Updates the system"
+    ],
+    "answer": "Synchronizes the local Portage tree with the remote repository",
+    "topic": "gentoo"
+  },
+  {
+    "question": "Arch Linux provides a graphical installer by default.",
+    "answer": "False",
+    "topic": "archlinux"
+  },
+  {
+    "question": "Which Linux command is used to view the contents of a text file?",
+    "choices": ["cat", "rm", "mkdir", "chmod"],
+    "answer": "cat",
+    "topic": "linux"
+  },
+  {
+    "question": "In Arch Linux, the __ file contains pacman’s configuration settings.",
+    "answer": "/etc/pacman.conf",
+    "topic": "archlinux"
+  },
+  {
+    "question": "What is the default init system used by Arch Linux?",
+    "choices": ["systemd", "SysVinit", "OpenRC", "Upstart"],
+    "answer": "systemd",
+    "topic": "archlinux"
+  },
+  {
+    "question": "Which Gentoo command is used to remove a package?",
+    "choices": [
+      "emerge --unmerge",
+      "emerge --remove",
+      "pacman -R",
+      "apt-get remove"
+    ],
+    "answer": "emerge --unmerge",
+    "topic": "gentoo"
+  },
+  {
+    "question": "What is the primary purpose of the /etc/fstab file in Linux?",
+    "choices": [
+      "Defines how disk partitions and devices are mounted",
+      "Stores user account info",
+      "Lists installed packages",
+      "Controls firewall rules"
+    ],
+    "answer": "Defines how disk partitions and devices are mounted",
+    "topic": "linux"
+  },
+  {
+    "question": "Gentoo Linux is considered a source-based distribution.",
+    "answer": "True",
+    "topic": "gentoo"
+  },
+  {
+    "question": "Which command would you use to search for a package in Arch Linux’s official repositories?",
+    "choices": [
+      "pacman -Ss",
+      "emerge --search",
+      "apt-cache search",
+      "yum search"
+    ],
+    "answer": "pacman -Ss",
+    "topic": "archlinux"
+  },
+  {
+    "question": "In Gentoo, USE flags are used to ___.",
+    "answer": "control optional features and compile-time options",
+    "topic": "gentoo"
+  },
+  {
+    "question": "Which directory contains user home directories in Linux?",
+    "choices": ["/home", "/usr", "/root", "/var"],
+    "answer": "/home",
+    "topic": "linux"
+  },
+  {
+    "question": "What does the 'df' command do in Linux?",
+    "choices": [
+      "Displays disk space usage",
+      "Displays file contents",
+      "Displays running processes",
+      "Deletes files"
+    ],
+    "answer": "Displays disk space usage",
+    "topic": "linux"
+  },
+  {
+    "question": "Arch Linux encourages users to manually configure their system.",
+    "answer": "True",
+    "topic": "archlinux"
+  },
+  {
+    "question": "Which Gentoo directory contains package build scripts?",
+    "choices": ["/usr/portage", "/etc/portage", "/var/lib/portage", "/usr/bin"],
+    "answer": "/usr/portage",
+    "topic": "gentoo"
+  },
+  {
+    "question": "What does the 'top' command display in Linux?",
+    "choices": [
+      "Real-time system processes and resource usage",
+      "Disk usage",
+      "User login history",
+      "Network connections"
+    ],
+    "answer": "Real-time system processes and resource usage",
+    "topic": "linux"
+  },
+  {
+    "question": "Arch Linux’s official wiki is known for being ___.",
+    "answer": "comprehensive and community-driven",
+    "topic": "archlinux"
+  },
+  {
+    "question": "Which command is used to change file ownership in Linux?",
+    "choices": ["chown", "chmod", "chgrp", "passwd"],
+    "answer": "chown",
+    "topic": "linux"
+  },
+  {
+    "question": "Gentoo requires compiling software from source code.",
+    "answer": "True",
+    "topic": "gentoo"
+  },
+  {
+    "question": "What command installs packages on Gentoo?",
+    "choices": [
+      "emerge package-name",
+      "pacman -S package-name",
+      "apt-get install package-name",
+      "yum install package-name"
+    ],
+    "answer": "emerge package-name",
+    "topic": "gentoo"
+  },
+  {
+    "question": "Which file in Arch Linux holds the list of installed packages?",
+    "choices": [
+      "/var/lib/pacman/local",
+      "/etc/pacman.conf",
+      "/var/log/pacman.log",
+      "/usr/lib/pacman"
+    ],
+    "answer": "/var/lib/pacman/local",
+    "topic": "archlinux"
+  }]
