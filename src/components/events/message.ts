@@ -121,8 +121,15 @@ export default async function (msg: Message, type: string): Promise<void> {
       (async () => {
         // override the msg!
         const react = { ...msg };
-        const isMustautoReact = await getSetting("auto_react");
-        if ((!isMustautoReact && isMustautoReact != "on") || react.fromMe)
+        const [isMustautoReact, alreadyReacted] = await Promise.all([
+          getSetting("auto_react"),
+          redis.get(`react:${msg.id.id}`),
+        ]);
+        if (
+          (!isMustautoReact && isMustautoReact != "on") ||
+          alreadyReacted ||
+          react.fromMe
+        )
           return;
 
         react.react = async (reaction: string): Promise<void> => {
@@ -157,7 +164,8 @@ export default async function (msg: Message, type: string): Promise<void> {
         } else if (containsAny(react.body, loveEE)) {
           await react.react("❤️");
         }
-
+      })(),
+      (async () => {
         const botId = (await client()).info.wid._serialized;
         if (msg.mentionedIds.length == 0 || !msg.mentionedIds.includes(botId))
           return;
