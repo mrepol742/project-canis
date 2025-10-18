@@ -6,7 +6,7 @@ export const info = {
   description: "Paused the bot operations.",
   usage: "paused [--on|--off]",
   example: "paused --on",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

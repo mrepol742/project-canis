@@ -22,7 +22,7 @@ export const info = {
   description: "Generate a waifu image with optional categories.",
   usage: "hwaifu [neko|trap|blowjob]",
   example: "hwaifu neko",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

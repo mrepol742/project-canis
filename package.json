@@ -8,7 +8,8 @@
     "clean": "rimraf dist",
     "build": "tsc",
     "start": "clear && while [ true ]; do node dist/index.js ; done",
-    "dev": "clear && while [ true ]; do ts-node src/index.ts ; done"
+    "dev": "clear && while [ true ]; do ts-node src/index.ts ; done",
+    "start:dev": "clear && ts-node-dev src/index.ts"
   },
   "author": {
     "name": "Melvin Jones Repol",
@@ -71,6 +72,7 @@
     "prisma": "^6.12.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   },
   "engines": {

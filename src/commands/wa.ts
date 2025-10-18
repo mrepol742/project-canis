@@ -8,7 +8,7 @@ export const info = {
   description: "Set WhatsApp status or name.",
   usage: "wa [status | name]",
   example: "wa status",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

@@ -258,6 +258,29 @@ export async function unblockUser(lid: string): Promise<void> {
   }
 }
 
+export async function setAdmin(lid: string, value: boolean): Promise<void> {
+  try {
+    const key = `admin:${lid}`;
+    if (value) await redis.set(key, "1");
+    else await redis.del(key);
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Redis", `Failed to set admin for: ${lid}`, error);
+  }
+}
+
+export async function isAdmin(lid: string): Promise<boolean> {
+  try {
+    const key = `admin:${lid}`;
+    const val = await redis.get(key);
+    return val !== null;
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Redis", `Failed to check admin: ${lid}`, error);
+  }
+  return false;
+}
+
 export async function deductUserPoints(
   lid: string,
   points: number,

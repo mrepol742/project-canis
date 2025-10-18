@@ -7,7 +7,7 @@ export const info = {
   description: "Enable/disable automatically react on messages based on keywords.",
   usage: "autoreact <on|off>",
   example: "autoreact on",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

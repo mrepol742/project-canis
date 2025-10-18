@@ -7,7 +7,7 @@ export const info = {
   description: "Log out the client from WhatsApp.",
   usage: "logout",
   example: "logout",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

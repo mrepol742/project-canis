@@ -8,7 +8,7 @@ export const info = {
   description: "Register a user.",
   usage: "req @user",
   example: "req @user",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

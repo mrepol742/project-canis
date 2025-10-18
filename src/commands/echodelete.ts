@@ -7,7 +7,7 @@ export const info = {
   description: "Echo deleted messages.",
   usage: "echodelete [--on|--off]",
   example: "echodelete --on",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

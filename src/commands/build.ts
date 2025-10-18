@@ -9,7 +9,7 @@ export const info = {
   description: "Build the bot (optionally clean before building).",
   usage: "build [--clean]",
   example: "build --clean",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

@@ -9,7 +9,7 @@ export const info = {
   description: "Run a code snippet in a specified programming language.",
   usage: "run [py|java|c|js|php]",
   example: "run py",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

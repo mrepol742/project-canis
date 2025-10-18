@@ -7,7 +7,7 @@ export const info = {
   description: "Echo edit messages.",
   usage: "echoedit [--on|--off]",
   example: "echoedit --on",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 
