@@ -20,7 +20,7 @@ export default async function (
       getSetting("resent_edit"),
     ]);
 
-    log.info("EditMessage", lid, prevBody);
+    log.info("EditMessage", lid);
     await addMessage(lid, prevBody, "edit");
 
     if (!isBlocked || !isMustResent || isMustResent == "off") return;

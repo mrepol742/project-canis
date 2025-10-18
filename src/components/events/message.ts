@@ -152,6 +152,12 @@ export default async function (msg: Message, type: string): Promise<void> {
             await sleep(randomMs);
             const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
             log.info("AutoReact", lid, reaction);
+            await redis.set(`react:${msg.id.id}`, "1", {
+              expiration: {
+                type: "EX",
+                value: 3600, // 1 hour
+              },
+            });
 
             if (Math.random() < 0.1 && !isEmoji)
               if (Math.random() < 0.2)
@@ -215,12 +221,12 @@ export default async function (msg: Message, type: string): Promise<void> {
 
     if (
       (handler.role === "super-admin" && !msg.fromMe) ||
-      (handler.role === "admin" && !isUserAdmin)
+      (handler.role === "admin" && !(isUserAdmin || msg.fromMe))
     ) {
       return;
     }
 
-    log.info("Message", lid, msg.body.slice(0, 150));
+    log.info("Message", lid, key);
     msg.body = newMessageBody;
 
     /*
@@ -237,7 +243,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       options?: MessageSendOptions,
     ): Promise<Message> => {
       let messageBody = typeof content === "string" ? Font(content) : content;
-      log.info("ReplyMessage", lid, content.toString().slice(0, 150));
+      log.info("Reply", lid, key);
 
       if (!msg.fromMe) {
         const chat = await msg.getChat();

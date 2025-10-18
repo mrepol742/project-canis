@@ -27,10 +27,7 @@ export default async function (call: Call): Promise<void> {
 
     (await client()).sendMessage(call.from, response);
 
-    log.info(
-      "CallEvent",
-      `Rejected a ${call.isVideo ? "video" : "voice"} call from ${call.from}`,
-    );
+    log.info("Call", call.from, call.isVideo ? "video" : "voice");
   } catch (err) {
     Sentry.captureException(err);
     log.error("Error handling call:", err);

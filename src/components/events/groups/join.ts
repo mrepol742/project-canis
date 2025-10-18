@@ -30,8 +30,6 @@ export default async function (notif: GroupNotification): Promise<void> {
       const isSelf =
         contact.id._serialized === (await client()).info.wid._serialized;
 
-      log.info("GroupJoin", `${name} joined the group ${group.name}`);
-
       if (isSelf) {
         await notif.reply(text);
       } else {
@@ -39,6 +37,8 @@ export default async function (notif: GroupNotification): Promise<void> {
         mentionIds.push(contact.id._serialized);
       }
     }
+
+    log.info("GroupJoin", group.id.user, JSON.stringify(newMembers));
 
     await Promise.allSettled([
       (async () => {

@@ -19,14 +19,14 @@ export default async function (notif: GroupNotification): Promise<void> {
       const isSelf =
         contact.id._serialized === (await client()).info.wid._serialized;
       if (!isSelf) {
-        log.info("GroupLeave", `${name} left the group ${group.name}`);
         leavers.push(contact.id._serialized.split("@")[0]);
         mentionIds.push(contact.id._serialized);
       } else {
-        log.info("GroupLeave", `the bot left the group ${group.name}`);
         break;
       }
     }
+
+    log.info("GroupLeave", group.id.user, JSON.stringify(leavers));
 
     if (leavers.length == 0) return;
     const message = getMessage(
@@ -34,7 +34,6 @@ export default async function (notif: GroupNotification): Promise<void> {
       leavers.map((n) => `@${n}`).join(", "),
     );
 
-    // await notif.reply(getMessage("leaving", `*${leavers.join(", ")}*`));
     (await client()).sendMessage(notif.chatId, message, {
       mentions: mentionIds,
     });
