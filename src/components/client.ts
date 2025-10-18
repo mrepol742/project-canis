@@ -6,6 +6,7 @@ import {
   LocalAuth,
   Message,
   Reaction,
+  WAState,
 } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import LoadingBar from "./utils/loadingBar";
@@ -20,6 +21,7 @@ import callEvent from "./events/call";
 import DownloadMedia from "./utils/message/download";
 import CheckSpamLink from "./utils/phishtank/checkSpam";
 import queue from "./queue";
+import groupAdminChanged from "./events/groups/groupAdminChanged";
 
 let instance: Client | null = null;
 let isLoadingBarStarted = false;
@@ -50,6 +52,7 @@ async function client(): Promise<Client> {
         "--metrics-recording-only",
         "--disable-hang-monitor",
       ],
+      defaultViewport: { width: 1366, height: 768 },
       executablePath:
         process.env.PUPPETEER_EXEC_PATH || "/opt/google/chrome/google-chrome",
     },
@@ -86,22 +89,21 @@ function registerEvents(client: Client): void {
 
   client.on("message_reaction", (react: Reaction) => reaction(client, react));
 
-  client.on("message_create", async (msg: Message) => {
-    await Promise.allSettled([
-      CheckSpamLink(msg),
-      queue.add(() => DownloadMedia(msg)),
-      messageEvent(msg, "create"),
-    ]);
+  client.on("message_create", (msg: Message) => {
+    CheckSpamLink(msg);
+    queue.add(() => DownloadMedia(msg));
+    messageEvent(msg, "create");
   });
+  client.on("media_uploaded", (msg: Message) =>
+    queue.add(() => DownloadMedia(msg)),
+  );
 
   client.on(
     "message_edit",
-    async (msg: Message, newBody: string, prevBody: string) => {
+    (msg: Message, newBody: string, prevBody: string) => {
       msg.body = newBody;
-      await Promise.allSettled([
-        messageEdit(msg, newBody, prevBody),
-        messageEvent(msg, "edit"),
-      ]);
+      messageEdit(msg, newBody, prevBody);
+      messageEvent(msg, "edit");
     },
   );
 
@@ -113,10 +115,17 @@ function registerEvents(client: Client): void {
 
   client.on("group_join", (notif: GroupNotification) => groupJoin(notif));
   client.on("group_leave", (notif: GroupNotification) => groupLeave(notif));
+  client.on("group_admin_changed", (notif: GroupNotification) =>
+    groupAdminChanged(notif),
+  );
 
   client.on("auth_failure", () => {
     loadingBar.stop();
     log.error("Auth", "Authentication failed. Please try again.");
+  });
+
+  client.on("disconnected", (reason: WAState | "LOGOUT") => {
+    throw Error(`Client has been disconnected reason: ${reason}`);
   });
 }
 
