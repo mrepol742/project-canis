@@ -4,6 +4,7 @@ dist
 .wwebjs_cache
 .temp
 .downloads
+.youtubei
 *.log
 *.env
 *.phishtank
