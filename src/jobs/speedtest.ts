@@ -2,6 +2,7 @@ import speedTest from "speedtest-net";
 import log from "../components/utils/log";
 import redis from "../components/redis";
 import { CronJobInfo } from "../cron";
+import * as Sentry from "@sentry/node";
 
 export const CACHE_KEY = "speedtest:result";
 const CACHE_TTL = 60 * 60; // 1 hour
@@ -33,6 +34,7 @@ export default async function () {
       },
     });
   } catch (err) {
+    Sentry.captureException(err);
     log.error("SpeedTestJob", err);
   }
 }

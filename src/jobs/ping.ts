@@ -1,11 +1,12 @@
 import log from "../components/utils/log";
 import client from "../components/client";
 import { CronJobInfo } from "../cron";
+import * as Sentry from "@sentry/node";
 
 export const info: CronJobInfo = {
   name: "Ping",
   description: "Ping WhatsApp Client",
-  schedule: "*/5 * * * *", // every 5 minutes
+  schedule: "0 * * * *", // every hour
   runOnStartup: false,
 };
 
@@ -17,6 +18,7 @@ export default async function () {
       `Successfully fetched ${chats.length} chats to keep session alive.`,
     );
   } catch (err) {
+    Sentry.captureException(err);
     log.error("Ping", err);
   }
 }
