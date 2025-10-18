@@ -57,7 +57,7 @@ export default async function (msg: Message, type: string): Promise<void> {
      * Block users from running commands.
      * will always return false if its admin
      */
-    const [rateLimitResult, isBlockedUser] = await Promise.all([
+    const [rateLimitResult, isBlockedUser, isPaused] = await Promise.all([
       (async () => {
         if (msg.fromMe) {
           return {
@@ -77,9 +77,10 @@ export default async function (msg: Message, type: string): Promise<void> {
         // If the Redis key exists (non-null), return true
         return isBlocked;
       })(),
+      getSetting("paused"),
     ]);
 
-    if (isBlockedUser) return;
+    if (isBlockedUser || (isPaused && isPaused === "on" && !msg.fromMe)) return;
 
     // process normalization
     msg.body = msg.body

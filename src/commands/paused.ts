@@ -25,7 +25,7 @@ export default async function (msg: Message): Promise<void> {
   const value = enable ? "on" : "off";
 
   try {
-    await saveSetting("resent_edit", value);
+    await saveSetting("paused", value);
     await msg.reply(`Paused has been successfully set to \`${value}\`.`);
   } catch (err) {
     await msg.reply("Failed to update Paused setting. Please try again.");
