@@ -13,6 +13,7 @@ import {
   deductUserPoints,
   findOrCreateUser,
   getBlockUser,
+  isAdmin,
 } from "../services/user";
 import { client } from "../client";
 import Font from "../utils/font";
@@ -56,29 +57,32 @@ export default async function (msg: Message, type: string): Promise<void> {
      * Block users from running commands.
      * will always return false if its admin
      */
-    const [rateLimitResult, isBlockedUser] = await Promise.all([
-      (async () => {
-        if (msg.fromMe) {
-          return {
-            status: false,
-            value: { timestamps: [], penaltyCount: 0, penaltyUntil: 0 },
-          };
-        }
+    const [rateLimitResult, isBlockedUser, isPaused, isUserAdmin] =
+      await Promise.all([
+        (async () => {
+          if (msg.fromMe) {
+            return {
+              status: false,
+              value: { timestamps: [], penaltyCount: 0, penaltyUntil: 0 },
+            };
+          }
 
-        return await rateLimiter(lid);
-      })(),
-      (async () => {
-        if (msg.fromMe) {
-          return false;
-        }
+          return await rateLimiter(lid);
+        })(),
+        (async () => {
+          if (msg.fromMe) {
+            return false;
+          }
 
-        const isBlocked = await getBlockUser(lid);
-        // If the Redis key exists (non-null), return true
-        return isBlocked;
-      })(),
-    ]);
+          const isBlocked = await getBlockUser(lid);
+          // If the Redis key exists (non-null), return true
+          return isBlocked;
+        })(),
+        getSetting("paused"),
+        isAdmin(lid),
+      ]);
 
-    if (isBlockedUser) return;
+    if (isBlockedUser || (isPaused && isPaused === "on" && !msg.fromMe)) return;
 
     // process normalization
     msg.body = msg.body
@@ -201,49 +205,19 @@ export default async function (msg: Message, type: string): Promise<void> {
       return;
     }
 
-    if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) {
+    if (
+      (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) &&
+      !isUserAdmin
+    ) {
       await penalizeUser(lid, rateLimitResult.value);
       return;
     }
 
-    /*
-     * Role based restrictions.
-     * - super-admin: only the bot owner (msg.fromMe) can run these commands
-     * - admin: allowed for bot owner OR group admins (when used inside groups)
-     */
-    if (handler.role === "super-admin") {
-      if (!msg.fromMe) return;
-    } else if (handler.role === "admin") {
-      if (!msg.fromMe) {
-        // allow only if the sender is a group admin
-        try {
-          const chat = await msg.getChat();
-          if (!chat.isGroup) return;
-
-          const participants: any = (chat as any).participants || [];
-          const senderJid = msg.author || msg.from; // full serialized jid
-          const participant = participants.find(
-            (p: any) => p && p.id && p.id._serialized === senderJid,
-          );
-
-          if (!participant || (!participant.isAdmin && !participant.isSuperAdmin))
-            return;
-        } catch (err) {
-          // in doubt, deny
-          return;
-        }
-      }
-    } else if (handler.role === "admin") {
-      if (!msg.fromMe) {
-        // admin role now covers previously 'bot-admin' privileges (stored in redis)
-        try {
-          const { isAdmin } = await import("../services/user");
-          const ok = await isAdmin(lid);
-          if (!ok) return;
-        } catch (err) {
-          return;
-        }
-      }
+    if (
+      (handler.role === "super-admin" && !msg.fromMe) ||
+      (handler.role === "admin" && !isUserAdmin)
+    ) {
+      return;
     }
 
     log.info("Message", lid, msg.body.slice(0, 150));
@@ -279,7 +253,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       return await originalReply(messageBody, chatId, options);
     };
 
-    if (!msg.fromMe) {
+    if (!msg.fromMe || !isUserAdmin) {
       const isInapproiateResponse = checkInappropriate(msg.body);
       if (isInapproiateResponse.isInappropriate) {
         const text =
