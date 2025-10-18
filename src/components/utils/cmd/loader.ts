@@ -10,18 +10,34 @@ const basePath = path.join(__dirname, "..", "..", "..", "commands");
 import * as Sentry from "@sentry/node";
 
 export const commandDirs = [basePath, path.join(basePath, "private")];
-export const commands: Record<
-  string,
-  {
-    command: string;
-    description: string;
-    usage: string;
-    example: string;
-    role: string;
-    cooldown: number;
-    exec: (msg: Message) => Promise<void>;
-  }
-> = {};
+export interface Command {
+  /** The actual command keyword the bot will listen for */
+  command: string;
+
+  /** A brief description of what the command does */
+  description: string;
+
+  /** How to use the command (syntax) */
+  usage: string;
+
+  /** Example usage of the command */
+  example: string;
+
+  /** Required role to use the command (e.g., 'admin', 'moderator') */
+  role: string;
+
+  /** Cooldown in seconds before the command can be reused */
+  cooldown: number;
+
+  /** Optional: set to true if you don't want AI to process this command */
+  optOutAI?: boolean;
+}
+
+interface InternalCommands extends Command {
+  /** The function that will be executed when the command is called */
+  exec: (msg: Message) => Promise<void>;
+}
+export const commands: Record<string, InternalCommands> = {};
 
 async function ensureDependencies(
   dependencies: { name: string; version: string }[],
