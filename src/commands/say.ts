@@ -1,8 +1,10 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import * as GoogleTTS from "google-tts-api";
 import fs from "fs";
 import axios from "../components/axios";
+
+const PROJECT_CANIS_ALIS: string = process.env.PROJECT_CANIS_ALIAS || "Canis";
 
 export const info = {
   command: "say",
@@ -20,30 +22,31 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  const url = GoogleTTS.getAudioUrl(query.substring(0, 150), {
+  const url: {
+    shortText: string;
+    url: string;
+  }[] = GoogleTTS.getAllAudioUrls(query.slice(0, 2000), {
     lang: "en",
     slow: false,
     host: "https://translate.google.com",
   });
 
-  const response = await axios.get(url, { responseType: "arraybuffer" });
-  const buffer = Buffer.from(response.data);
-  const tempDir = "./.temp";
-  const filename = `say_${Date.now()}.mp3`;
-  const tempPath = `${tempDir}/say_${Date.now()}.mp3`;
+  if (!url || url.length === 0) {
+    throw Error("Unable to generate audio");
+  }
 
-  // Ensure the temp directory exists
-  await fs.promises.mkdir(tempDir, { recursive: true });
-  await fs.promises.writeFile(tempPath, buffer);
-
-  const audioBuffer = fs.readFileSync(tempPath);
-  const media = new MessageMedia(
-    "audio/mpeg",
-    audioBuffer.toString("base64"),
-    `${filename}.mp3`,
-  );
-  await msg.reply(media, undefined, {
-    sendAudioAsVoice: true,
-  });
-  await fs.promises.unlink(tempPath);
+  for (let i = 0; i < url.length; i++) {
+    const response = await axios.get(url[i].url, {
+      responseType: "arraybuffer",
+    });
+    const buffer = Buffer.from(response.data);
+    const media = new MessageMedia(
+      "audio/mpeg",
+      buffer.toString("base64"),
+      `${PROJECT_CANIS_ALIS}.mp3`,
+    );
+    await msg.reply(media, undefined, {
+      sendAudioAsVoice: true,
+    });
+  }
 }

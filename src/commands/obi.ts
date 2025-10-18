@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
@@ -43,7 +43,7 @@ export default async function (msg: Message): Promise<void> {
   4. Truth by Declaration – If Obi says it, it becomes true.
   5. Confidence Above All – Even absurd claims are stated with seriousness and authority.
   6. Reponse in Nigerian Pidgin mix with igbo english
-  7. Reponse has 5 max sentence
+  7. Response briefly and concisely with no more than one paragraph unless very necessary to do so
   ${mentioned && "8. You can mentioned users using @"}
   User: ${query}
   ${quotedMessage ? `\nQuoted Message: ${quotedMessage.body}` : ""}`;

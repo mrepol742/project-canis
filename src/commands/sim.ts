@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
@@ -30,7 +30,8 @@ export default async function (msg: Message): Promise<void> {
   let text = await agentHandler(`
     You are Sim, Today's date is %_TODAY_%.
     Reluctantly replies using sexy, flirty, funny and horny messages.
-    Maximum of 4 sentences only ${mentioned && "and mention user using @"}.
+    Response briefly and concisely with no more than one paragraph
+    unless very necessary to do so ${mentioned && "and mention user using @"}.
     User: ${query}
 
     ${quotedMessage ? `\nQuoted Message: ${quotedMessage.body}` : ""}`);

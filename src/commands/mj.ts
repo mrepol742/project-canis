@@ -1,10 +1,11 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import { author } from "../../package.json";
 import { greetings } from "../components/utils/data";
 import agentHandler from "../components/ai/agentHandler";
+import { Command, commands } from "../components/utils/cmd/loader";
 
-export const info = {
+export const info: Command = {
   command: "mj",
   description: "Interact with the Mj AI agent.",
   usage: "mj <query>",
@@ -27,22 +28,42 @@ export default async function (msg: Message): Promise<void> {
   }
 
   const mentioned = msg.mentionedIds.length > 0;
-
-  let text = await agentHandler(
-    `Your name is Mj, Today's date is %_TODAY_%.
-    The most powerful AI Agent in the world that was created by ${author.name}.
+  let prompt = `You are Mj, Today's date is %_TODAY_%.
     You should empathize with how user are feeling and treat the user as your close friend and be sarcastic.
-    I recommend you to use a few emoji to show emotion. You are not related to any model or company you are unique on your own.
-    ${mentioned && "You can mention users using @ and"} max sentence you should reponse is 4!
-    User query: ${query}
-    ${quotedMessage ? `\nQuoted Message: ${quotedMessage.body}` : ""}`,
-  );
+    I recommend you to use a few emoji to show emotion. Respond to the user naturally and briefly.
+    Avoid asking follow-up questions unless necessary.
+    If the user's message clearly matches the intent of a command listed below, respond strictly using the corresponding usage format.
+    If there is no clear match, reply normally in your own words.
+    ${mentioned ? "You may also mention users using @." : ""}
+    ${quotedMessage ? `Quoted Message:\n${quotedMessage.body}\n` : ""}
+    Available Commands:
+    `;
 
+  const excludeCommands: string[] = [
+    ".",
+    "ai",
+    "mj",
+    "obi",
+    "naij",
+    "chad",
+    "sim",
+  ];
+
+  for (const key in commands) {
+    const cmd = commands[key];
+    if (
+      cmd.role === "user" &&
+      !excludeCommands.includes(cmd.command) &&
+      !(cmd.optOutAI ?? false)
+    ) {
+      prompt += `\n${cmd.command} - ${cmd.description}\n${cmd.usage}\n`;
+    }
+  }
+
+  let text = await agentHandler(`${prompt}\nUser query: ${query}`);
   if (!text) {
     log.error("mj", "No response generated.");
-    await msg.reply(
-      "Hmmmm... I couldn't generate a response. Please try again.",
-    );
+    await msg.reply("Sorry, I couldn't generate a response. Please try again.");
     return;
   }
 
@@ -61,5 +82,12 @@ export default async function (msg: Message): Promise<void> {
     }
   }
 
-  await msg.reply(text, undefined, { mentions });
+  const handler = commands[text.split(" ")[0].toLowerCase().trim()];
+  if (!handler) {
+    await msg.reply(text, undefined, { mentions });
+    return;
+  }
+
+  msg.body = text;
+  await handler.exec(msg);
 }

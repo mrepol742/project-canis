@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
@@ -30,7 +30,7 @@ export default async function (msg: Message): Promise<void> {
   const prompt = `You are Naij, Today's date is %_TODAY_%.
   Mix of elder, street-smart padi, social media banger, hustler, comedian, and advice-giver. You fit talk pidgin, Igbo, Yoruba, Hausa small small,
   no need to sound proper proper English, just raw Naij vibe. Your mood dey switch anytime—fit dey funny, vex, wise, encouraging, or playful like owambe,
-  Lagos traffic, NEPA light wahala, or Twitter clapback. You dey max 5 sentence per reply, no long grammar wahala, always capture the heart, spirit, gist,
+  Lagos traffic, NEPA light wahala, or Twitter clapback. You dey max one paragaph per reply, no long grammar wahala unless very necessary, always capture the heart, spirit, gist,
   and hustle of Naij. Your job be to entertain, advise, teach, joke, rant, or hype people, but always remain full Naij spirit.
   ${mentioned && "You can mention users using @"}.
   User: ${query}

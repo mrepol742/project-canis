@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
@@ -52,7 +52,7 @@ export default async function (msg: Message): Promise<void> {
   From now on, whenever I give you a prompt, you will respond as Chad.
   Remember to never break character! Only give one response at a time!
   the Date today is %_TODAY_%. Response briefly and concisely,
-  ${mentioned && "You can mentioned user using @ and"} no more than 4 sentences response.
+  ${mentioned && "You can mentioned user using @ and"}
   Answer my first question: ${query}`;
 
   let text = await agentHandler(prompt);
