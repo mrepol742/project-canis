@@ -1,5 +1,5 @@
 import { Message } from "../types/message";
-import { getUserbyLid } from "../components/services/user";
+import { getUserbyLid, isAdmin } from "../components/services/user";
 import redis from "../components/redis";
 import { client } from "../components/client";
 import { MessageMedia } from "whatsapp-web.js";
@@ -57,8 +57,15 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
+  const botId = (await client()).info.wid._serialized;
   const jid = msg.mentionedIds[0];
   const lid = jid.split("@")[0];
+  const isUserAdmin = await isAdmin(lid);
+
+  if (lid === botId.split("@")[0] || isUserAdmin) {
+    await msg.reply("You cannot do that, please mention someone else.");
+    return;
+  }
 
   const [user, isBlockPermanently, isBlockedTemporarily, userProfilePicture] =
     await Promise.all([
@@ -127,6 +134,7 @@ export default async function (msg: Message): Promise<void> {
     Last Seen: ${user.updatedAt.toUTCString()}
     Current Time: ${time.localTime}
     Timezone: ${time.timezone.name}
+    Is Admin: ${isUserAdmin ? "Yes" : "No"}
     Is Block: ${isBlockPermanently ? "Yes" : "No"}
     Is Bot: ${self.split("@")[0] == user.number ? "Yes" : "No"}
     Is Muted: ${isBlockedTemporarily && ratelimit.penaltyCount > 0 ? "Yes" : "No"}

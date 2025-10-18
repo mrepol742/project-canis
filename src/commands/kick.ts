@@ -9,7 +9,7 @@ export const info = {
   description: "Kick users from the group.",
   usage: "kick <@user>",
   example: "kick @user123",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

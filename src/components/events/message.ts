@@ -219,12 +219,16 @@ export default async function (msg: Message, type: string): Promise<void> {
       return;
     }
 
+    const isSuperAdmin = msg.fromMe;
+    const isAdminUser = isUserAdmin || isSuperAdmin;
+
     if (
-      (handler.role === "super-admin" && !msg.fromMe) ||
-      (handler.role === "admin" && !(isUserAdmin || msg.fromMe))
+      (handler.role === "super-admin" && !isSuperAdmin) ||
+      (handler.role === "admin" && !isAdminUser)
     ) {
       return;
     }
+
 
     log.info("Message", lid, key);
     msg.body = newMessageBody;

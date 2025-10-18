@@ -39,9 +39,9 @@ function buildUserPage(
   return response;
 }
 
-function buildAdminPage(adminCommands: string[]): string {
+function buildAdminPage(type: string, adminCommands: string[]): string {
   let response = `
-    \`Help Admin\`
+    \`Help ${type}\`
     help [command] for more details on a specific command.
 
     |  •  ${adminCommands.join("\n    |  •  ") || "_None_"}
@@ -50,7 +50,7 @@ function buildAdminPage(adminCommands: string[]): string {
 }
 
 export default async function (msg: Message): Promise<void> {
-  const match = /^help(?:\s+(?:--admin|\w+))?$/i.exec(msg.body.trim());
+  const match = /^help(?:\s+(admin|super-admin|\d+))?$/i.exec(msg.body.trim());
   if (!match) return;
 
   const query = msg.body
@@ -69,7 +69,7 @@ export default async function (msg: Message): Promise<void> {
 
     *Usage:* ${matchCommands.usage || "No usage"}
     *Example:* ${matchCommands.example || "No example"}
-    *Role:* ${matchCommands.role || "user"}
+    *Role:* ${matchCommands.role || "User"}
     *Cooldown:* ${matchCommands.cooldown || 5000}ms
     `;
     await msg.reply(response);
@@ -82,7 +82,7 @@ export default async function (msg: Message): Promise<void> {
       .filter((cmd: CommandType) => cmd.role === "admin")
       .map((cmd: CommandType) => cmd.command)
       .sort((a, b) => a.localeCompare(b));
-    await msg.reply(buildAdminPage(adminCommands));
+    await msg.reply(buildAdminPage("Admin", adminCommands));
     return;
   }
 
@@ -92,7 +92,7 @@ export default async function (msg: Message): Promise<void> {
       .filter((cmd: CommandType) => cmd.role === "super-admin")
       .map((cmd: CommandType) => cmd.command)
       .sort((a, b) => a.localeCompare(b));
-    await msg.reply(buildAdminPage(superCommands));
+    await msg.reply(buildAdminPage("Super Admin", superCommands));
     return;
   }
 
