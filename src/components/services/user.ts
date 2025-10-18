@@ -260,23 +260,27 @@ export async function unblockUser(lid: string): Promise<void> {
 
 export async function setBotAdmin(lid: string, value: boolean): Promise<void> {
   try {
-    await prisma.user.update({
-      where: { lid },
-      data: { isBotAdmin: value },
-    });
+    const key = `botadmin:${lid}`;
+    if (value) {
+      // set without TTL so privilege persists
+      await redis.set(key, "1");
+    } else {
+      await redis.del(key);
+    }
   } catch (error) {
     Sentry.captureException(error);
-    log.error("Database", `Failed to set bot admin for: ${lid}`, error);
+    log.error("Redis", `Failed to set bot admin for: ${lid}`, error);
   }
 }
 
 export async function isBotAdmin(lid: string): Promise<boolean> {
   try {
-    const user = await prisma.user.findUnique({ where: { lid } });
-    return !!user && !!user.isBotAdmin;
+    const key = `botadmin:${lid}`;
+    const val = await redis.get(key);
+    return val !== null;
   } catch (error) {
     Sentry.captureException(error);
-    log.error("Database", `Failed to check bot admin: ${lid}`, error);
+    log.error("Redis", `Failed to check bot admin: ${lid}`, error);
   }
   return false;
 }
