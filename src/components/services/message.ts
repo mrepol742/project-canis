@@ -1,6 +1,6 @@
 import prisma from "../prisma";
 import log from "../../components/utils/log";
-import { Message } from "whatsapp-web.js";
+import * as Sentry from "@sentry/node";
 
 const MAX_LENGTH = 191;
 
@@ -27,6 +27,7 @@ export async function addMessage(
       },
     });
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", "Failed to add message.", error);
   }
 }
@@ -41,6 +42,7 @@ export async function getMessage(lid: string) {
 
     return message;
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", "Failed to get message.", error);
   }
   return null;

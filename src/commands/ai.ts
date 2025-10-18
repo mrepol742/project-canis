@@ -38,13 +38,21 @@ export default async function (msg: Message): Promise<void> {
   Available Commands:
   `;
 
-  const excludeAiCommands: string[] = ["mj", "obi", "naij", "chad", "sim"];
+  const excludeCommands: string[] = [
+    ".",
+    "ai",
+    "mj",
+    "obi",
+    "naij",
+    "chad",
+    "sim",
+  ];
 
   for (const key in commands) {
     const cmd = commands[key];
     if (
       cmd.role === "user" &&
-      !excludeAiCommands.includes(cmd.command) &&
+      !excludeCommands.includes(cmd.command) &&
       !(cmd.optOutAI ?? false)
     ) {
       prompt += `\n${cmd.command} - ${cmd.description}\n${cmd.usage}\n`;

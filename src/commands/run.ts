@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
@@ -7,7 +7,7 @@ import fs from "fs/promises";
 export const info = {
   command: "run",
   description: "Run a code snippet in a specified programming language.",
-  usage: "run <language>",
+  usage: "run [py|java|c|js|php]",
   example: "run py",
   role: "admin",
   cooldown: 5000,

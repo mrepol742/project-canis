@@ -1,10 +1,8 @@
 import { Message } from "../types/message"
 import log from "../components/utils/log";
-import Font from "../components/utils/font";
 import { author } from "../../package.json";
 import { greetings } from "../components/utils/data";
 import agentHandler from "../components/ai/agentHandler";
-import { client } from "../components/client";
 
 export const info = {
   command: "mj",

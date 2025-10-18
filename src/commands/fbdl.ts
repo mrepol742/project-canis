@@ -9,8 +9,8 @@ import he from "he";
 
 export const info = {
   command: "fbdl",
-  description: "Download Facebook videos.",
-  usage: "fbdl <facebook_url>",
+  description: "Download facebook video from the provided url.",
+  usage: "fbdl <url>",
   example: "fbdl https://www.facebook.com/watch?v=1234567890",
   role: "user",
   cooldown: 5000,

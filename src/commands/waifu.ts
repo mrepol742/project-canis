@@ -10,7 +10,8 @@ const execPromise = util.promisify(exec);
 export const info = {
   command: "waifu",
   description: "Get a random waifu image or a specific type of waifu.",
-  usage: "waifu [type]",
+  usage:
+    "waifu [neko|shinobu|megumin|bully|cuddle|cry|hug|awoo|kiss|lick|pat|smug|bonk|yeet|blush|smile|wave|highfive|handhold|nom|bite|glomp|slap|kill|kick|happy|wink|poke|dance|cringe]",
   example: "waifu neko",
   role: "user",
   cooldown: 5000,

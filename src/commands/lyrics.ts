@@ -4,7 +4,6 @@ import { Message } from "../types/message"
 // so i recommend using `require` for now...
 // it works
 const Genius = require("genius-lyrics");
-import log from "../components/utils/log";
 import { request } from "undici";
 
 export const info = {

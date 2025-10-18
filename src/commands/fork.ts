@@ -1,8 +1,8 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 
 export const info = {
   command: "fork",
-  description: "Fork this bot on GitHub.",
+  description: "Display the bot github repository.",
   usage: "fork",
   example: "fork",
   role: "user",

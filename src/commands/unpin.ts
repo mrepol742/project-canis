@@ -3,7 +3,7 @@ import log from "../components/utils/log";
 
 export const info = {
   command: "unpin",
-  description: "Unpin a previously pinned message.",
+  description: "Unpin a pinned message.",
   usage: "unpin",
   example: "unpin",
   role: "user",

@@ -1,7 +1,6 @@
 import { Message } from "../types/message"
 import { phishingSet } from "..";
 import { normalize } from "../components/utils/url";
-import log from "../components/utils/log";
 
 export const info = {
   command: "phishing",

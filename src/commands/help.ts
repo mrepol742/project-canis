@@ -1,12 +1,12 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import { commands } from "../components/utils/cmd/loader";
 
 export const info = {
   command: "help",
   description: "List available commands and their usage.",
-  usage: "help [page] | --[role] | [command]",
-  example: "help --admin",
+  usage: "help [page|role|command]",
+  example: "help admin",
   role: "user",
   cooldown: 5000,
 };
@@ -77,7 +77,7 @@ export default async function (msg: Message): Promise<void> {
   }
 
   // help admin
-  if (/^--admin$/i.test(query)) {
+  if (/^admin$/i.test(query)) {
     const adminCommands = Object.values(commands)
       .filter((cmd: CommandType) => cmd.role === "admin")
       .map((cmd: CommandType) => cmd.command)
@@ -103,10 +103,10 @@ export default async function (msg: Message): Promise<void> {
     .map((cmd: CommandType) => cmd.command)
     .sort((a, b) => a.localeCompare(b));
 
-  userCommands.unshift("--admin");
-  userCommands.unshift("--super-admin");
+  userCommands.unshift("admin");
+  userCommands.unshift("super-admin");
 
-  if (userCommands.length == 0) {
+  if (Object.values(commands).length === 0) {
     await msg.reply(`The *${page}* is obviously is not our bot bounds.`);
     return;
   }

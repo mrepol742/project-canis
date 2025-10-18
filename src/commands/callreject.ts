@@ -5,7 +5,7 @@ import log from "../components/utils/log";
 export const info = {
   command: "callreject",
   description: "Automatically declined call.",
-  usage: "callreject <--on|--off>",
+  usage: "callreject [--on|--off]",
   example: "callreject --on",
   role: "admin",
   cooldown: 5000,

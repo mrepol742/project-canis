@@ -1,10 +1,5 @@
-import { Message } from "../types/message"
-import log from "../components/utils/log";
-import { exec } from "child_process";
-import util from "util";
-import prisma from "../components/prisma";
-import redis from "../components/redis";
-import { addBlockUser } from "../components/services/user";
+import { Message } from "../types/message";
+import { addBlockUser, deductUserPoints } from "../components/services/user";
 
 export const info = {
   command: "block",
@@ -24,7 +19,7 @@ export default async function (msg: Message): Promise<void> {
   for (const userId of msg.mentionedIds) {
     const lid = userId.split("@")[0];
 
-    await addBlockUser(lid);
+    await Promise.allSettled([addBlockUser(lid), deductUserPoints(lid, 30)]);
   }
 
   await msg.react("✅");

@@ -3,6 +3,7 @@ import log from "../../utils/log";
 import sleep from "../../utils/sleep";
 import { client } from "../../client";
 import { getMessage } from "../../../data/group";
+import * as Sentry from "@sentry/node";
 
 export default async function (notif: GroupNotification): Promise<void> {
   try {
@@ -38,6 +39,7 @@ export default async function (notif: GroupNotification): Promise<void> {
       mentions: mentionIds,
     });
   } catch (err) {
+    Sentry.captureException(err);
     log.error("GroupLeave", "Failed to process group leave event:", err);
   }
 }

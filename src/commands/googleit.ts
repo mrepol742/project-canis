@@ -43,7 +43,10 @@ export default async function (msg: Message): Promise<void> {
       }),
       page.setViewport({ width: 1366, height: 768 }),
     ]);
-    await page.goto(query, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.goto(`https://google.com/search?=${query}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 15000,
+    });
 
     const buffer = await page.screenshot();
 

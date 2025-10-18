@@ -11,7 +11,7 @@ import redis from "../components/redis";
 
 export const info = {
   command: "stats",
-  description: "Get system and Node.js runtime statistics.",
+  description: "Get system, network, node and bot runtime stats.",
   usage: "stats",
   example: "stats",
   role: "user",

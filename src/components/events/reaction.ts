@@ -5,12 +5,17 @@ import { getSetting } from "../services/settings";
 import { rateLimiter } from "../utils/rateLimiter";
 import { getBlockUser } from "../services/user";
 import * as Sentry from "@sentry/node";
+import redis from "../redis";
 
 export default async function (client: Client, react: Reaction): Promise<void> {
   if (react.msgId.fromMe || react.id.fromMe) return;
   if (!react.reaction?.trim()) return;
   // ignore react if it is older than 60 seconds
   if (react.timestamp < Date.now() / 1000 - 60) return;
+
+  const key = `react:${react.id.id}`;
+  const alreadyReacted = await redis.get(key);
+  if (alreadyReacted) return;
 
   const senderId = react.senderId.split("@")[0];
   /*
@@ -35,7 +40,15 @@ export default async function (client: Client, react: Reaction): Promise<void> {
     const message = await client.getMessageById(react.msgId._serialized);
     if (!message) return;
     await sleep(2000);
-    await message.react(react.reaction);
+    await Promise.allSettled([
+      message.react(react.reaction),
+      redis.set(key, "1", {
+        expiration: {
+          type: "EX",
+          value: 3600, // 1 hour
+        },
+      }),
+    ]);
     log.info("Reaction", senderId, `Reacted to message with ${react.reaction}`);
   } catch (err) {
     Sentry.captureException(err);

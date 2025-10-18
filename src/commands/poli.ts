@@ -1,13 +1,11 @@
 import { MessageMedia } from "whatsapp-web.js";
 import { Message } from "../types/message"
 import axios from "../components/axios";
-import log from "../components/utils/log";
 import fs from "fs/promises";
-import { client } from "../components/client";
 
 export const info = {
   command: "poli",
-  description: "Generate an image based on a prompt using Pollinations.",
+  description: "Generate an image using Pollinations AI.",
   usage: "poli <prompt>",
   example: "poli a beautiful sunset over the mountains",
   role: "user",

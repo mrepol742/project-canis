@@ -1,6 +1,4 @@
 import { Message } from "../types/message"
-import log from "../components/utils/log";
-
 export const info = {
   command: "mute",
   description: "Mute this chat",

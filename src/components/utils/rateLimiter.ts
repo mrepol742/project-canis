@@ -26,6 +26,7 @@ export async function resetRateLimit(lid: string): Promise<void> {
       },
     );
   } catch (error) {
+    Sentry.captureException(error);
     log.error("RateLimiter", `Failed to reset rate limit: ${lid}`, error);
   }
 }
@@ -57,7 +58,7 @@ export async function penalizeUser(
           type: "EX",
           value: ttl,
         },
-      },),
+      }),
       prisma.user.update({
         where: { lid },
         data: { points: { decrement: 10 } },
@@ -107,7 +108,7 @@ export async function rateLimiter(
         type: "EX",
         value: ttl,
       },
-    },);
+    });
 
     return {
       value: entry,

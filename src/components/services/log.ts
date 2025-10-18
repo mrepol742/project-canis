@@ -1,6 +1,7 @@
 import prisma from "../prisma";
 import log from "../utils/log";
 import { Message } from "whatsapp-web.js";
+import * as Sentry from "@sentry/node";
 
 const MAX_LENGTH = 191;
 
@@ -14,7 +15,7 @@ function filterContent(body: string): string {
 export default async function (
   msg: Message,
   command: string,
-  output?: string
+  output?: string,
 ): Promise<void> {
   try {
     const lid = (msg.author ?? msg.from).split("@")[0];
@@ -27,6 +28,7 @@ export default async function (
       },
     });
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", "Failed to log command.", error);
   }
 }

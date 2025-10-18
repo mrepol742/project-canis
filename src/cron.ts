@@ -2,6 +2,7 @@ import cron from "node-cron";
 import speedtestJob, { info as speedtestInfo } from "./jobs/speedtest";
 import pingJob, { info as pingInfo } from "./jobs/ping";
 import log from "./components/utils/log";
+import * as Sentry from "@sentry/node";
 
 export interface CronJobInfo {
   /** The name of the Job */
@@ -28,14 +29,19 @@ const jobs: CronJob[] = [
   { info: pingInfo, job: pingJob },
 ];
 
-export function registerCronJobs() {
-  for (const { info, job } of jobs) {
-    cron.schedule(info.schedule, job);
-    log.info(info.name, `Registered cron job on (${info.schedule})`);
+export function registerCronJobs(): void {
+  try {
+    for (const { info, job } of jobs) {
+      cron.schedule(info.schedule, job);
+      log.info(info.name, `Registered cron job on (${info.schedule})`);
 
-    if (info.runOnStartup) {
-      log.info(info.name, "Running on startup...");
-      job();
+      if (info.runOnStartup) {
+        log.info(info.name, "Running on startup...");
+        job();
+      }
     }
+  } catch (err) {
+    Sentry.captureException(err);
+    log.error("Cron", err);
   }
 }

@@ -2,6 +2,7 @@ import prisma from "../prisma";
 import log from "../../components/utils/log";
 import { Message } from "whatsapp-web.js";
 import redis from "../redis";
+import * as Sentry from "@sentry/node";
 
 const MAX_LENGTH = 191;
 
@@ -40,6 +41,7 @@ export async function addUserQuizPoints(
       },
     });
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", `Failed to set quiz attempt answered.`, error);
   }
 }
@@ -94,6 +96,7 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
     ]);
     return true;
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", `Failed to find or create user.`, error);
   }
   return false;
@@ -108,6 +111,7 @@ export async function getUserbyLid(lid: string) {
     });
     return user;
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", `Failed to get user by lid: ${lid}`, error);
   }
   return null;
@@ -118,9 +122,10 @@ export async function getUserCount(): Promise<number> {
     const count = await prisma.user.count();
     return count;
   } catch (error) {
+    Sentry.captureException(error);
     console.error("Failed to get user count:", error);
-    return 0;
   }
+  return 0;
 }
 
 export async function getUsersPoints(): Promise<any[]> {
@@ -150,9 +155,10 @@ export async function getUsersPoints(): Promise<any[]> {
       }),
     );
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", `Failed to get users.`, error);
-    return [];
   }
+  return [];
 }
 
 export async function getUsersCommandCount(): Promise<any[]> {
@@ -182,9 +188,10 @@ export async function getUsersCommandCount(): Promise<any[]> {
       }),
     );
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", `Failed to get users.`, error);
-    return [];
   }
+  return [];
 }
 
 export async function getUsersQuiz(): Promise<any[]> {
@@ -216,9 +223,10 @@ export async function getUsersQuiz(): Promise<any[]> {
       }),
     );
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Database", `Failed to get users.`, error);
-    return [];
   }
+  return [];
 }
 
 export async function getBlockUser(lid: string): Promise<boolean> {
@@ -226,6 +234,7 @@ export async function getBlockUser(lid: string): Promise<boolean> {
     const isBlocked = await redis.get(`block:${lid}`);
     return !!isBlocked;
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Redis", `Failed to get block user: ${lid}`, error);
   }
   return false;
@@ -235,6 +244,7 @@ export async function addBlockUser(lid: string): Promise<void> {
   try {
     await redis.set(`block:${lid}`, "1");
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Redis", `Failed to block user: ${lid}`, error);
   }
 }
@@ -243,6 +253,37 @@ export async function unblockUser(lid: string): Promise<void> {
   try {
     redis.del(`block:${lid}`);
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Redis", `Failed to block user: ${lid}`, error);
+  }
+}
+
+export async function deductUserPoints(
+  lid: string,
+  points: number,
+): Promise<void> {
+  try {
+    prisma.user.update({
+      where: { lid },
+      data: { points: { decrement: points } },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Database", `Failed to deduct user points: ${lid}`, error);
+  }
+}
+
+export async function addUserPoints(
+  lid: string,
+  points: number,
+): Promise<void> {
+  try {
+    prisma.user.update({
+      where: { lid },
+      data: { points: { increment: points } },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Database", `Failed to add user points: ${lid}`, error);
   }
 }

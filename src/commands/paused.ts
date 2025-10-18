@@ -1,11 +1,10 @@
 import { Message } from "../types/message";
 import { saveSetting } from "../components/services/settings";
-import log from "../components/utils/log";
 
 export const info = {
   command: "paused",
   description: "Paused the bot operations.",
-  usage: "paused <--on|--off>",
+  usage: "paused [--on|--off]",
   example: "paused --on",
   role: "admin",
   cooldown: 5000,
