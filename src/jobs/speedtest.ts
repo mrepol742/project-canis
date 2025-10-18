@@ -1,11 +1,12 @@
 import speedTest from "speedtest-net";
 import log from "../components/utils/log";
 import redis from "../components/redis";
+import { CronJobInfo } from "../cron";
 
 export const CACHE_KEY = "speedtest:result";
 const CACHE_TTL = 60 * 60; // 1 hour
 
-export const info = {
+export const info: CronJobInfo = {
   name: "SpeedTestJob",
   description: "Runs an internet speed test and logs results.",
   schedule: "0 * * * *", // every hour

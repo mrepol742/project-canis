@@ -1,4 +1,4 @@
-import { Message } from "../../../types/message"
+import { Message } from "../../../types/message";
 import path from "path";
 import fs from "fs";
 import log from "../log";
@@ -10,7 +10,8 @@ const PROJECT_MAX_DOWNLOAD_MEDIA: number = parseInt(
 const MAX_FILE_SIZE: number = PROJECT_MAX_DOWNLOAD_MEDIA * 1024 * 1024;
 
 export default async function (msg: Message): Promise<void> {
-  if (!msg.hasMedia || msg.fromMe) return;
+  // msg type unknown to ignore group mention statuses
+  if (!msg.hasMedia || msg.fromMe || msg.type === "unknown") return;
   const media = await msg.downloadMedia();
   if (!media) return;
 

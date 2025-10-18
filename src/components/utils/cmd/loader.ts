@@ -31,6 +31,9 @@ export interface Command {
 
   /** Optional: set to true if you don't want AI to process this command */
   optOutAI?: boolean;
+
+  /** Optional: add here the dependencies of your command if it's doesn't exists yet */
+  dependencies?: string[];
 }
 
 interface InternalCommands extends Command {
