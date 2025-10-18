@@ -1,7 +1,8 @@
 import { phishingSet } from "../../..";
-import { Message } from "../../../types/message"
+import { Message } from "../../../types/message";
 import log from "../log";
 import { normalize } from "../url";
+import * as Sentry from "@sentry/node";
 
 const isPhishtankEnable = process.env.PHISHTANK_ENABLE === "true";
 
@@ -25,6 +26,7 @@ export default async function (msg: Message): Promise<void> {
     `;
     await msg.reply(text);
   } catch (error) {
+    Sentry.captureException(error);
     log.error(
       "PhishTank",
       "Unable to check message for potential spam links:",

@@ -12,7 +12,7 @@ const execPromise = util.promisify(exec);
 
 export const info = {
   command: "play",
-  description: "Play a YouTube music by searching for it.",
+  description: "Searches and returns a music based on your query or url.",
   usage: "play <query>",
   example: "play Never Gonna Give You Up",
   role: "user",

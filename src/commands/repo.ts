@@ -1,7 +1,6 @@
 import { Message } from "../types/message"
 import axios from "../components/axios";
 import { download } from "../components/utils/download";
-import log from "../components/utils/log";
 
 export const info = {
   command: "repo",

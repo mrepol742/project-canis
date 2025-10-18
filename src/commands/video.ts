@@ -8,7 +8,7 @@ import { DownloadOptions } from "youtubei.js/dist/src/types";
 
 export const info = {
   command: "video",
-  description: "Play a YouTube video by searching for it.",
+  description: "Searches and returns a video based on your query or url.",
   usage: "video <query>",
   example: "video Never Gonna Give You Up",
   role: "user",

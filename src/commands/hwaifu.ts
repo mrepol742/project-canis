@@ -20,7 +20,7 @@ const execPromise = util.promisify(exec);
 export const info = {
   command: "hwaifu",
   description: "Generate a waifu image with optional categories.",
-  usage: "hwaifu [type]",
+  usage: "hwaifu [neko|trap|blowjob]",
   example: "hwaifu neko",
   role: "admin",
   cooldown: 5000,

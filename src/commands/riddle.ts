@@ -1,6 +1,5 @@
 import { Message } from "../types/message";
 import { riddles } from "../components/utils/data";
-import log from "../components/utils/log";
 import redis from "../components/redis";
 
 export const info = {

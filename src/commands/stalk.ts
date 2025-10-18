@@ -7,11 +7,10 @@ import parsePhoneNumber from "libphonenumber-js";
 import moment from "moment-timezone";
 import { getTimezonesForCountry, Timezone } from "countries-and-timezones";
 import axios from "../components/axios";
-import timestamp from "../components/utils/timestamp";
 import fs from "fs";
 import path from "path";
 import log from "../components/utils/log";
-import { RateEntry, rateLimiter } from "../components/utils/rateLimiter";
+import { RateEntry } from "../components/utils/rateLimiter";
 
 export const info = {
   command: "stalk",

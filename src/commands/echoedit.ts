@@ -5,7 +5,7 @@ import log from "../components/utils/log";
 export const info = {
   command: "echoedit",
   description: "Echo edit messages.",
-  usage: "echoedit <--on|--off>",
+  usage: "echoedit [--on|--off]",
   example: "echoedit --on",
   role: "admin",
   cooldown: 5000,

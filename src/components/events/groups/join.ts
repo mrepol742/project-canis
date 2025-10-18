@@ -3,6 +3,7 @@ import log from "../../utils/log";
 import sleep from "../../utils/sleep";
 import { client } from "../../client";
 import { getMessage } from "../../../data/group";
+import * as Sentry from "@sentry/node";
 
 const PROJECT_CANIS_ALIAS: string = process.env.PROJECT_CANIS_ALIAS || "Canis";
 
@@ -39,7 +40,7 @@ export default async function (notif: GroupNotification): Promise<void> {
       }
     }
 
-    await Promise.all([
+    await Promise.allSettled([
       (async () => {
         if (newMembers.length == 0) return;
         const message = getMessage(
@@ -58,6 +59,7 @@ export default async function (notif: GroupNotification): Promise<void> {
       })(),
     ]);
   } catch (err) {
+    Sentry.captureException(err);
     log.error("GroupJoin", "Failed to process group join event:", err);
   }
 }

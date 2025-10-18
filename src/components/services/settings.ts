@@ -1,11 +1,12 @@
-import prisma from "../prisma";
 import log from "../../components/utils/log";
 import redis from "../redis";
+import * as Sentry from "@sentry/node";
 
 export async function saveSetting(name: string, value: string): Promise<void> {
   try {
     await redis.set(`settings:${name}`, value);
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Redis", `Failed to save setting: ${name}`, error);
   }
 }
@@ -15,9 +16,10 @@ export async function getSetting(name: string): Promise<string> {
     const value = await redis.get(`settings:${name}`);
     return value || "off";
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Redis", `Failed to get setting: ${name}`, error);
-    return "off";
   }
+  return "off";
 }
 
 export async function getAllSettings(): Promise<Record<string, string>> {
@@ -39,7 +41,8 @@ export async function getAllSettings(): Promise<Record<string, string>> {
 
     return settings;
   } catch (error) {
+    Sentry.captureException(error);
     log.error("Redis", "Failed to get all settings.", error);
-    return {};
   }
+  return {};
 }

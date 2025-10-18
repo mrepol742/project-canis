@@ -1,6 +1,5 @@
 import { Message } from "../types/message"
 import { saveSetting } from "../components/services/settings";
-import log from "../components/utils/log";
 
 export const info = {
   command: "reactrepeater",

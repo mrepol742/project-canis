@@ -1,8 +1,5 @@
 import { Message } from "../types/message"
-import axios from "../components/axios";
-import log from "../components/utils/log";
 import fs from "fs";
-import path from "path";
 import { commands, commandDirs } from "../components/utils/cmd/loader";
 import Loader from "../components/utils/cmd/loader";
 

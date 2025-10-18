@@ -5,7 +5,7 @@ import log from "../components/utils/log";
 export const info = {
   command: "echodelete",
   description: "Echo deleted messages.",
-  usage: "echodelete <--on|--off>",
+  usage: "echodelete [--on|--off]",
   example: "echodelete --on",
   role: "admin",
   cooldown: 5000,

@@ -1,5 +1,4 @@
 import { Message } from "../types/message"
-import prisma from "../components/prisma";
 import redis from "../components/redis";
 import { unblockUser } from "../components/services/user";
 
