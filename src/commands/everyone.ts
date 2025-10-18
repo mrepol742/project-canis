@@ -15,10 +15,15 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  const match = /^everyone(?:\s+--admin)?$/i.exec(msg.body.trim());
-  if (!match) return;
+  const raw = msg.body.trim();
+  if (!/^everyone\b/i.test(raw)) return;
 
-  const onlyAdmins = msg.body.includes("--admin");
+  // Extract optional message and flag
+  let args = raw.replace(/^everyone\b\s*/i, "").trim();
+  const onlyAdmins = /(^|\s)--admin(\s|$)/i.test(args);
+  if (onlyAdmins) {
+    args = args.replace(/(^|\s)--admin(\s|$)/i, " ").trim();
+  }
 
   const chat = await msg.getChat();
   if (!chat.isGroup) {
@@ -49,6 +54,7 @@ export default async function (msg: Message): Promise<void> {
   const total = mentions.length;
   const baseText =
     helloMessage[Math.floor(Math.random() * helloMessage.length)];
+  const prefixMessage = args.length > 0 ? args : baseText;
   // i made it per batch to prevent rate limiting and possibly issues
   const batchSize = 30;
 
@@ -58,7 +64,7 @@ export default async function (msg: Message): Promise<void> {
       .map((jid) => `@${jid.split("@")[0]}`)
       .join(" ");
 
-    const messageText = i === 0 ? `${baseText}\n\n${mentionText}` : mentionText;
+  const messageText = i === 0 ? `${prefixMessage}\n\n${mentionText}` : mentionText;
 
     await msg.reply(messageText, undefined, { mentions: batchMentions });
 
