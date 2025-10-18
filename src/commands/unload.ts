@@ -8,7 +8,7 @@ export const info = {
   description: "Unload a specific command.",
   usage: "unload [command]",
   example: "unload ai",
-  role: "bot-admin",
+  role: "admin",
   cooldown: 5000,
 };
 

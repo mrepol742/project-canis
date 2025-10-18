@@ -233,11 +233,12 @@ export default async function (msg: Message, type: string): Promise<void> {
           return;
         }
       }
-    } else if (handler.role === "bot-admin") {
+    } else if (handler.role === "admin") {
       if (!msg.fromMe) {
+        // admin role now covers previously 'bot-admin' privileges (stored in redis)
         try {
-          const { isBotAdmin } = await import("../services/user");
-          const ok = await isBotAdmin(lid);
+          const { isAdmin } = await import("../services/user");
+          const ok = await isAdmin(lid);
           if (!ok) return;
         } catch (err) {
           return;

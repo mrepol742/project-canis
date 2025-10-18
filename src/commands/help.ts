@@ -96,16 +96,6 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  // help bot-admin
-  if (/^bot-admin$/i.test(query)) {
-    const botCommands = Object.values(commands)
-      .filter((cmd: CommandType) => cmd.role === "bot-admin")
-      .map((cmd: CommandType) => cmd.command)
-      .sort((a, b) => a.localeCompare(b));
-    await msg.reply(buildAdminPage(botCommands));
-    return;
-  }
-
   if (!/^[1-9]\d*$/.test(query) && query != "") {
     await msg.reply("Please type a valid page number.");
     return;
@@ -125,7 +115,6 @@ export default async function (msg: Message): Promise<void> {
 
   userCommands.unshift("admin");
   userCommands.unshift("super-admin");
-  userCommands.unshift("bot-admin");
 
   if (Object.values(commands).length === 0) {
     await msg.reply(`The *${page}* is obviously is not our bot bounds.`);

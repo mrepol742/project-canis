@@ -8,7 +8,7 @@ export const info = {
   description: "Reload a specific command or all commands.",
   usage: "reload | [command]",
   example: "reload ai",
-  role: "bot-admin",
+  role: "admin",
   cooldown: 5000,
 };
 

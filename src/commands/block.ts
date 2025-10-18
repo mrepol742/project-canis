@@ -6,7 +6,7 @@ export const info = {
   description: "Block users from the bot.",
   usage: "block <@user>",
   example: "block @user123",
-  role: "bot-admin",
+  role: "admin",
   cooldown: 5000,
 };
 
