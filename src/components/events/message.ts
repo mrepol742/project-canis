@@ -57,28 +57,30 @@ export default async function (msg: Message, type: string): Promise<void> {
      * Block users from running commands.
      * will always return false if its admin
      */
-    const [rateLimitResult, isBlockedUser, isPaused] = await Promise.all([
-      (async () => {
-        if (msg.fromMe) {
-          return {
-            status: false,
-            value: { timestamps: [], penaltyCount: 0, penaltyUntil: 0 },
-          };
-        }
+    const [rateLimitResult, isBlockedUser, isPaused, isUserAdmin] =
+      await Promise.all([
+        (async () => {
+          if (msg.fromMe) {
+            return {
+              status: false,
+              value: { timestamps: [], penaltyCount: 0, penaltyUntil: 0 },
+            };
+          }
 
-        return await rateLimiter(lid);
-      })(),
-      (async () => {
-        if (msg.fromMe) {
-          return false;
-        }
+          return await rateLimiter(lid);
+        })(),
+        (async () => {
+          if (msg.fromMe) {
+            return false;
+          }
 
-        const isBlocked = await getBlockUser(lid);
-        // If the Redis key exists (non-null), return true
-        return isBlocked;
-      })(),
-      getSetting("paused"),
-    ]);
+          const isBlocked = await getBlockUser(lid);
+          // If the Redis key exists (non-null), return true
+          return isBlocked;
+        })(),
+        getSetting("paused"),
+        isAdmin(lid),
+      ]);
 
     if (isBlockedUser || (isPaused && isPaused === "on" && !msg.fromMe)) return;
 
@@ -203,16 +205,19 @@ export default async function (msg: Message, type: string): Promise<void> {
       return;
     }
 
-    if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) {
+    if (
+      (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) &&
+      !isUserAdmin
+    ) {
       await penalizeUser(lid, rateLimitResult.value);
       return;
     }
 
-    if (handler.role === "super-admin" && !msg.fromMe) {
+    if (
+      (handler.role === "super-admin" && !msg.fromMe) ||
+      (handler.role === "admin" && !isUserAdmin)
+    ) {
       return;
-    } else if (handler.role === "admin") {
-      const ok = await isAdmin(lid);
-      if (!ok) return;
     }
 
     log.info("Message", lid, msg.body.slice(0, 150));
@@ -248,7 +253,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       return await originalReply(messageBody, chatId, options);
     };
 
-    if (!msg.fromMe) {
+    if (!msg.fromMe || !isUserAdmin) {
       const isInapproiateResponse = checkInappropriate(msg.body);
       if (isInapproiateResponse.isInappropriate) {
         const text =
