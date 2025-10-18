@@ -1,5 +1,5 @@
-import { Message } from "../types/message"
-import { getUserbyLid } from "../components/services/user";
+import { Message } from "../types/message";
+import { getUserbyLid, isAdmin } from "../components/services/user";
 import redis from "../components/redis";
 import { client } from "../components/client";
 import { MessageMedia } from "whatsapp-web.js";
@@ -50,42 +50,48 @@ export default async function (msg: Message): Promise<void> {
   const jid = msg.author ?? msg.from;
   const lid = jid.split("@")[0];
 
-  const [user, isBlockPermanently, isBlockedTemporarily, userProfilePicture] =
-    await Promise.all([
-      getUserbyLid(lid),
-      redis.get(`block:${lid}`),
-      redis.get(`rate:${lid}`),
-      (async () => {
-        try {
-          const tempDir = "./.temp";
-          await fs.promises.mkdir(tempDir, { recursive: true });
-          const savePath = path.join(tempDir, `profile_${lid}.png`);
+  const [
+    user,
+    isBlockPermanently,
+    isBlockedTemporarily,
+    isUserAdmin,
+    userProfilePicture,
+  ] = await Promise.all([
+    getUserbyLid(lid),
+    redis.get(`block:${lid}`),
+    redis.get(`rate:${lid}`),
+    isAdmin(lid),
+    (async () => {
+      try {
+        const tempDir = "./.temp";
+        await fs.promises.mkdir(tempDir, { recursive: true });
+        const savePath = path.join(tempDir, `profile_${lid}.png`);
 
-          if (await fileExists(savePath)) {
-            return MessageMedia.fromFilePath(savePath);
-          }
-
-          const avatarUrl = await (await client()).getProfilePicUrl(jid);
-
-          if (!avatarUrl) return undefined;
-
-          const res = await axios.get(avatarUrl, {
-            responseType: "arraybuffer",
-          });
-          const buffer = Buffer.from(res.data, "binary");
-
-          await fs.promises.writeFile(savePath, buffer);
-          return new MessageMedia(
-            "image/jpeg",
-            buffer.toString("base64"),
-            "avatar.jpg",
-          );
-        } catch (error) {
-          log.error("Me", "Unable to fetch user profile pic:", error);
-          return undefined;
+        if (await fileExists(savePath)) {
+          return MessageMedia.fromFilePath(savePath);
         }
-      })(),
-    ]);
+
+        const avatarUrl = await (await client()).getProfilePicUrl(jid);
+
+        if (!avatarUrl) return undefined;
+
+        const res = await axios.get(avatarUrl, {
+          responseType: "arraybuffer",
+        });
+        const buffer = Buffer.from(res.data, "binary");
+
+        await fs.promises.writeFile(savePath, buffer);
+        return new MessageMedia(
+          "image/jpeg",
+          buffer.toString("base64"),
+          "avatar.jpg",
+        );
+      } catch (error) {
+        log.error("Me", "Unable to fetch user profile pic:", error);
+        return undefined;
+      }
+    })(),
+  ]);
 
   if (!user) {
     await msg.reply(
@@ -117,6 +123,7 @@ export default async function (msg: Message): Promise<void> {
     Last Seen: ${user.updatedAt.toUTCString()}
     Current Time: ${time.localTime}
     Timezone: ${time.timezone.name}
+    Is Admin: ${isUserAdmin ? "Yes" : "No"}
     Is Block: ${isBlockPermanently ? "Yes" : "No"}
     Is Bot: ${self.split("@")[0] == user.number ? "Yes" : "No"}
     Is Muted: ${isBlockedTemporarily && ratelimit.penaltyCount > 0 ? "Yes" : "No"}

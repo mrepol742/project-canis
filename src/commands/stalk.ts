@@ -62,7 +62,7 @@ export default async function (msg: Message): Promise<void> {
   const lid = jid.split("@")[0];
   const isUserAdmin = await isAdmin(lid);
 
-  if (lid === botId.split("@")[0] || isUserAdmin) {
+  if (!msg.fromMe && (lid === botId.split("@")[0] || isUserAdmin)) {
     await msg.reply("You cannot do that, please mention someone else.");
     return;
   }
