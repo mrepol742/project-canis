@@ -5,7 +5,7 @@ export const info = {
   description: "Return the event of the message or the quoted message.",
   usage: "event",
   example: "event",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

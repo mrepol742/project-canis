@@ -7,7 +7,7 @@ export const info = {
   description: "Unblock the users from the bot & rate limiter.",
   usage: "unblock <@user>",
   example: "unblock @user123",
-  role: "admin",
+  role: "bot-admin",
   cooldown: 5000,
 };
 

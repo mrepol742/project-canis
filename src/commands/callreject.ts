@@ -7,7 +7,7 @@ export const info = {
   description: "Automatically declined call.",
   usage: "callreject [--on|--off]",
   example: "callreject --on",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

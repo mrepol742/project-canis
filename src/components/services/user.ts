@@ -258,6 +258,29 @@ export async function unblockUser(lid: string): Promise<void> {
   }
 }
 
+export async function setBotAdmin(lid: string, value: boolean): Promise<void> {
+  try {
+    await prisma.user.update({
+      where: { lid },
+      data: { isBotAdmin: value },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Database", `Failed to set bot admin for: ${lid}`, error);
+  }
+}
+
+export async function isBotAdmin(lid: string): Promise<boolean> {
+  try {
+    const user = await prisma.user.findUnique({ where: { lid } });
+    return !!user && !!user.isBotAdmin;
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Database", `Failed to check bot admin: ${lid}`, error);
+  }
+  return false;
+}
+
 export async function deductUserPoints(
   lid: string,
   points: number,

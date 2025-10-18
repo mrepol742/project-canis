@@ -8,7 +8,7 @@ export const info = {
   description: "Execute a SQL query and return the result.",
   usage: "sql <query>",
   example: "sql SELECT * FROM users WHERE active = true;",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

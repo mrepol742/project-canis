@@ -6,7 +6,7 @@ export const info = {
   description: "Access the redis-cli.",
   usage: "redis <command> [args]",
   example: "redis get block:12345",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

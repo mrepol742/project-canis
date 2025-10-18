@@ -4,7 +4,7 @@ export const info = {
   description: "Mute this chat",
   usage: "mute",
   example: "mute",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

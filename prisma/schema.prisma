@@ -26,6 +26,7 @@ model User {
   quizAnswered      Int      @default(0)
   quizAnsweredWrong Int      @default(0)
   points            Float    @default(0.0)
+  isBotAdmin        Boolean  @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }

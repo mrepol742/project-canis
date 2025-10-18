@@ -8,7 +8,7 @@ export const info = {
   description: "Restart the bot.",
   usage: "restart",
   example: "restart",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

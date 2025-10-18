@@ -76,13 +76,33 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  // help admin
+  // help admin (group admins)
   if (/^admin$/i.test(query)) {
     const adminCommands = Object.values(commands)
       .filter((cmd: CommandType) => cmd.role === "admin")
       .map((cmd: CommandType) => cmd.command)
       .sort((a, b) => a.localeCompare(b));
     await msg.reply(buildAdminPage(adminCommands));
+    return;
+  }
+
+  // help super-admin (bot owner)
+  if (/^super-admin$/i.test(query)) {
+    const superCommands = Object.values(commands)
+      .filter((cmd: CommandType) => cmd.role === "super-admin")
+      .map((cmd: CommandType) => cmd.command)
+      .sort((a, b) => a.localeCompare(b));
+    await msg.reply(buildAdminPage(superCommands));
+    return;
+  }
+
+  // help bot-admin
+  if (/^bot-admin$/i.test(query)) {
+    const botCommands = Object.values(commands)
+      .filter((cmd: CommandType) => cmd.role === "bot-admin")
+      .map((cmd: CommandType) => cmd.command)
+      .sort((a, b) => a.localeCompare(b));
+    await msg.reply(buildAdminPage(botCommands));
     return;
   }
 
@@ -105,6 +125,7 @@ export default async function (msg: Message): Promise<void> {
 
   userCommands.unshift("admin");
   userCommands.unshift("super-admin");
+  userCommands.unshift("bot-admin");
 
   if (Object.values(commands).length === 0) {
     await msg.reply(`The *${page}* is obviously is not our bot bounds.`);

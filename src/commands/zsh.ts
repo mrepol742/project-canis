@@ -9,7 +9,7 @@ export const info = {
   description: "Execute a shell and return the output.",
   usage: "zsh <command>",
   example: "zsh ls -la",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 

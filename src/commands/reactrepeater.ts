@@ -6,7 +6,7 @@ export const info = {
   description: "Enable/disable automatically repeating react on messages.",
   usage: "reactrepeater <on|off>",
   example: "reactrepeater on",
-  role: "admin",
+  role: "super-admin",
   cooldown: 5000,
 };
 
