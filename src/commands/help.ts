@@ -35,10 +35,10 @@ function buildRoleHelpPage(
   role: string,
 ): string {
   let response = `
-    \`Help ${role.charAt(0).toUpperCase() + role.slice(1)}\`
+    \`Help\`
     Use: *help [command]* for more details
 
-    |  •  ${commandsForRole.join("\n|  •  ") || "_None_"}
+   |  •  ${commandsForRole.join("\n |  •  ")}
 
     \`Page ${page} of ${totalPages}\`
   `;
@@ -94,7 +94,7 @@ export default async function (msg: Message): Promise<void> {
   const totalPages = Math.ceil(filteredCommands.length / PAGE_SIZE);
   if (page < 1 || page > totalPages) {
     await msg.reply(
-      `Page *${page}* is out of range. Total pages: *${totalPages}*.`,
+      `Page *${page}* is out of range. The total pages is *${totalPages}*.`,
     );
     return;
   }
