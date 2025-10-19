@@ -2,6 +2,7 @@ import { Message } from "whatsapp-web.js";
 import { addUserQuizPoints } from "../services/user";
 import { quiz, done, wrong } from "../utils/data";
 import log from "../utils/log";
+import startNewQuiz from "../../commands/quiz";
 import redis from "../redis";
 
 export default async function (msg: Message): Promise<void> {
@@ -30,20 +31,21 @@ export default async function (msg: Message): Promise<void> {
       userInput === answer ||
       (question.choices && userInput === answerIndex.toString())
     ) {
+      log.info("QuizAnswered", quizAttempt.quiz_id, "correct");
       await Promise.allSettled([
         redis.del(key),
         msg.reply(done[Math.floor(Math.random() * done.length)]),
         addUserQuizPoints(msg, true),
         quoted.delete(true, true),
-        log.info("QuizAnswered", "Correct", quoted.body),
+        startNewQuiz(msg),
       ]);
     } else {
+      log.info("QuizAnswered", quizAttempt.quiz_id, "wrong");
       await Promise.allSettled([
         redis.del(key),
         msg.reply(wrong[Math.floor(Math.random() * wrong.length)]),
         addUserQuizPoints(msg, false),
         quoted.delete(true, true),
-        log.info("QuizAnswered", "Wrong", quoted.body),
       ]);
     }
   } catch (error: any) {}
