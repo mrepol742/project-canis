@@ -5,8 +5,8 @@ import { commands } from "../components/utils/cmd/loader";
 export const info = {
   command: "help",
   description: "List available commands and their usage.",
-  usage: "help [page|role|command]",
-  example: "help admin",
+  usage: "help [--role] [page|command]",
+  example: "help --admin 2",
   role: "user",
   cooldown: 5000,
 };
@@ -14,115 +14,92 @@ export const info = {
 type CommandType = {
   command: string;
   role: string;
+  description?: string;
+  usage?: string;
+  example?: string;
+  cooldown?: number;
 };
 
 const PAGE_SIZE = 20;
+const validRoles = ["user", "admin", "super-admin", "legal"];
 
 function paginate(items: string[], page: number, pageSize: number): string[] {
   const start = (page - 1) * pageSize;
   return items.slice(start, start + pageSize);
 }
 
-function buildUserPage(
-  userCommands: string[],
+function buildRoleHelpPage(
+  commandsForRole: string[],
   page: number,
   totalPages: number,
+  role: string,
 ): string {
   let response = `
-    \`Help ${page}\`
-    help [command] for more details on a specific command.
+    \`Help ${role.charAt(0).toUpperCase() + role.slice(1)}\`
+    Use: *help [command]* for more details
 
-    |  •  ${userCommands.join("\n    |  •  ") || "_None_"}
+    |  •  ${commandsForRole.join("\n|  •  ") || "_None_"}
 
     \`Page ${page} of ${totalPages}\`
   `;
   return response;
 }
 
-function buildAdminPage(type: string, adminCommands: string[]): string {
-  let response = `
-    \`Help ${type}\`
-    help [command] for more details on a specific command.
-
-    |  •  ${adminCommands.join("\n    |  •  ") || "_None_"}
-  `;
-  return response;
-}
-
 export default async function (msg: Message): Promise<void> {
-  const match = /^help(?:\s+(admin|super-admin|\d+))?$/i.exec(msg.body.trim());
-  if (!match) return;
+  const query = msg.body.replace(/^help/i, "").trim();
 
-  const query = msg.body
-    .replace(/^help\b\s*/i, "")
-    .trim()
-    .toLowerCase();
-
-  /*
-   * will show help for a specific command
-   */
-  const matchCommands = commands[query];
-  if (matchCommands) {
+  // check if the query matches a specific command first
+  const possibleCommand = query.split(/\s+/)[0];
+  if (commands[possibleCommand]) {
+    const cmd = commands[possibleCommand] as CommandType;
     const response = `
-    \`${matchCommands.command}\`
-    ${matchCommands.description || "No description"}
+      \`${cmd.command}\`
+      ${cmd.description || "No description"}
 
-    *Usage:* ${matchCommands.usage || "No usage"}
-    *Example:* ${matchCommands.example || "No example"}
-    *Role:* ${matchCommands.role || "User"}
-    *Cooldown:* ${matchCommands.cooldown || 5000}ms
+      *Usage:* ${cmd.usage || "N/A"}
+      *Example:* ${cmd.example || "N/A"}
+      *Role:* ${cmd.role}
+      *Cooldown:* ${cmd.cooldown || 5000}ms
     `;
     await msg.reply(response);
     return;
   }
 
-  // help admin (group admins)
-  if (/^admin$/i.test(query)) {
-    const adminCommands = Object.values(commands)
-      .filter((cmd: CommandType) => cmd.role === "admin")
-      .map((cmd: CommandType) => cmd.command)
-      .sort((a, b) => a.localeCompare(b));
-    await msg.reply(buildAdminPage("Admin", adminCommands));
-    return;
+  // extract role and page
+  const args = query.split(/\s+/).filter(Boolean);
+  let role = "user";
+  let page = 1;
+
+  for (const arg of args) {
+    if (arg.startsWith("--")) {
+      const roleCandidate = arg.replace(/^--/, "").toLowerCase();
+      if (validRoles.includes(roleCandidate)) {
+        role = roleCandidate;
+      }
+    } else if (/^\d+$/.test(arg)) {
+      page = parseInt(arg, 10);
+    }
   }
 
-  // help super-admin (bot owner)
-  if (/^super-admin$/i.test(query)) {
-    const superCommands = Object.values(commands)
-      .filter((cmd: CommandType) => cmd.role === "super-admin")
-      .map((cmd: CommandType) => cmd.command)
-      .sort((a, b) => a.localeCompare(b));
-    await msg.reply(buildAdminPage("Super Admin", superCommands));
-    return;
-  }
-
-  if (!/^[1-9]\d*$/.test(query) && query != "") {
-    await msg.reply("Please type a valid page number.");
-    return;
-  }
-
-  // help [page]
-  const matchPage = query.match(/(\d+)?/i);
-  const page = Math.max(
-    1,
-    matchPage && matchPage[1] ? parseInt(matchPage[1], 10) : 1,
-  );
-
-  const userCommands = Object.values(commands)
-    .filter((cmd: CommandType) => cmd.role === "user")
+  const filteredCommands = Object.values(commands)
+    .filter((cmd: CommandType) => cmd.role === role)
     .map((cmd: CommandType) => cmd.command)
     .sort((a, b) => a.localeCompare(b));
 
-  userCommands.unshift("admin");
-  userCommands.unshift("super-admin");
-
-  if (Object.values(commands).length === 0) {
-    await msg.reply(`The *${page}* is obviously is not our bot bounds.`);
+  if (filteredCommands.length === 0) {
+    await msg.reply(`No commands found for role: *${role}*.`);
     return;
   }
 
-  const totalPages = Math.ceil(userCommands.length / PAGE_SIZE);
-  const userPage = paginate(userCommands, page, PAGE_SIZE);
+  const totalPages = Math.ceil(filteredCommands.length / PAGE_SIZE);
+  if (page < 1 || page > totalPages) {
+    await msg.reply(
+      `Page *${page}* is out of range. Total pages: *${totalPages}*.`,
+    );
+    return;
+  }
 
-  await msg.reply(buildUserPage(userPage, page, totalPages));
+  const paginated = paginate(filteredCommands, page, PAGE_SIZE);
+  const response = buildRoleHelpPage(paginated, page, totalPages, role);
+  await msg.reply(response);
 }

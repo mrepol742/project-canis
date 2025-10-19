@@ -9,7 +9,7 @@ export const info = {
   description: "Pull changes from the remote repository and show commit info.",
   usage: "update",
   example: "update",
-  role: "super-admin",
+  role: "admin",
   cooldown: 5000,
 };
 

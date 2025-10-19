@@ -211,11 +211,11 @@ export default async function (msg: Message, type: string): Promise<void> {
       return;
     }
 
-    if (
-      (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) &&
-      !isUserAdmin
-    ) {
-      await penalizeUser(lid, rateLimitResult.value);
+    if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) {
+      await Promise.allSettled([
+        penalizeUser(lid, rateLimitResult.value),
+        msg.reply("You have been detected as spam, please wait for a while."),
+      ]);
       return;
     }
 
@@ -228,7 +228,6 @@ export default async function (msg: Message, type: string): Promise<void> {
     ) {
       return;
     }
-
 
     log.info("Message", lid, key);
     msg.body = newMessageBody;
@@ -263,7 +262,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       return await originalReply(messageBody, chatId, options);
     };
 
-    if (!msg.fromMe || !isUserAdmin) {
+    if (!msg.fromMe) {
       const isInapproiateResponse = checkInappropriate(msg.body);
       if (isInapproiateResponse.isInappropriate) {
         const text =
