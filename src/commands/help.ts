@@ -38,7 +38,7 @@ function buildRoleHelpPage(
     \`Help\`
     Use: *help [command]* for more details
 
-   |  •  ${commandsForRole.join("\n |  •  ")}
+    •  ${commandsForRole.join("\n    •  ")}
 
     \`Page ${page} of ${totalPages}\`
   `;
