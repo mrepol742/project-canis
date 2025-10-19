@@ -6,6 +6,7 @@ import log from "../components/utils/log";
 import axios from "../components/axios";
 import fs from "fs";
 import he from "he";
+import { fileExists } from "../components/utils/file";
 
 export const info = {
   command: "fbdl",
@@ -14,15 +15,6 @@ export const info = {
   example: "fbdl https://www.facebook.com/watch?v=1234567890",
   role: "user",
   cooldown: 5000,
-};
-
-const fileExists = async (filePath: string) => {
-  try {
-    await fs.promises.access(filePath, fs.constants.F_OK);
-    return true;
-  } catch {
-    return false;
-  }
 };
 
 function md5FromUrl(url: string) {

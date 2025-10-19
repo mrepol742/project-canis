@@ -1,6 +1,7 @@
 import { Message } from "../types/message";
 import log from "../components/utils/log";
 import { isAdmin, setAdmin } from "../components/services/user";
+import client from "../components/client";
 
 export const info = {
   command: "demote",

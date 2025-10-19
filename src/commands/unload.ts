@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import { commands, commandDirs } from "../components/utils/cmd/loader";
 import Loader from "../components/utils/cmd/loader";
 import path from "path";
@@ -13,7 +13,10 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  const query = msg.body.replace(/^unload\b\s*/i, "").trim().toLowerCase();
+  const query = msg.body
+    .replace(/^unload\b\s*/i, "")
+    .trim()
+    .toLowerCase();
 
   if (!query) {
     await msg.reply("Please specify a command to unload.");
@@ -27,7 +30,13 @@ export default async function (msg: Message): Promise<void> {
 
   if (query === "unload") {
     await msg.reply(
-      `"${query}" can't be un-unloaded, 'cause the command that unloads can't be unloaded when it unloads unloading!`
+      `"${query}" can't be un-unloaded, 'cause the command that unloads can't be unloaded when it unloads unloading!`,
+    );
+    return;
+  }
+  if (query === "reload") {
+    await msg.reply(
+      `"${query}" can't be un-unloaded, 'cause the command that reloads can't be unloaded when it reloads reloading!`,
     );
     return;
   }
@@ -42,8 +51,7 @@ export default async function (msg: Message): Promise<void> {
         delete require.cache[require.resolve(filePath)];
         delete commands[query];
         found = true;
-      } catch {
-      }
+      } catch {}
     }
   }
 

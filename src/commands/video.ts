@@ -5,6 +5,7 @@ import path from "path";
 import { Innertube, UniversalCache, Utils } from "youtubei.js";
 import log from "../components/utils/log";
 import { DownloadOptions } from "youtubei.js/dist/src/types";
+import { fileExists } from "../components/utils/file";
 
 export const info = {
   command: "video",
@@ -13,15 +14,6 @@ export const info = {
   example: "video Never Gonna Give You Up",
   role: "user",
   cooldown: 5000,
-};
-
-const fileExists = async (filePath: string) => {
-  try {
-    await fs.promises.access(filePath, fs.constants.F_OK);
-    return true;
-  } catch {
-    return false;
-  }
 };
 
 async function safeDownload(

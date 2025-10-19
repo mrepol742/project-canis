@@ -25,13 +25,18 @@ export default async function (msg: Message): Promise<void> {
   const jid = msg.mentionedIds[0];
   const lid = jid.split("@")[0];
 
-  // todo: _serialized will return an pid instead of lid
-  // changce to mention contracts or continue?
-  const botId = (await client()).info.wid._serialized;
+  const self = (await client()).info.wid._serialized;
   const isUserAdmin = await isAdmin(lid);
 
-  if (!msg.fromMe && (isUserAdmin || lid === botId.split("@")[0])) {
-    await msg.reply("Unable to block the user");
+  if (!msg.fromMe && isUserAdmin) {
+    await msg.reply("Unable to block the user.");
+    return;
+  }
+
+  const mentions = await msg.getMentions();
+  const user = mentions[0];
+  if (self.split("@")[0] === user.id._serialized.split("@")[0]) {
+    await msg.reply("Unable to block the user.");
     return;
   }
 

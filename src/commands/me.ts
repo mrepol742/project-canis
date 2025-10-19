@@ -2,16 +2,10 @@ import { Message } from "../types/message";
 import { getUserbyLid, isAdmin } from "../components/services/user";
 import redis from "../components/redis";
 import { client } from "../components/client";
-import { MessageMedia } from "whatsapp-web.js";
 import parsePhoneNumber from "libphonenumber-js";
-import moment from "moment-timezone";
-import { getTimezonesForCountry, Timezone } from "countries-and-timezones";
-import axios from "../components/axios";
-import timestamp from "../components/utils/timestamp";
-import fs from "fs";
-import path from "path";
-import log from "../components/utils/log";
 import { RateEntry } from "../components/utils/rateLimiter";
+import { getCurrentTimeByCountryCode } from "../components/utils/time";
+import downloadProfilePicture from "../components/utils/profile/download";
 
 export const info = {
   command: "me",
@@ -21,30 +15,6 @@ export const info = {
   role: "user",
   cooldown: 5000,
 };
-
-const fileExists = async (filePath: string) => {
-  try {
-    await fs.promises.access(filePath, fs.constants.F_OK);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-function getCurrentTimeByCountryCode(countryCode: string) {
-  const timezones: Timezone[] | undefined = getTimezonesForCountry(
-    countryCode.toUpperCase(),
-  );
-
-  if (!timezones || timezones.length === 0) {
-    throw new Error("Invalid country code or no timezones found.");
-  }
-
-  const timezone = timezones[0];
-  const localTime = moment().tz(timezone.name).format("YYYY-MM-DD HH:mm:ss");
-
-  return { countryCode, timezone, localTime };
-}
 
 export default async function (msg: Message): Promise<void> {
   const jid = msg.author ?? msg.from;
@@ -61,36 +31,7 @@ export default async function (msg: Message): Promise<void> {
     redis.get(`block:${lid}`),
     redis.get(`rate:${lid}`),
     isAdmin(lid),
-    (async () => {
-      try {
-        const tempDir = "./.temp";
-        await fs.promises.mkdir(tempDir, { recursive: true });
-        const savePath = path.join(tempDir, `profile_${lid}.png`);
-
-        if (await fileExists(savePath)) {
-          return MessageMedia.fromFilePath(savePath);
-        }
-
-        const avatarUrl = await (await client()).getProfilePicUrl(jid);
-
-        if (!avatarUrl) return undefined;
-
-        const res = await axios.get(avatarUrl, {
-          responseType: "arraybuffer",
-        });
-        const buffer = Buffer.from(res.data, "binary");
-
-        await fs.promises.writeFile(savePath, buffer);
-        return new MessageMedia(
-          "image/jpeg",
-          buffer.toString("base64"),
-          "avatar.jpg",
-        );
-      } catch (error) {
-        log.error("Me", "Unable to fetch user profile pic:", error);
-        return undefined;
-      }
-    })(),
+    downloadProfilePicture(jid),
   ]);
 
   if (!user) {

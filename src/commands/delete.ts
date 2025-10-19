@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import { client } from "../components/client";
 
 export const info = {
@@ -11,13 +11,12 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  if (!msg.hasQuotedMsg) {
-    await msg.reply("Please reply the message you want to delete.");
-    return;
-  }
+  if (!msg.hasQuotedMsg) return;
+
   const quoted = await msg.getQuotedMessage();
 
   if (quoted.fromMe) {
+    if (!msg.fromMe && /[aeiou]/i.test(quoted.body)) return;
     await quoted.delete(true, true);
   }
 }
