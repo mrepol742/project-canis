@@ -16,7 +16,7 @@ export default async function (msg: Message): Promise<void> {
   const quoted = await msg.getQuotedMessage();
 
   if (quoted.fromMe) {
-    if (!msg.fromMe && /[aeiou]/i.test(quoted.body)) return;
+    if (!quoted.fromMe && /[aeiou]/i.test(quoted.body)) return;
     await quoted.delete(true, true);
   }
 }
