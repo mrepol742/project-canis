@@ -2,6 +2,7 @@ import { Message } from "whatsapp-web.js";
 import { addUserQuizPoints } from "../services/user";
 import { riddles, done, wrong } from "../utils/data";
 import log from "../utils/log";
+import startNewRiddle from "../../commands/riddle";
 import redis from "../redis";
 
 export default async function (msg: Message): Promise<void> {
@@ -17,10 +18,7 @@ export default async function (msg: Message): Promise<void> {
 
     const riddleAttempt = JSON.parse(result);
     const riddle = riddles[parseInt(riddleAttempt.riddle_id)];
-    const userInput = msg.body
-      .trim()
-      .toLowerCase()
-      .split(/\s+/);
+    const userInput = msg.body.trim().toLowerCase().split(/\s+/);
     const answer = riddle.answer.toLowerCase();
 
     let isCorrect = false;
@@ -33,20 +31,21 @@ export default async function (msg: Message): Promise<void> {
     }
 
     if (isCorrect) {
+      log.info("RiddleAnswered", riddleAttempt.quiz_id, "correct");
       await Promise.allSettled([
         redis.del(key),
         msg.reply(done[Math.floor(Math.random() * done.length)]),
         addUserQuizPoints(msg, true, 20),
         quoted.delete(true, true),
-        log.info("RiddleAnswered", "Correct", quoted.body),
+        startNewRiddle(msg),
       ]);
     } else {
+      log.info("RiddleAnsweredWrong", riddleAttempt.quiz_id, "wrong");
       await Promise.allSettled([
         redis.del(key),
         msg.reply(wrong[Math.floor(Math.random() * wrong.length)]),
         addUserQuizPoints(msg, false, 0.2),
         quoted.delete(true, true),
-        log.info("RiddleAnsweredWrong", "Wrong", quoted.body),
       ]);
     }
   } catch (error: any) {}

@@ -42,13 +42,17 @@ export async function InstantDownloader(msg: Message): Promise<void> {
       return;
     }
 
+    msg.react("🔍");
+
     const [video]: [Video | undefined, any] = await Promise.all([
       (async () => {
         if (facebookUrlRegex.test(query)) {
           log.info("InstantDownloader", `Found ${query}`);
+          msg.react("⬇️");
           return await FacebookInstantDownloader(query);
         } else if (youtubeShortsUrlRegex.test(query)) {
           log.info("InstantDownloader", `Found ${query}`);
+          msg.react("⬇️");
           return await YoutubeShortsInstantDownloader(query);
         }
       })(),

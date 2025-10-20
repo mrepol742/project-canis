@@ -1,6 +1,6 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import redis from "../components/redis";
-import { unblockUser } from "../components/services/user";
+import { getBlockUser, unblockUser } from "../components/services/user";
 
 export const info = {
   command: "unblock",
@@ -17,17 +17,21 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  const lids = msg.mentionedIds.map((id) => id.split("@")[0]);
+  const jid = msg.mentionedIds[0];
+  const lid = jid.split("@")[0];
+
+  const isBlocked = await getBlockUser(lid);
+  if (!isBlocked) {
+    await msg.reply("The user is not block.");
+    return;
+  }
 
   await Promise.all([
-    lids.map((lid) => unblockUser(lid)),
-    lids.map((lid) =>
-      redis.set(
-        `rate:${lid}`,
-        JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 }),
-      ),
+    unblockUser(lid),
+    redis.set(
+      `rate:${lid}`,
+      JSON.stringify({ timestamps: [], penaltyCount: 0, penaltyUntil: 0 }),
     ),
+    msg.reply("The user has been unblocked."),
   ]);
-
-  await msg.react("✅");
 }

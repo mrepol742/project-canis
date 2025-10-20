@@ -56,7 +56,7 @@ export default async function (client: Client, react: Reaction): Promise<void> {
         },
       }),
     ]);
-    log.info("Reaction", senderId, `Reacted to message with ${react.reaction}`);
+    log.info("Reaction", senderId, react.reaction);
   } catch (err) {
     Sentry.captureException(err);
     log.error("Failed to react back to message:", err);

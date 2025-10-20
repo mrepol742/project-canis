@@ -6,7 +6,7 @@ export const info = {
   description: "Send all settings value",
   usage: "settings",
   example: "settings",
-  role: "super-admin",
+  role: "user",
   cooldown: 5000,
 };
 

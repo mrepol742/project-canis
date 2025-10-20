@@ -134,7 +134,50 @@ export default async function (msg: Message, type: string): Promise<void> {
           )
             return;
 
+<<<<<<< HEAD
           reactQueue.add(() => autoReaction(msg));
+=======
+          react.react = async (reaction: string): Promise<void> => {
+            // add delay for more
+            // humanly like interaction
+            const min = 2000;
+            const max = 6000;
+            const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
+
+            await sleep(randomMs);
+            const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
+            log.info("AutoReact", lid, reaction);
+            await redis.set(`react:${msg.id.id}`, "1", {
+              expiration: {
+                type: "EX",
+                value: 3600, // 1 hour
+              },
+            });
+
+            if (Math.random() < 0.1 && !isEmoji)
+              if (Math.random() < 0.2)
+                (await client()).sendMessage(react.id.remote, reaction);
+              else await msg.reply(reaction);
+            else await msg.react(reaction);
+          };
+
+          const emojis = [
+            ...new Set([...react.body.matchAll(regex)].map((m) => m[0])),
+          ];
+          if (emojis.length > 0) {
+            await react.react(
+              emojis[Math.floor(Math.random() * emojis.length)],
+            );
+          } else if (containsAny(react.body, funD)) {
+            await react.react("🤣");
+          } else if (containsAny(react.body, happyEE)) {
+            await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
+          } else if (containsAny(react.body, sadEE)) {
+            await react.react("😭");
+          } else if (containsAny(react.body, loveEE)) {
+            await react.react("❤️");
+          }
+>>>>>>> de917599a0c2a5b0589a34461a0512e42cbffea6
         })(),
         (async () => {
           const botId = (await client()).info.wid._serialized;
@@ -164,22 +207,25 @@ export default async function (msg: Message, type: string): Promise<void> {
       return;
     }
 
-    if (
-      (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) &&
-      !isUserAdmin
-    ) {
-      await penalizeUser(lid, rateLimitResult.value);
+    if (rateLimitResult.status || rateLimitResult.value.timestamps.length > 5) {
+      await Promise.allSettled([
+        penalizeUser(lid, rateLimitResult.value),
+        msg.reply("You have been detected as spam, please wait for a while."),
+      ]);
       return;
     }
 
+    const isSuperAdmin = msg.fromMe;
+    const isAdminUser = isUserAdmin || isSuperAdmin;
+
     if (
-      (handler.role === "super-admin" && !msg.fromMe) ||
-      (handler.role === "admin" && !isUserAdmin)
+      (handler.role === "super-admin" && !isSuperAdmin) ||
+      (handler.role === "admin" && !isAdminUser)
     ) {
       return;
     }
 
-    log.info("Message", lid, msg.body.slice(0, 150));
+    log.info("Message", lid, key);
     msg.body = newMessageBody;
 
     /*
@@ -196,7 +242,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       options?: MessageSendOptions,
     ): Promise<Message> => {
       let messageBody = typeof content === "string" ? Font(content) : content;
-      log.info("ReplyMessage", lid, content.toString().slice(0, 150));
+      log.info("Reply", lid, key);
 
       if (!msg.fromMe) {
         const chat = await msg.getChat();
@@ -212,7 +258,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       return await originalReply(messageBody, chatId, options);
     };
 
-    if (!msg.fromMe || !isUserAdmin) {
+    if (!msg.fromMe) {
       const isInapproiateResponse = checkInappropriate(msg.body);
       if (isInapproiateResponse.isInappropriate) {
         const text =

@@ -45,7 +45,7 @@ export default async function (
       ? MessageMedia.fromFilePath(downloadFilePath)
       : null;
 
-    log.info("RevokeMessage", lid, revoked_msg.body);
+    log.info("RevokeMessage", lid);
     await Promise.all([
       addMessage(lid, revoked_msg.body, "revoke"),
       msg.reply(media || caption, undefined, {

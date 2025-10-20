@@ -1,19 +1,10 @@
 import { MessageMedia } from "whatsapp-web.js";
 import { getFbVideoInfo } from "fb-downloader-scrapper";
 import crypto from "crypto";
-import log from "../log";
 import axios from "../../axios";
 import fs from "fs";
 import { Video } from "./downloader";
-
-const fileExists = async (filePath: string) => {
-  try {
-    await fs.promises.access(filePath, fs.constants.F_OK);
-    return true;
-  } catch {
-    return false;
-  }
-};
+import { fileExists } from "../file";
 
 function md5FromUrl(url: string): string {
   return crypto.createHash("md5").update(url).digest("hex");
