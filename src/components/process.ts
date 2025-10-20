@@ -2,7 +2,8 @@ import * as Sentry from "@sentry/node";
 import log from "./utils/log";
 import { client } from "./client";
 import redis from "./redis";
-import queue from "./queue";
+import downloadQueue from "./queue/download";
+import reactQueue from "./queue/react";
 import prisma from "./prisma";
 
 async function gracefulShutdown(signal: string): Promise<void> {
@@ -14,12 +15,11 @@ async function gracefulShutdown(signal: string): Promise<void> {
       await popupBrowser.close();
       log.info("Browser", "Puppeteer browser closed successfully.");
     }
+    // all work must be empty, before it send a SAVE Command to redis
+    // avoiding conflicts when exiting the redis and db
+    await Promise.allSettled([downloadQueue.onIdle(), reactQueue.onIdle()]);
     redis.sendCommand(["SAVE"]);
-    await Promise.allSettled([
-      redis.quit(),
-      queue.onIdle(),
-      prisma.$disconnect(),
-    ]);
+    await Promise.allSettled([redis.quit(), prisma.$disconnect()]);
   } catch (err) {
     Sentry.captureException(err);
     log.error("Browser", `Error closing browser: ${(err as Error).message}`);

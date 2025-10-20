@@ -6,6 +6,7 @@ import { rateLimiter } from "../utils/rateLimiter";
 import { getBlockUser } from "../services/user";
 import * as Sentry from "@sentry/node";
 import redis from "../redis";
+import reactQueue from "../queue/react";
 
 export default async function (client: Client, react: Reaction): Promise<void> {
   if (react.msgId.fromMe || react.id.fromMe) return;
@@ -39,9 +40,15 @@ export default async function (client: Client, react: Reaction): Promise<void> {
   try {
     const message = await client.getMessageById(react.msgId._serialized);
     if (!message) return;
-    await sleep(2000);
+
+    const min = 2000;
+    const max = 6000;
+    const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    await sleep(randomMs);
+
     await Promise.allSettled([
-      message.react(react.reaction),
+      reactQueue.add(() => message.react(react.reaction)),
       redis.set(key, "1", {
         expiration: {
           type: "EX",

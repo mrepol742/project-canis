@@ -20,7 +20,7 @@ import revoke from "./events/revoke";
 import callEvent from "./events/call";
 import DownloadMedia from "./utils/message/download";
 import CheckSpamLink from "./utils/phishtank/checkSpam";
-import queue from "./queue";
+import queue from "./queue/download";
 import groupAdminChanged from "./events/groups/groupAdminChanged";
 
 let instance: Client | null = null;
@@ -91,7 +91,6 @@ function registerEvents(client: Client): void {
 
   client.on("message_create", (msg: Message) => {
     CheckSpamLink(msg);
-    queue.add(() => DownloadMedia(msg));
     messageEvent(msg, "create");
   });
   client.on("media_uploaded", (msg: Message) =>

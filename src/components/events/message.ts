@@ -1,13 +1,7 @@
-import {
-  Client,
-  Message,
-  MessageContent,
-  MessageSendOptions,
-} from "whatsapp-web.js";
+import { Message, MessageContent, MessageSendOptions } from "whatsapp-web.js";
 import log from "../utils/log";
 import { commands } from "../utils/cmd/loader";
 import { penalizeUser, rateLimiter } from "../utils/rateLimiter";
-import sleep from "../utils/sleep";
 import {
   addBlockUser,
   deductUserPoints,
@@ -21,14 +15,12 @@ import quiz from "../utils/quiz";
 import riddle from "../utils/riddle";
 import { getSetting } from "../services/settings";
 import { errors, mentionResponses } from "../utils/data";
-import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
-import { containsAny } from "../utils/string";
+import autoReaction from "../utils/message/react";
 import { InstantDownloader } from "../utils/instantdl/downloader";
 import { checkInappropriate } from "../utils/contentChecker";
-import prisma from "../prisma";
 import redis from "../redis";
-import queue from "../queue";
-import regex from "../emoji";
+import downloadQueue from "../queue/download";
+import reactQueue from "../queue/react";
 import ai from "../../commands/ai";
 import * as Sentry from "@sentry/node";
 
@@ -127,7 +119,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       await Promise.allSettled([
         quiz(msg),
         riddle(msg),
-        queue.add(() => InstantDownloader(msg)),
+        downloadQueue.add(() => InstantDownloader(msg)),
         (async () => {
           // override the msg!
           const react = { ...msg };
@@ -142,40 +134,7 @@ export default async function (msg: Message, type: string): Promise<void> {
           )
             return;
 
-          react.react = async (reaction: string): Promise<void> => {
-            // add delay for more
-            // humanly like interaction
-            const min = 2000;
-            const max = 6000;
-            const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
-
-            await sleep(randomMs);
-            const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
-            log.info("AutoReact", lid, reaction);
-
-            if (Math.random() < 0.1 && !isEmoji)
-              if (Math.random() < 0.2)
-                (await client()).sendMessage(react.id.remote, reaction);
-              else await msg.reply(reaction);
-            else await msg.react(reaction);
-          };
-
-          const emojis = [
-            ...new Set([...react.body.matchAll(regex)].map((m) => m[0])),
-          ];
-          if (emojis.length > 0) {
-            await react.react(
-              emojis[Math.floor(Math.random() * emojis.length)],
-            );
-          } else if (containsAny(react.body, funD)) {
-            await react.react("🤣");
-          } else if (containsAny(react.body, happyEE)) {
-            await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
-          } else if (containsAny(react.body, sadEE)) {
-            await react.react("😭");
-          } else if (containsAny(react.body, loveEE)) {
-            await react.react("❤️");
-          }
+          reactQueue.add(() => autoReaction(msg));
         })(),
         (async () => {
           const botId = (await client()).info.wid._serialized;
