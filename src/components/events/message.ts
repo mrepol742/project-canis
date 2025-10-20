@@ -134,50 +134,7 @@ export default async function (msg: Message, type: string): Promise<void> {
           )
             return;
 
-<<<<<<< HEAD
           reactQueue.add(() => autoReaction(msg));
-=======
-          react.react = async (reaction: string): Promise<void> => {
-            // add delay for more
-            // humanly like interaction
-            const min = 2000;
-            const max = 6000;
-            const randomMs = Math.floor(Math.random() * (max - min + 1)) + min;
-
-            await sleep(randomMs);
-            const isEmoji = /.*[A-Za-z0-9].*/.test(reaction);
-            log.info("AutoReact", lid, reaction);
-            await redis.set(`react:${msg.id.id}`, "1", {
-              expiration: {
-                type: "EX",
-                value: 3600, // 1 hour
-              },
-            });
-
-            if (Math.random() < 0.1 && !isEmoji)
-              if (Math.random() < 0.2)
-                (await client()).sendMessage(react.id.remote, reaction);
-              else await msg.reply(reaction);
-            else await msg.react(reaction);
-          };
-
-          const emojis = [
-            ...new Set([...react.body.matchAll(regex)].map((m) => m[0])),
-          ];
-          if (emojis.length > 0) {
-            await react.react(
-              emojis[Math.floor(Math.random() * emojis.length)],
-            );
-          } else if (containsAny(react.body, funD)) {
-            await react.react("🤣");
-          } else if (containsAny(react.body, happyEE)) {
-            await msg.reply(funD[Math.floor(Math.random() * funD.length)]);
-          } else if (containsAny(react.body, sadEE)) {
-            await react.react("😭");
-          } else if (containsAny(react.body, loveEE)) {
-            await react.react("❤️");
-          }
->>>>>>> de917599a0c2a5b0589a34461a0512e42cbffea6
         })(),
         (async () => {
           const botId = (await client()).info.wid._serialized;
