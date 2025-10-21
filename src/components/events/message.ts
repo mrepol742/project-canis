@@ -45,6 +45,8 @@ export default async function (msg: Message, type: string): Promise<void> {
     if (!commandPrefixLess && prefix) return;
     if (msg.fromMe && prefix) return;
 
+    const receivedAt = Date.now();
+
     /*
      * Block users from running commands.
      * will always return false if its admin
@@ -199,7 +201,9 @@ export default async function (msg: Message, type: string): Promise<void> {
       options?: MessageSendOptions,
     ): Promise<Message> => {
       let messageBody = typeof content === "string" ? Font(content) : content;
-      log.info("Reply", lid, key);
+      const latency = Date.now() - receivedAt;
+      const latencySec = (latency / 1000).toFixed(2);
+      log.info("Reply", lid, `${key} ${latencySec}s`);
 
       if (!msg.fromMe) {
         const chat = await msg.getChat();
