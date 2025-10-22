@@ -1,5 +1,5 @@
-import { GroupChat } from "whatsapp-web.js";
-import { Message } from "../types/message"
+import { GroupChat, MessageMedia } from "whatsapp-web.js";
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import sleep from "../components/utils/sleep";
 import { helloMessage } from "../components/utils/data";
@@ -29,7 +29,7 @@ export default async function (msg: Message): Promise<void> {
   const groupChat = chat as GroupChat;
   const participants = groupChat.participants;
 
-  const self = (await client()).info.wid._serialized
+  const self = (await client()).info.wid._serialized;
   const filteredParticipants = participants.filter((p) => {
     if (p.id._serialized === self) return false;
     if (onlyAdmins && !p.isAdmin && !p.isSuperAdmin) return false;
@@ -47,8 +47,29 @@ export default async function (msg: Message): Promise<void> {
 
   const mentions = filteredParticipants.map((p) => p.id._serialized);
   const total = mentions.length;
-  const baseText =
-    helloMessage[Math.floor(Math.random() * helloMessage.length)];
+
+  const [baseText, media] = await Promise.all([
+    (async () => {
+      const defaultMessage =
+        helloMessage[Math.floor(Math.random() * helloMessage.length)];
+      if (!msg.hasQuotedMsg) return defaultMessage;
+
+      const qoutedMessage = await msg.getQuotedMessage();
+      return qoutedMessage.body ? qoutedMessage.body : defaultMessage;
+    })(),
+    (async () => {
+      if (msg.hasMedia) return await msg.downloadMedia();
+    })(),
+  ]);
+
+  if (media && (["sticker", "ptt"].includes(msg.type) || msg.isGif)) {
+    await msg.reply(media);
+  }
+
+  const mediaShouldBeSend = !(
+    ["sticker", "ptt"].includes(msg.type) && msg.isGif
+  );
+
   // i made it per batch to prevent rate limiting and possibly issues
   const batchSize = 30;
 
@@ -60,7 +81,14 @@ export default async function (msg: Message): Promise<void> {
 
     const messageText = i === 0 ? `${baseText}\n\n${mentionText}` : mentionText;
 
-    await msg.reply(messageText, undefined, { mentions: batchMentions });
+    await msg.reply(
+      mediaShouldBeSend ? (media ? media : messageText) : messageText,
+      undefined,
+      {
+        caption: mediaShouldBeSend ? (media ? messageText : "") : "",
+        mentions: batchMentions,
+      },
+    );
 
     const min = 2000;
     const max = 6000;

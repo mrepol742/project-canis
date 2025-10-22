@@ -33,6 +33,10 @@ export default async function (msg: Message, type: string): Promise<void> {
     if (!msg.body) return;
     if (msg.timestamp < Date.now() / 1000 - 60 && type === "create") return;
     if (msg.isGif || msg.isStatus || msg.broadcast || msg.isForwarded) return; // ignore them all
+
+    // ignore @Meta AI and others
+    if (msg.author && msg.author.split("@")[1] === "bot") return;
+
     const lid: string = msg.author
       ? msg.author.split("@")[0]
       : msg.from.split("@")[0];

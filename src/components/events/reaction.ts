@@ -2,7 +2,7 @@ import { Client, Reaction } from "whatsapp-web.js";
 import log from "../utils/log";
 import sleep from "../utils/sleep";
 import { getSetting } from "../services/settings";
-import { rateLimiter } from "../utils/rateLimiter";
+import { penalizeUser, rateLimiter } from "../utils/rateLimiter";
 import { getBlockUser } from "../services/user";
 import * as Sentry from "@sentry/node";
 import redis from "../redis";
@@ -13,6 +13,9 @@ export default async function (client: Client, react: Reaction): Promise<void> {
   if (!react.reaction?.trim()) return;
   // ignore react if it is older than 60 seconds
   if (react.timestamp < Date.now() / 1000 - 60) return;
+
+  // ignore @Meta AI and others
+  if (react.senderId.split("@")[1] === "bot") return;
 
   const key = `react:${react.id.id}`;
   const alreadyReacted = await redis.get(key);
@@ -28,14 +31,12 @@ export default async function (client: Client, react: Reaction): Promise<void> {
     getSetting("react_repeater"),
   ]);
 
-  if (
-    isBlockedUser ||
-    isRateLimit.status ||
-    isRateLimit.value.timestamps.length > 5 ||
-    !isMustRepeatReact ||
-    isMustRepeatReact == "off"
-  )
+  if (isRateLimit.status || isRateLimit.value.timestamps.length > 5) {
+    await penalizeUser(senderId, isRateLimit.value);
     return;
+  }
+
+  if (isBlockedUser || !isMustRepeatReact || isMustRepeatReact == "off") return;
 
   try {
     const message = await client.getMessageById(react.msgId._serialized);

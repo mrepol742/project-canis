@@ -1,8 +1,7 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
-import redis from "../components/redis";
 
 export const info = {
   command: "update",
@@ -21,7 +20,7 @@ export default async function (msg: Message): Promise<void> {
   if (stderr) log.warn("Update", `git pull stderr:\n${stderr}`);
 
   const { stdout: commitInfo } = await execPromise(
-    'git log -1 --pretty=format:"%h - %s (%an, %ar)"',
+    'git log -7 --pretty=format:"%h - %s (%an, %ar)"',
   );
 
   const text = `

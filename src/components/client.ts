@@ -92,10 +92,8 @@ function registerEvents(client: Client): void {
   client.on("message_create", (msg: Message) => {
     CheckSpamLink(msg);
     messageEvent(msg, "create");
+     queue.add(() => DownloadMedia(msg))
   });
-  client.on("media_uploaded", (msg: Message) =>
-    queue.add(() => DownloadMedia(msg)),
-  );
 
   client.on(
     "message_edit",
