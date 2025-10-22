@@ -4,7 +4,8 @@ import fs from "fs";
 import log from "../log";
 import { addMessage } from "../../services/message";
 
-const PROJECT_AUTO_DOWNLOAD_MEDIA: boolean = process.env.PROJECT_AUTO_DOWNLOAD_MEDIA === "true"
+const PROJECT_AUTO_DOWNLOAD_MEDIA: boolean =
+  process.env.PROJECT_AUTO_DOWNLOAD_MEDIA === "true";
 const PROJECT_MAX_DOWNLOAD_MEDIA: number = parseInt(
   process.env.PROJECT_MAX_DOWNLOAD_MEDIA || "25",
 );
@@ -12,7 +13,17 @@ const MAX_FILE_SIZE: number = PROJECT_MAX_DOWNLOAD_MEDIA * 1024 * 1024;
 
 export default async function (msg: Message): Promise<void> {
   // msg type unknown to ignore group mention statuses
-  if (!msg.hasMedia || msg.fromMe || msg.type === "unknown" || !PROJECT_AUTO_DOWNLOAD_MEDIA) return;
+  if (
+    !msg.hasMedia ||
+    msg.fromMe ||
+    msg.type === "unknown" ||
+    !PROJECT_AUTO_DOWNLOAD_MEDIA
+  )
+    return;
+
+  // ignore @Meta AI and others
+  if (msg.author && msg.author.split("@")[1] === "bot") return;
+
   const media = await msg.downloadMedia();
   if (!media) return;
 
