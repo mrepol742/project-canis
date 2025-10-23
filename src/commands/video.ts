@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import fs from "fs";
 import path from "path";
 import { Innertube, UniversalCache, Utils } from "youtubei.js";
@@ -62,7 +62,6 @@ export default async function (msg: Message): Promise<void> {
   const yt = await Innertube.create({
     cache: new UniversalCache(true, "./.youtubei"),
     generate_session_locally: true,
-    player_id: "0004de42",
   });
 
   const [video] = await Promise.all([search(yt, query), msg.react("🔍")]);

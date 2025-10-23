@@ -1,12 +1,11 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
-import { Innertube, UniversalCache, Utils } from "youtubei.js";
+import { Innertube, UniversalCache, Utils, Types } from "youtubei.js";
 import util from "util";
 import log from "../components/utils/log";
-import { DownloadOptions } from "youtubei.js/dist/src/types";
 import { fileExists } from "../components/utils/file";
 
 const execPromise = util.promisify(exec);
@@ -23,7 +22,7 @@ export const info = {
 async function safeDownload(
   yt: Innertube,
   id: string,
-  options: DownloadOptions,
+  options: Types.DownloadOptions,
   retries = 3,
 ) {
   for (let attempt = 1; attempt <= retries; attempt++) {
@@ -70,7 +69,6 @@ export default async function (msg: Message): Promise<void> {
   const yt = await Innertube.create({
     cache: new UniversalCache(true, "./.youtubei"),
     generate_session_locally: true,
-    player_id: "0004de42",
   });
 
   const [audio] = await Promise.all([search(yt, query), msg.react("🔍")]);
