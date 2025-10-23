@@ -14,6 +14,9 @@ const MAX_FILE_SIZE: number = PROJECT_MAX_DOWNLOAD_MEDIA * 1024 * 1024;
 export default async function (msg: Message): Promise<void> {
   // msg type unknown to ignore group mention statuses
   if (
+    msg.isStatus ||
+    msg.broadcast ||
+    msg.isForwarded ||
     !msg.hasMedia ||
     msg.fromMe ||
     msg.type === "unknown" ||
