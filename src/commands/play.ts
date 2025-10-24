@@ -3,7 +3,7 @@ import { Message } from "../types/message";
 import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
-import { Innertube, UniversalCache, Utils, Types } from "youtubei.js";
+import { Innertube, UniversalCache, Utils, Platform, Types } from "youtubei.js";
 import util from "util";
 import log from "../components/utils/log";
 import { fileExists } from "../components/utils/file";
@@ -17,6 +17,25 @@ export const info = {
   example: "play Never Gonna Give You Up",
   role: "user",
   cooldown: 5000,
+};
+
+Platform.shim.eval = async (
+  data: Types.BuildScriptResult,
+  env: Record<string, Types.VMPrimative>,
+) => {
+  const properties = [];
+
+  if (env.n) {
+    properties.push(`n: exportedVars.nFunction("${env.n}")`);
+  }
+
+  if (env.sig) {
+    properties.push(`sig: exportedVars.sigFunction("${env.sig}")`);
+  }
+
+  const code = `${data.output}\nreturn { ${properties.join(", ")} }`;
+
+  return new Function(code)();
 };
 
 async function safeDownload(
