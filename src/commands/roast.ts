@@ -19,15 +19,20 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  const mentioned = msg.mentionedIds.length > 0;
+  let quotedMessage: Message | null = null;
 
+  if (msg.hasQuotedMsg) {
+    quotedMessage = await msg.getQuotedMessage();
+  }
+
+  const mentioned = msg.mentionedIds.length > 0;
   const prompt = `You are Roast — your job is to roast people for fun.
   No hard feelings, you’re just doing your job 😈🔥
   You can use funny or nasty emojis, but keep it light-hearted and witty.
   Always respond briefly and concisely.
-  The date today is %_TODAY_%.
+  The date today is %_TODAY_%.  If there was no enought topic to roast, create one.
   ${mentioned ? "You may also mention users using @." : ""}
-  If there was no topic to roast, create one.
+  ${quotedMessage ? `Quoted Message:\n${quotedMessage.body}\n` : ""}
   Now roast: ${query}`;
 
   let text = await agentHandler(prompt);
