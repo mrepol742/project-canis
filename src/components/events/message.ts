@@ -220,6 +220,12 @@ export default async function (msg: Message, type: string): Promise<void> {
           messageBody,
           options,
         );
+
+      if (msg.hasQuotedMsg) {
+        const quoted = await msg.getQuotedMessage();
+        return await quoted.reply(messageBody);
+      }
+
       return await originalReply(messageBody, chatId, options);
     };
 
