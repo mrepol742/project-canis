@@ -189,7 +189,13 @@ export default async function (msg: Message, type: string): Promise<void> {
     }
 
     log.info("Message", lid, key);
-    msg.body = newMessageBody;
+
+    if (newMessageBody.split(" ").length === 1 && msg.hasQuotedMsg) {
+      const qoutedMessage = await msg.getQuotedMessage();
+      msg.body = (newMessageBody + " " + qoutedMessage.body).trim();
+    } else {
+      msg.body = newMessageBody;
+    }
 
     /*
      *

@@ -1,5 +1,5 @@
 import { Message } from "../types/message";
-import { quiz } from "../components/utils/data";
+import { done, quiz } from "../components/utils/data";
 import log from "../components/utils/log";
 import redis from "../components/redis";
 
@@ -12,11 +12,16 @@ export const info = {
   cooldown: 5000,
 };
 
-export default async function (msg: Message): Promise<void> {
+export default async function (
+  msg: Message,
+  continueQuiz: boolean = false,
+): Promise<void> {
   const id = Math.floor(Math.random() * quiz.length);
   const response = quiz[id];
 
   let text = `
+    ${continueQuiz && done[Math.floor(Math.random() * done.length)]}
+
     \`${response.question}\`
   `;
 

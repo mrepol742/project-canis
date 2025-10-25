@@ -34,10 +34,9 @@ export default async function (msg: Message): Promise<void> {
       log.info("RiddleAnswered", riddleAttempt.quiz_id, "correct");
       await Promise.allSettled([
         redis.del(key),
-        msg.reply(done[Math.floor(Math.random() * done.length)]),
         addUserQuizPoints(msg, true, 20),
         quoted.delete(true, true),
-        startNewRiddle(msg),
+        startNewRiddle(msg, true),
       ]);
     } else {
       log.info("RiddleAnsweredWrong", riddleAttempt.quiz_id, "wrong");
