@@ -37,6 +37,7 @@ export default async function (msg: Message): Promise<void> {
         addUserQuizPoints(msg, true, 20),
         quoted.delete(true, true),
         startNewRiddle(msg, true),
+
       ]);
     } else {
       log.info("RiddleAnsweredWrong", riddleAttempt.quiz_id, "wrong");
