@@ -16,8 +16,6 @@ export const info = {
   cooldown: 5000,
 };
 
-<<<<<<< HEAD
-=======
 Platform.shim.eval = async (
   data: Types.BuildScriptResult,
   env: Record<string, Types.VMPrimative>,
@@ -37,7 +35,6 @@ Platform.shim.eval = async (
   return new Function(code)();
 };
 
->>>>>>> upstream/master
 async function safeDownload(
   yt: Innertube,
   id: string,

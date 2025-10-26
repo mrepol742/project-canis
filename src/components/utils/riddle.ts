@@ -36,11 +36,8 @@ export default async function (msg: Message): Promise<void> {
         redis.del(key),
         addUserQuizPoints(msg, true, 20),
         quoted.delete(true, true),
-<<<<<<< HEAD
-        startNewRiddle(msg),
-=======
         startNewRiddle(msg, true),
->>>>>>> upstream/master
+
       ]);
     } else {
       log.info("RiddleAnsweredWrong", riddleAttempt.quiz_id, "wrong");

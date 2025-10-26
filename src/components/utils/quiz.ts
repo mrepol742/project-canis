@@ -36,11 +36,7 @@ export default async function (msg: Message): Promise<void> {
         redis.del(key),
         addUserQuizPoints(msg, true),
         quoted.delete(true, true),
-<<<<<<< HEAD
-        startNewQuiz(msg),
-=======
         startNewQuiz(msg, true),
->>>>>>> upstream/master
       ]);
     } else {
       log.info("QuizAnswered", quizAttempt.quiz_id, "wrong");
