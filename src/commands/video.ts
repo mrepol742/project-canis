@@ -1,8 +1,8 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import fs from "fs";
 import path from "path";
-import { Innertube, UniversalCache, Utils } from "youtubei.js";
+import { Innertube, UniversalCache, Platform, Types, Utils } from "youtubei.js";
 import log from "../components/utils/log";
 import { DownloadOptions } from "youtubei.js/dist/src/types";
 import { fileExists } from "../components/utils/file";
@@ -16,6 +16,28 @@ export const info = {
   cooldown: 5000,
 };
 
+<<<<<<< HEAD
+=======
+Platform.shim.eval = async (
+  data: Types.BuildScriptResult,
+  env: Record<string, Types.VMPrimative>,
+) => {
+  const properties = [];
+
+  if (env.n) {
+    properties.push(`n: exportedVars.nFunction("${env.n}")`);
+  }
+
+  if (env.sig) {
+    properties.push(`sig: exportedVars.sigFunction("${env.sig}")`);
+  }
+
+  const code = `${data.output}\nreturn { ${properties.join(", ")} }`;
+
+  return new Function(code)();
+};
+
+>>>>>>> upstream/master
 async function safeDownload(
   yt: Innertube,
   id: string,
@@ -62,7 +84,6 @@ export default async function (msg: Message): Promise<void> {
   const yt = await Innertube.create({
     cache: new UniversalCache(true, "./.youtubei"),
     generate_session_locally: true,
-    player_id: "0004de42",
   });
 
   const [video] = await Promise.all([search(yt, query), msg.react("🔍")]);

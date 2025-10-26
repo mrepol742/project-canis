@@ -7,12 +7,14 @@
     "removeComments": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types", "src/typeses"]
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "typeRoots": ["./node_modules/@types", "./src/typeses"],
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo"
   },
-  "include": ["src", "src/commands/..ts", "..ts"]
+  "include": ["src/**/*"]
 }

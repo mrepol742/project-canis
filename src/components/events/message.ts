@@ -1,13 +1,7 @@
-import {
-  Client,
-  Message,
-  MessageContent,
-  MessageSendOptions,
-} from "whatsapp-web.js";
+import { Message, MessageContent, MessageSendOptions } from "whatsapp-web.js";
 import log from "../utils/log";
 import { commands } from "../utils/cmd/loader";
 import { penalizeUser, rateLimiter } from "../utils/rateLimiter";
-import sleep from "../utils/sleep";
 import {
   addBlockUser,
   deductUserPoints,
@@ -21,14 +15,12 @@ import quiz from "../utils/quiz";
 import riddle from "../utils/riddle";
 import { getSetting } from "../services/settings";
 import { errors, mentionResponses } from "../utils/data";
-import { funD, happyEE, sadEE, loveEE } from "../../data/reaction";
-import { containsAny } from "../utils/string";
+import autoReaction from "../utils/message/react";
 import { InstantDownloader } from "../utils/instantdl/downloader";
 import { checkInappropriate } from "../utils/contentChecker";
-import prisma from "../prisma";
 import redis from "../redis";
-import queue from "../queue";
-import regex from "../emoji";
+import downloadQueue from "../queue/download";
+import reactQueue from "../queue/react";
 import ai from "../../commands/ai";
 import * as Sentry from "@sentry/node";
 
@@ -41,6 +33,10 @@ export default async function (msg: Message, type: string): Promise<void> {
     if (!msg.body) return;
     if (msg.timestamp < Date.now() / 1000 - 60 && type === "create") return;
     if (msg.isGif || msg.isStatus || msg.broadcast || msg.isForwarded) return; // ignore them all
+
+    // ignore @Meta AI and others
+    if (msg.author && msg.author.split("@")[1] === "bot") return;
+
     const lid: string = msg.author
       ? msg.author.split("@")[0]
       : msg.from.split("@")[0];
@@ -52,6 +48,8 @@ export default async function (msg: Message, type: string): Promise<void> {
      */
     if (!commandPrefixLess && prefix) return;
     if (msg.fromMe && prefix) return;
+
+    const receivedAt = Date.now();
 
     /*
      * Block users from running commands.
@@ -127,7 +125,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       await Promise.allSettled([
         quiz(msg),
         riddle(msg),
-        queue.add(() => InstantDownloader(msg)),
+        downloadQueue.add(() => InstantDownloader(msg)),
         (async () => {
           // override the msg!
           const react = { ...msg };
@@ -142,6 +140,7 @@ export default async function (msg: Message, type: string): Promise<void> {
           )
             return;
 
+<<<<<<< HEAD
           react.react = async (reaction: string): Promise<void> => {
             // add delay for more
             // humanly like interaction
@@ -182,6 +181,9 @@ export default async function (msg: Message, type: string): Promise<void> {
           } else if (containsAny(react.body, loveEE)) {
             await react.react("❤️");
           }
+=======
+          reactQueue.add(() => autoReaction(msg));
+>>>>>>> upstream/master
         })(),
         (async () => {
           const botId = (await client()).info.wid._serialized;
@@ -230,7 +232,17 @@ export default async function (msg: Message, type: string): Promise<void> {
     }
 
     log.info("Message", lid, key);
+<<<<<<< HEAD
     msg.body = newMessageBody;
+=======
+
+    if (newMessageBody.split(" ").length === 1 && msg.hasQuotedMsg) {
+      const qoutedMessage = await msg.getQuotedMessage();
+      msg.body = (newMessageBody + " " + qoutedMessage.body).trim();
+    } else {
+      msg.body = newMessageBody;
+    }
+>>>>>>> upstream/master
 
     /*
      *
@@ -246,7 +258,13 @@ export default async function (msg: Message, type: string): Promise<void> {
       options?: MessageSendOptions,
     ): Promise<Message> => {
       let messageBody = typeof content === "string" ? Font(content) : content;
+<<<<<<< HEAD
       log.info("Reply", lid, key);
+=======
+      const latency = Date.now() - receivedAt;
+      const latencySec = (latency / 1000).toFixed(2);
+      log.info("Reply", lid, `${key} ${latencySec}s`);
+>>>>>>> upstream/master
 
       if (!msg.fromMe) {
         const chat = await msg.getChat();
@@ -259,6 +277,12 @@ export default async function (msg: Message, type: string): Promise<void> {
           messageBody,
           options,
         );
+
+      if (msg.hasQuotedMsg) {
+        const quoted = await msg.getQuotedMessage();
+        return await quoted.reply(messageBody, chatId, options);
+      }
+
       return await originalReply(messageBody, chatId, options);
     };
 

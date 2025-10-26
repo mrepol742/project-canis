@@ -6,26 +6,32 @@ import * as Sentry from "@sentry/node";
 export async function findOrCreateGroup(chat: WAWebJS.Chat): Promise<void> {
   try {
     if (!chat.isGroup) return;
+
     const groupChat = chat as GroupChat;
 
-    const group = await prisma.group
-      .update({
+    await prisma.$transaction(async (tx) => {
+      const existingGroup = await tx.group.findUnique({
         where: { gid: groupChat.id.user },
+      });
+
+      if (existingGroup) {
+        await tx.group.update({
+          where: { gid: groupChat.id.user },
+          data: {
+            name: groupChat.name,
+            description: groupChat.description,
+          },
+        });
+        return;
+      }
+
+      await tx.group.create({
         data: {
+          gid: groupChat.id.user,
           name: groupChat.name,
           description: groupChat.description,
         },
-      })
-      .catch(() => null);
-
-    if (group) return;
-
-    await prisma.group.create({
-      data: {
-        gid: groupChat.id.user,
-        name: groupChat.name,
-        description: groupChat.description,
-      },
+      });
     });
   } catch (error) {
     Sentry.captureException(error);

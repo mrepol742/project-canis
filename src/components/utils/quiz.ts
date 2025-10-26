@@ -34,10 +34,13 @@ export default async function (msg: Message): Promise<void> {
       log.info("QuizAnswered", quizAttempt.quiz_id, "correct");
       await Promise.allSettled([
         redis.del(key),
-        msg.reply(done[Math.floor(Math.random() * done.length)]),
         addUserQuizPoints(msg, true),
         quoted.delete(true, true),
+<<<<<<< HEAD
         startNewQuiz(msg),
+=======
+        startNewQuiz(msg, true),
+>>>>>>> upstream/master
       ]);
     } else {
       log.info("QuizAnswered", quizAttempt.quiz_id, "wrong");

@@ -46,6 +46,16 @@ export default async function (
       : null;
 
     log.info("RevokeMessage", lid);
+<<<<<<< HEAD
+=======
+
+    // cant include captions under this certain messages
+    // so caption will be send first before the deleted message
+    if (["sticker", "ptt"].includes(msg.type) || msg.isGif) {
+      await msg.reply(caption);
+    }
+
+>>>>>>> upstream/master
     await Promise.all([
       addMessage(lid, revoked_msg.body, "revoke"),
       msg.reply(media || caption, undefined, {

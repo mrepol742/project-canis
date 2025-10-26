@@ -5,6 +5,7 @@ dist
 .temp
 .downloads
 .youtubei
+.tsbuildinfo
 *.log
 *.env
 *.phishtank
