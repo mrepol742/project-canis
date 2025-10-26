@@ -16,7 +16,7 @@ function checkNodeVersion() {
 function checkMySQL() {
   const dbUrl = process.env.DATABASE_URL || "mysql://root@127.0.0.1:3306";
   try {
-    const version = execSync("mariadb --version").toString().trim();
+    const version = execSync("mysql --version").toString().trim();
     log.info("MySQL", version);
   } catch {
     log.error(
