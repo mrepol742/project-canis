@@ -4,7 +4,6 @@ import fs from "fs";
 import path from "path";
 import { Innertube, UniversalCache, Platform, Types, Utils } from "youtubei.js";
 import log from "../components/utils/log";
-import { DownloadOptions } from "youtubei.js/dist/src/types";
 import { fileExists } from "../components/utils/file";
 
 export const info = {
@@ -38,7 +37,7 @@ Platform.shim.eval = async (
 async function safeDownload(
   yt: Innertube,
   id: string,
-  options: DownloadOptions,
+  options: Types.DownloadOptions,
   retries = 3,
 ) {
   for (let attempt = 1; attempt <= retries; attempt++) {

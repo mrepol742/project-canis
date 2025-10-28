@@ -1,5 +1,5 @@
 import { MessageMedia } from "whatsapp-web.js";
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import { getFbVideoInfo } from "fb-downloader-scrapper";
 import crypto from "crypto";
 import log from "../components/utils/log";
@@ -7,6 +7,7 @@ import axios from "../components/axios";
 import fs from "fs";
 import he from "he";
 import { fileExists } from "../components/utils/file";
+import redis from "../components/redis";
 
 export const info = {
   command: "fbdl",
@@ -42,6 +43,16 @@ export default async function (msg: Message): Promise<void> {
       msg.reply("No video found at the provided URL."),
       msg.react(""),
     ]);
+    return;
+  }
+
+  const key = `instantdownload:${md5FromUrl(result.url)}`;
+  const isPending = await redis.get(key);
+  if (isPending) {
+    log.warn(
+      "InstantDownload",
+      `The video is already in pending: ${query}, key: ${key}`,
+    );
     return;
   }
 

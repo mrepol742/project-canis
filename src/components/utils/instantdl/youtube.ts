@@ -1,9 +1,51 @@
 import { MessageMedia } from "whatsapp-web.js";
 import fs from "fs";
 import path from "path";
-import { Innertube, UniversalCache, Utils } from "youtubei.js";
+import { Innertube, UniversalCache, Platform, Types, Utils } from "youtubei.js";
 import { Video } from "./downloader";
 import { fileExists } from "../file";
+import log from "../log";
+
+Platform.shim.eval = async (
+  data: Types.BuildScriptResult,
+  env: Record<string, Types.VMPrimative>,
+) => {
+  const properties = [];
+
+  if (env.n) {
+    properties.push(`n: exportedVars.nFunction("${env.n}")`);
+  }
+
+  if (env.sig) {
+    properties.push(`sig: exportedVars.sigFunction("${env.sig}")`);
+  }
+
+  const code = `${data.output}\nreturn { ${properties.join(", ")} }`;
+
+  return new Function(code)();
+};
+
+async function safeDownload(
+  yt: Innertube,
+  id: string,
+  options: Types.DownloadOptions,
+  retries = 3,
+) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const stream = await yt.download(id, options);
+      return stream;
+    } catch (err) {
+      log.error(
+        "InstantDownload",
+        `Download failed (attempt ${attempt}/${retries}):`,
+        err,
+      );
+      if (attempt === retries) throw err;
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  }
+}
 
 export async function YoutubeShortsInstantDownloader(
   query: string,
@@ -11,7 +53,6 @@ export async function YoutubeShortsInstantDownloader(
   const yt = await Innertube.create({
     cache: new UniversalCache(false),
     generate_session_locally: true,
-    player_id: "0004de42",
   });
 
   const endpoint = await yt.resolveURL(query);
@@ -29,7 +70,7 @@ export async function YoutubeShortsInstantDownloader(
     };
   }
 
-  const stream = await yt.download(videoId, {
+  const stream = await safeDownload(yt, videoId, {
     type: "video+audio",
     quality: "best",
     format: "mp4",
