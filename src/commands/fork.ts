@@ -14,16 +14,12 @@ export default async function (msg: Message): Promise<void> {
     \`Open Source\`
     Don't forget to leave a star and fork it on Github.
 
-    \`Canis for WhatsApp\`
-    https://github.com/mrepol742/project-canis
-
-    \`Canis for Telegram\`
-    https://github.com/mrepol742/project-canis-tg
-
     This bot is not affiliated, endorsed, partner, or connected to Meta.
     Use it at your own RISK.
 
     Type \`Legal\` for more information.
+
+    https://www.melvinjonesrepol.com/projects/project-canis
   `;
   await msg.reply(text);
 }
