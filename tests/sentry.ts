@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config({ quiet: true, debug: process.env.DEBUG === "true" });
 import * as Sentry from "@sentry/node";
 
 Sentry.init({
@@ -7,3 +9,8 @@ Sentry.init({
   sendDefaultPii: false,
   enabled: process.env.DEBUG !== "true",
 });
+
+const test =
+  "🚀 Hello if you read this, it's just a test error. nothing serious so far.";
+Sentry.captureException(new Error(test));
+console.error(test);
