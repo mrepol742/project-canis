@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ quiet: true, debug: process.env.DEBUG === "true" });
+dotenv.config();
 import * as Sentry from "@sentry/node";
 
 Sentry.init({
@@ -7,7 +7,6 @@ Sentry.init({
   // Setting this option to true will send default PII data to Sentry.
   // For example, automatic IP address collection on events
   sendDefaultPii: false,
-  enabled: process.env.DEBUG !== "true",
 });
 
 const test =

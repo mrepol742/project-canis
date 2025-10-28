@@ -83,14 +83,14 @@ Canis supports multiple AI providers out of the box:
    | `PHISHTANK_UPDATE_HOUR`       | ❌        | Hour to run daily update (UTC)                     | `3`                                         |
    | `PHISHTANK_AUTO_UPDATE`       | ❌        | Automatically update PhishTank data                | `true`                                      |
    | `SENTRY_DNS`                  | ❌        | Sentry DSN for error tracking                      |                                             |
-   | `DEBUG`                       | ❌        | Enable debug mode for extra logging                | `true`                                      |
+   | `NODE_ENV`                    | ✅       | Environment                                        | `development`                               |
    | `COMMAND_PREFIX`              | ❌        | The command prefix used by the bot                 | `!`                                         |
    | `COMMAND_PREFIX_LESS`         | ❌        | Allow commands without prefix                      | `true`                                      |
-   | `PORT`                        | ✅        | Port for running the server                        | `3000`                                      |
+   | `PORT`                        | ✅       | Port for running the server                        | `3000`                                      |
    | `PUPPETEER_EXEC_PATH`         | ❌        | Path to Chrome/Edge/Brave/Firefox for Puppeteer    | `/opt/google/chrome/google-chrome`          |
    | `AUTO_RELOAD`                 | ❌        | Reload command files automatically when edited     | `false`                                     |
-   | `DATABASE_URL`                | ✅        | MySQL database connection URL                      | `mysql://root@127.0.0.1:3306/project_canis` |
-   | `REDIS_URL`                   | ✅        | Redis connection URL                               | `redis://127.0.0.1:6379`                    |
+   | `DATABASE_URL`                | ✅       | MySQL database connection URL                      | `mysql://root@127.0.0.1:3306/project_canis` |
+   | `REDIS_URL`                   | ✅       | Redis connection URL                               | `redis://127.0.0.1:6379`                    |
    | `AI_PROVIDER`                 | ❌        | Preferred AI provider (`groq`, `openrouter`, etc.) | `groq`                                      |
    | `OPEN_ROUTER_API_KEY`         | ❌        | API key for OpenRouter                             |                                             |
    | `OPEN_ROUTER_MODEL`           | ❌        | OpenRouter model to use                            | `moonshotai/kimi-k2:free`                   |
