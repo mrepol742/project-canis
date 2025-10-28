@@ -9,7 +9,6 @@
     "build:clean": "ts-node scripts/build.ts --clean",
     "start": "clear && while [ true ]; do node dist/index.js ; done",
     "dev": "clear && while [ true ]; do ts-node src/index.ts ; done",
-    "test:wa": "ts-node tests/webwhatsapp.ts",
     "test:sentry": "ts-node tests/sentry.ts"
   },
   "author": {
