@@ -38,7 +38,7 @@ Canis supports multiple AI providers out of the box:
 
 ## Prerequisites
 
-- Node.js (>=24)
+- Node.js (>=18.x)
 - MySQL
 
   You can changed the db provider in `prisma/schema.prisma`

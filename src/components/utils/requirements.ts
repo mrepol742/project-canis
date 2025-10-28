@@ -7,7 +7,7 @@ import redis from "../redis";
 
 function checkNodeVersion() {
   const current = process.versions.node;
-  const required = ">=24.0.0";
+  const required = ">=18.0.0";
   if (!semver.satisfies(current, required)) {
     log.warn("Node", `Node.js ${required} required, found ${current}`);
   } else {
