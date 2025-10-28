@@ -2,6 +2,8 @@ import { execSync } from "child_process";
 import * as process from "process";
 import semver from "semver";
 import log from "./log";
+import prisma from "../../components/prisma";
+import redis from "../redis";
 
 function checkNodeVersion() {
   const current = process.versions.node;
@@ -13,25 +15,29 @@ function checkNodeVersion() {
   }
 }
 
-function checkMySQL() {
+async function checkDatabase() {
   const dbUrl = process.env.DATABASE_URL || "mysql://root@127.0.0.1:3306";
   try {
-    const version = execSync("mariadb --version").toString().trim();
-    log.info("MySQL", version);
+    const start = Date.now();
+    await prisma.$queryRaw`SELECT 1`;
+    const end = Date.now() - start;
+    log.info("Database", `Ping ${end}ms at ${dbUrl}`);
   } catch {
     log.error(
-      "MySQL",
-      "MySQL is required but not found (install mysql-client or ensure server is accessible).",
+      "Database",
+      "Database is required but not found (install mariadb or ensure server is running",
     );
     process.exit(1);
   }
 }
 
-function checkRedis() {
+async function checkRedis() {
   const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
   try {
-    const version = execSync("redis-cli --version").toString().trim();
-    log.info("Redis", version);
+    const start = Date.now();
+    await redis.ping();
+    const end = Date.now() - start;
+    log.info("Redis", `Ping ${end}ms at ${redisUrl}`);
   } catch {
     log.error(
       "Redis",
@@ -55,24 +61,11 @@ function checkChrome() {
   }
 }
 
-function checkFFMPEG() {
-  try {
-    const version = execSync("ffmpeg -version")
-      .toString()
-      .split("\n")[0]
-      .trim();
-    log.info("FFMPEG", version);
-  } catch {
-    log.warn("FFMPEG", "FFmpeg not found. Some features may not work.");
-  }
-}
-
 export function checkRequirements() {
   log.info("Requirements", "Checking bot requirements...");
   checkNodeVersion();
-  checkMySQL();
+  checkDatabase();
   checkRedis();
   checkChrome();
-  checkFFMPEG();
   log.info("Requirements", "Bot requirements check complete.");
 }
