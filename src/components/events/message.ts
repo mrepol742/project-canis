@@ -26,6 +26,7 @@ import * as Sentry from "@sentry/node";
 
 const commandPrefix: string = process.env.COMMAND_PREFIX || "!";
 const commandPrefixLess: boolean = process.env.COMMAND_PREFIX_LESS === "true";
+const enableBotFont: boolean = process.env.PROJECT_ENABLE_BOT_FONT === "true";
 
 export default async function (msg: Message, type: string): Promise<void> {
   try {
@@ -210,7 +211,8 @@ export default async function (msg: Message, type: string): Promise<void> {
       chatId?: string,
       options?: MessageSendOptions,
     ): Promise<Message> => {
-      let messageBody = typeof content === "string" ? Font(content) : content;
+      let messageBody =
+        typeof content === "string" && enableBotFont ? Font(content) : content;
       const latency = Date.now() - receivedAt;
       const latencySec = (latency / 1000).toFixed(2);
       log.info("Reply", lid, `${key} ${latencySec}s`);
