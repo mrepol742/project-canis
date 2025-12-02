@@ -61,7 +61,7 @@ Canis supports multiple AI providers out of the box:
 2. **Install dependencies**
 
    ```sh
-   npm install
+   npm install or pnpm i
    ```
 
 3. **Setup environment variables**
