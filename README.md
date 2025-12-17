@@ -61,7 +61,7 @@ Canis supports multiple AI providers out of the box:
 2. **Install dependencies**
 
    ```sh
-   npm install or pnpm i
+   npm i
    ```
 
 3. **Setup environment variables**
@@ -93,7 +93,7 @@ Canis supports multiple AI providers out of the box:
 2. **Start**
 
    ```
-   pm2 start ecosystem.config.js
+   pm2 start
    ```
 
 #### NodeJS

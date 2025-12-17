@@ -21,5 +21,8 @@ jobs:
       - name: Clean Install Dependencies
         run: npm ci
 
+      - name: Setup environment
+        run: cp .env.example .env
+
       - name: Build project
         run: npm run build

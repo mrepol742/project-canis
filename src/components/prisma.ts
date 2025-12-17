@@ -1,15 +1,25 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/client";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
-declare global {
-  var _sharedPrisma: PrismaClient;
-}
+const globalForPrisma = globalThis as unknown as {
+  prisma?: PrismaClient;
+};
 
-if (!global._sharedPrisma) {
-  global._sharedPrisma = new PrismaClient({
-    log: ["warn", "error"],
+const adapter = new PrismaMariaDb({
+  host: process.env.PRISMA_MARIA_DB_HOST ?? "127.0.0.1",
+  user: process.env.PRISMA_MARIA_DB_USER ?? "root",
+  password: process.env.PRISMA_MARIA_DB_PASSWORD ?? "",
+  database: process.env.PRISMA_MARIA_DB_DATABASE ?? "project_canis",
+});
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    adapter,
   });
-}
 
-const prisma = global._sharedPrisma;
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
 
 export default prisma;

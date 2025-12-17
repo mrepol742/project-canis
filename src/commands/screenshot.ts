@@ -62,7 +62,7 @@ export default async function (msg: Message): Promise<void> {
 
     const media = new MessageMedia(
       "image/png",
-      buffer.toString("base64"),
+      buffer.toString(),
       `screenshot.png`,
     );
 

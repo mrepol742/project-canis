@@ -9,3 +9,4 @@ dist
 *.log
 *.env
 *.phishtank
+src/generated
