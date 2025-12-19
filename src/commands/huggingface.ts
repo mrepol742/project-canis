@@ -29,7 +29,7 @@ export default async function (msg: Message): Promise<void> {
   const models = response.data[0];
   const info = `
     \`${models.modelId}\`
-    ${models.tags.splice(0, 5).join(", ") || "N/A"}
+    ${models.tags.splice(0, 5).join(", ") ?? "N/A"}
 
     Library: ${models.library_name}
     Pipeline: ${models.pipeline_tag}

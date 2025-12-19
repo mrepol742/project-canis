@@ -1,13 +1,12 @@
 import { phishingSet } from "../../..";
+import { PHISHTANK_ENABLE } from "../../../config";
 import { Message } from "../../../types/message";
 import log from "../log";
 import { normalize } from "../url";
 import * as Sentry from "@sentry/node";
 
-const isPhishtankEnable = process.env.PHISHTANK_ENABLE === "true";
-
 export default async function (msg: Message): Promise<void> {
-  if (!isPhishtankEnable) return;
+  if (!PHISHTANK_ENABLE) return;
   try {
     const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g) || [];
     if (!extractUrls || extractUrls.length === 0) return;

@@ -22,6 +22,7 @@ import DownloadMedia from "./utils/message/download";
 import CheckSpamLink from "./utils/phishtank/checkSpam";
 import queue from "./queue/download";
 import groupAdminChanged from "./events/groups/groupAdminChanged";
+import { PUPPETEER_EXEC_PATH } from "../config";
 
 let instance: Client | null = null;
 let isLoadingBarStarted = false;
@@ -53,8 +54,7 @@ async function client(): Promise<Client> {
         "--disable-hang-monitor",
       ],
       defaultViewport: { width: 1366, height: 768 },
-      executablePath:
-        process.env.PUPPETEER_EXEC_PATH || "/opt/google/chrome/google-chrome",
+      executablePath: PUPPETEER_EXEC_PATH,
     },
     authStrategy: new LocalAuth(),
   });
@@ -92,7 +92,7 @@ function registerEvents(client: Client): void {
   client.on("message_create", (msg: Message) => {
     CheckSpamLink(msg);
     messageEvent(msg, "create");
-     queue.add(() => DownloadMedia(msg))
+    queue.add(() => DownloadMedia(msg));
   });
 
   client.on(

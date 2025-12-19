@@ -28,7 +28,7 @@ export default async function (msg: Message): Promise<void> {
   const data = response.data;
   const title = data.title || query;
   const description = data.description ? `(${data.description})` : "";
-  const extract = data.extract || "No summary available.";
+  const extract = data.extract ?? "No summary available.";
 
   const info = `
     \`${title}\`

@@ -1,3 +1,10 @@
+import {
+  NODE_ENV,
+  PRISMA_MARIA_DB_DATABASE,
+  PRISMA_MARIA_DB_HOST,
+  PRISMA_MARIA_DB_PASSWORD,
+  PRISMA_MARIA_DB_USER,
+} from "../config";
 import { PrismaClient } from "../generated/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
@@ -6,10 +13,10 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 const adapter = new PrismaMariaDb({
-  host: process.env.PRISMA_MARIA_DB_HOST ?? "127.0.0.1",
-  user: process.env.PRISMA_MARIA_DB_USER ?? "root",
-  password: process.env.PRISMA_MARIA_DB_PASSWORD ?? "",
-  database: process.env.PRISMA_MARIA_DB_DATABASE ?? "project_canis",
+  host: PRISMA_MARIA_DB_HOST,
+  user: PRISMA_MARIA_DB_USER,
+  password: PRISMA_MARIA_DB_PASSWORD,
+  database: PRISMA_MARIA_DB_DATABASE,
 });
 
 export const prisma =
@@ -18,7 +25,7 @@ export const prisma =
     adapter,
   });
 
-if (process.env.NODE_ENV !== "production") {
+if (NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 

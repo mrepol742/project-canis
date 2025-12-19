@@ -104,10 +104,10 @@ export default async function loader(
 
         commands[commandModule.info.command] = {
           command: commandModule.info.command,
-          description: commandModule.info.description || "No description",
-          usage: commandModule.info.usage || "No usage",
-          example: commandModule.info.example || "No example",
-          role: commandModule.info.role || "user",
+          description: commandModule.info.description ?? "No description",
+          usage: commandModule.info.usage ?? "No usage",
+          example: commandModule.info.example ?? "No example",
+          role: commandModule.info.role ?? "user",
           cooldown: commandModule.info.cooldown || 5000,
           exec: commandModule.default,
         };

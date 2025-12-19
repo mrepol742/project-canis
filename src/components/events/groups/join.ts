@@ -4,8 +4,7 @@ import sleep from "../../utils/sleep";
 import { client } from "../../client";
 import { getMessage } from "../../../data/group";
 import * as Sentry from "@sentry/node";
-
-const PROJECT_CANIS_ALIAS: string = process.env.PROJECT_CANIS_ALIAS || "Canis";
+import { PROJECT_CANIS_ALIAS } from "../../../config";
 
 export default async function (notif: GroupNotification): Promise<void> {
   try {

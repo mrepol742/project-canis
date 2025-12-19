@@ -37,9 +37,9 @@ export default async function (msg: Message): Promise<void> {
 
   const info = `
     \`${user.name || user.login}\`
-    ${user.bio || ""}
+    ${user.bio ?? ""}
 
-    Place: ${user.location || "N/A"}
+    Place: ${user.location ?? "N/A"}
     Followers: ${user.followers}
     Following: ${user.following}
     Gists: ${user.public_gists}
@@ -49,7 +49,7 @@ export default async function (msg: Message): Promise<void> {
         ? `https://twitter.com/${user.twitter_username}`
         : "N/A"
     }
-    Link: ${user.blog || "N/A"}
+    Link: ${user.blog ?? "N/A"}
   `;
   await msg.reply(downloadAvatar, undefined, {
     caption: info,

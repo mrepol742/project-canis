@@ -75,7 +75,7 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
     const contact = await msg.getContact();
 
     const name = contact?.pushname || contact?.name || "null";
-    const number = contact?.number || "0";
+    const number = contact?.number ?? "0";
     const countryCode = contact
       ? await contact.getCountryCode().catch(() => "null")
       : "null";

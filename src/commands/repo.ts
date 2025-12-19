@@ -29,14 +29,14 @@ export default async function (msg: Message): Promise<void> {
 
   const info = `
     \`${repo.name}\`
-    ${repo.description.substring(0, 100) || "No description available."}
+    ${repo.description.substring(0, 100) ?? "No description available."}
 
     Stars: ${repo.stargazers_count}
     Forks: ${repo.forks_count}
     Open Issues: ${repo.open_issues_count}
     Watchers: ${repo.watchers_count}
     Stargazers: ${repo.stargazers_count}
-    Language:${repo.language || "N/A"}
+    Language:${repo.language ?? "N/A"}
     License: ${repo.license ? repo.license.name : "N/A"}
     Is Fork: ${repo.fork ? "Yes" : "No"}
     Is Template: ${repo.is_template ? "Yes" : "No"}

@@ -8,6 +8,7 @@ import { commands } from "../components/utils/cmd/loader";
 import timestamp from "../components/utils/timestamp";
 import speedTest from "../components/utils/speedtest";
 import redis from "../components/redis";
+import { PROJECT_CANIS_ALIAS } from "../config";
 
 export const info = {
   command: "stats",
@@ -23,7 +24,6 @@ export default async function (msg: Message): Promise<void> {
   // Node.js runtime stats
   const mem = process.memoryUsage();
   const cpu = process.cpuUsage();
-  const PROJECT_CANIS_ALIAS = process.env.PROJECT_CANIS_ALIAS || "Canis";
 
   const nodeStats = {
     rss: (mem.rss / 1024 ** 2).toFixed(2), // MB

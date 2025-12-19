@@ -23,10 +23,12 @@ import downloadQueue from "../queue/download";
 import reactQueue from "../queue/react";
 import ai from "../../commands/ai";
 import * as Sentry from "@sentry/node";
-
-const commandPrefix: string = process.env.COMMAND_PREFIX || "!";
-const commandPrefixLess: boolean = process.env.COMMAND_PREFIX_LESS === "true";
-const enableBotFont: boolean = process.env.PROJECT_ENABLE_BOT_FONT === "true";
+import {
+  COMMAND_PREFIX,
+  COMMAND_PREFIX_LESS,
+  PROJECT_CANIS_ALIAS,
+  PROJECT_ENABLE_BOT_FONT,
+} from "../../config";
 
 export default async function (msg: Message, type: string): Promise<void> {
   try {
@@ -42,12 +44,12 @@ export default async function (msg: Message, type: string): Promise<void> {
       ? msg.author.split("@")[0]
       : msg.from.split("@")[0];
 
-    const prefix: boolean = !msg.body.startsWith(commandPrefix);
+    const prefix: boolean = !msg.body.startsWith(COMMAND_PREFIX);
 
     /*
      * Prefix
      */
-    if (!commandPrefixLess && prefix) return;
+    if (!COMMAND_PREFIX_LESS && prefix) return;
     if (msg.fromMe && prefix) return;
 
     const receivedAt = Date.now();
@@ -96,7 +98,7 @@ export default async function (msg: Message, type: string): Promise<void> {
 
     const rawBody = msg.body;
 
-    const prefixRegex = new RegExp(`^(${commandPrefix})\\s*`, "i");
+    const prefixRegex = new RegExp(`^(${COMMAND_PREFIX})\\s*`, "i");
     const bodyHasPrefix = prefixRegex.test(rawBody);
     const cleanedBody = bodyHasPrefix
       ? rawBody.replace(prefixRegex, "")
@@ -158,10 +160,7 @@ export default async function (msg: Message, type: string): Promise<void> {
           }
 
           msg.body += `Sender name is: @${lid}`;
-          msg.body = msg.body.replaceAll(
-            `@${lid}`,
-            process.env.PROJECT_CANIS_ALIAS || "Canis",
-          );
+          msg.body = msg.body.replaceAll(`@${lid}`, PROJECT_CANIS_ALIAS);
           msg.mentionedIds = msg.mentionedIds.map((mentionedId: string) =>
             mentionedId === botId ? lid : mentionedId,
           );
@@ -212,7 +211,9 @@ export default async function (msg: Message, type: string): Promise<void> {
       options?: MessageSendOptions,
     ): Promise<Message> => {
       let messageBody =
-        typeof content === "string" && enableBotFont ? Font(content) : content;
+        typeof content === "string" && PROJECT_ENABLE_BOT_FONT
+          ? Font(content)
+          : content;
       const latency = Date.now() - receivedAt;
       const latencySec = (latency / 1000).toFixed(2);
       log.info("Reply", lid, `${key} ${latencySec}s`);

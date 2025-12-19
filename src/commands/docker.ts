@@ -54,7 +54,7 @@ export default async function (msg: Message): Promise<void> {
   const repo = response.data;
   const info = `
     \`${repo.name}\`
-    ${repo.description || ""}
+    ${repo.description ?? ""}
 
     Stars: ${repo.star_count}
     Pulls: ${repo.pull_count}

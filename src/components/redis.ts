@@ -1,5 +1,6 @@
 import { createClient, type RedisClientType } from "redis";
 import log from "./utils/log";
+import { REDIS_URL } from "../config";
 
 declare global {
   var _sharedRedis: RedisClientType;
@@ -7,7 +8,7 @@ declare global {
 
 if (!global._sharedRedis) {
   const client: RedisClientType = createClient({
-    url: process.env.REDIS_URL || "redis://localhost:6379",
+    url: REDIS_URL,
     socket: {
       connectTimeout: 30000,
       reconnectStrategy: (retries) => Math.min(retries * 100, 3000),

@@ -1,5 +1,6 @@
-import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import dotenv from "dotenv";
+dotenv.config({ quiet: true, debug: process.env.NODE_ENV === "production" });
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",

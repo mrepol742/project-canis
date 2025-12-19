@@ -1,6 +1,7 @@
 import log from "npmlog";
+import { NODE_ENV } from "../../config";
 
-if (process.env.NODE_ENV === "production") {
+if (NODE_ENV === "production") {
   const methodsToPatch = ["error", "warn"];
 
   for (const method of methodsToPatch) {

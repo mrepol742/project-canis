@@ -41,14 +41,14 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  const name = data.name || "-";
-  const version = versionData.version || "-";
-  const description = versionData.description || "-";
-  const author = versionData.author?.name || "-";
-  const homepage = versionData.homepage || "-";
-  const repository = versionData.repository?.url || "-";
-  const license = versionData.license || "-";
-  const lastPublished = data.time?.[latestVersion] || "-";
+  const name = data.name ?? "-";
+  const version = versionData.version ?? "-";
+  const description = versionData.description ?? "-";
+  const author = versionData.author?.name ?? "-";
+  const homepage = versionData.homepage ?? "-";
+  const repository = versionData.repository?.url ?? "-";
+  const license = versionData.license ?? "-";
+  const lastPublished = data.time?.[latestVersion] ?? "-";
 
   // Format lastPublished date nicely, e.g., "June 13 2002"
   let formattedPublished = "-";

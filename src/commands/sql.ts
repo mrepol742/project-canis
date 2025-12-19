@@ -29,7 +29,7 @@ export default async function (msg: Message): Promise<void> {
       await msg.reply(output);
     }
   } catch (err: any) {
-    const message = err?.message || "Unknown SQL error.";
+    const message = err?.message ?? "Unknown SQL error.";
     await msg.reply(message);
     log.error("sql", `Error running query: ${query}`, err);
   }

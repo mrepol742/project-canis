@@ -1,4 +1,5 @@
 import PQueue from "p-queue";
+import { P_QUEUE_CONCURRENCY_COUNT } from "../../config";
 
 declare global {
   var _sharedQueue: PQueue;
@@ -6,7 +7,7 @@ declare global {
 
 if (!global._sharedQueue) {
   global._sharedQueue = new PQueue({
-    concurrency: parseInt(process.env.P_QUEUE_CONCURRENCY_COUNT || "2"),
+    concurrency: P_QUEUE_CONCURRENCY_COUNT,
   });
 }
 

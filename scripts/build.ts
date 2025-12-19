@@ -21,11 +21,7 @@ exec("tsc", (err, stdout, stderr) => {
   const end = Date.now();
   const duration = ((end - start) / 1000).toFixed(2);
 
-  if (err) {
-    console.error("Build failed:", stderr);
-    process.exit(1);
-  } else {
-    console.log(stdout);
-    console.log(`Build took ${duration} seconds`);
-  }
+  console.log(stdout);
+  console.log(`Build ${err ? "failed" : "success"} took ${duration} seconds`);
+  if (err) process.exit(1);
 });

@@ -5,7 +5,7 @@ import log from "./log";
 import prisma from "../../components/prisma";
 import redis from "../redis";
 
-function checkNodeVersion() {
+function checkNodeVersion(): void {
   const current = process.versions.node;
   const required = ">=18.0.0";
   if (!semver.satisfies(current, required)) {
@@ -15,13 +15,12 @@ function checkNodeVersion() {
   }
 }
 
-async function checkDatabase() {
-  const dbUrl = process.env.DATABASE_URL || "mysql://root@127.0.0.1:3306";
+async function checkDatabase(): Promise<void> {
   try {
     const start = Date.now();
     await prisma.$queryRaw`SELECT 1`;
     const end = Date.now() - start;
-    log.info("Database", `Ping ${end}ms at ${dbUrl}`);
+    log.info("Database", `${end}ms Ping`);
   } catch {
     log.error(
       "Database",
@@ -31,13 +30,12 @@ async function checkDatabase() {
   }
 }
 
-async function checkRedis() {
-  const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+async function checkRedis(): Promise<void> {
   try {
     const start = Date.now();
     await redis.ping();
     const end = Date.now() - start;
-    log.info("Redis", `Ping ${end}ms at ${redisUrl}`);
+    log.info("Redis", `${end}ms Ping`);
   } catch {
     log.error(
       "Redis",
@@ -47,7 +45,7 @@ async function checkRedis() {
   }
 }
 
-function checkChrome() {
+function checkChrome(): void {
   try {
     const version = execSync("google-chrome-stable --version")
       .toString()
@@ -61,7 +59,7 @@ function checkChrome() {
   }
 }
 
-function checkFFMPEG() {
+function checkFFMPEG(): void {
   try {
     const version = execSync("ffmpeg -version")
       .toString()
@@ -73,12 +71,11 @@ function checkFFMPEG() {
   }
 }
 
-export function checkRequirements() {
+export async function checkRequirements() {
   log.info("Requirements", "Checking bot requirements...");
   checkNodeVersion();
-  checkDatabase();
-  checkRedis();
   checkChrome();
   checkFFMPEG();
+  await Promise.all([checkDatabase(), checkRedis()]);
   log.info("Requirements", "Bot requirements check complete.");
 }
