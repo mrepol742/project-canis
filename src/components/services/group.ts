@@ -8,30 +8,17 @@ export async function findOrCreateGroup(chat: WAWebJS.Chat): Promise<void> {
     if (!chat.isGroup) return;
 
     const groupChat = chat as GroupChat;
-
-    await prisma.$transaction(async (tx) => {
-      const existingGroup = await tx.group.findUnique({
-        where: { gid: groupChat.id.user },
-      });
-
-      if (existingGroup) {
-        await tx.group.update({
-          where: { gid: groupChat.id.user },
-          data: {
-            name: groupChat.name,
-            description: groupChat.description,
-          },
-        });
-        return;
-      }
-
-      await tx.group.create({
-        data: {
-          gid: groupChat.id.user,
-          name: groupChat.name,
-          description: groupChat.description,
-        },
-      });
+    await prisma.group.upsert({
+      where: { gid: groupChat.id.user },
+      update: {
+        name: groupChat.name,
+        description: groupChat.description,
+      },
+      create: {
+        gid: groupChat.id.user,
+        name: groupChat.name,
+        description: groupChat.description,
+      },
     });
   } catch (error) {
     Sentry.captureException(error);
