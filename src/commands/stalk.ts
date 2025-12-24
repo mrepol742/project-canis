@@ -60,7 +60,7 @@ export default async function (msg: Message): Promise<void> {
   }
 
   const phoneNumber = parsePhoneNumber(`+${user.number}`);
-  const countryCode = phoneNumber?.country || "";
+  const countryCode = phoneNumber?.country ?? "";
   const time = getCurrentTimeByCountryCode(countryCode);
   const ratelimit: RateEntry = isBlockedTemporarily
     ? JSON.parse(isBlockedTemporarily)
@@ -68,7 +68,7 @@ export default async function (msg: Message): Promise<void> {
 
   const text = `
     \`${user.name}\`
-    ${user.about || "No about information available."}
+    ${user.about ?? "No about information available."}
 
     ID: ${user.lid}
     Number: ${user.number}

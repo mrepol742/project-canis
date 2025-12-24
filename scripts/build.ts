@@ -1,6 +1,6 @@
-const { execSync, exec } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+import { exec } from "child_process";
+import fs from "fs";
+import path from "path";
 
 const args = process.argv.slice(2);
 
@@ -15,19 +15,13 @@ if (args.includes("--clean")) {
   }
 }
 
-console.log("Build started at:", new Date().toLocaleTimeString());
 const start = Date.now();
 
 exec("tsc", (err, stdout, stderr) => {
   const end = Date.now();
   const duration = ((end - start) / 1000).toFixed(2);
 
-  if (err) {
-    console.error("Build failed:", stderr);
-    process.exit(1);
-  } else {
-    console.log(stdout);
-    console.log("Build finished at:", new Date().toLocaleTimeString());
-    console.log(`Build took ${duration} seconds`);
-  }
+  console.log(stdout);
+  console.log(`Build ${err ? "failed" : "success"} took ${duration} seconds`);
+  if (err) process.exit(1);
 });

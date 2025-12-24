@@ -42,7 +42,7 @@ export default async function (msg: Message): Promise<void> {
   }
 
   const phoneNumber = parsePhoneNumber(`+${user.number}`);
-  const countryCode = phoneNumber?.country || "";
+  const countryCode = phoneNumber?.country ?? "";
   const time = getCurrentTimeByCountryCode(countryCode);
   const self = (await client()).info.wid._serialized;
   const ratelimit: RateEntry = isBlockedTemporarily
@@ -51,7 +51,7 @@ export default async function (msg: Message): Promise<void> {
 
   const text = `
     \`${user.name}\`
-    ${user.about || "No more about you (its private)."}
+    ${user.about ?? "No more about you (its private)."}
 
     ID: ${user.lid}
     Number: ${user.number}

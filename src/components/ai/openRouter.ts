@@ -1,8 +1,9 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { generateText } from "ai";
+import { OPEN_ROUTER_API_KEY } from "../../config";
 
 const openrouter = createOpenRouter({
-  apiKey: process.env.OPEN_ROUTER_API_KEY || "",
+  apiKey: OPEN_ROUTER_API_KEY,
 });
 
 export { openrouter, generateText };

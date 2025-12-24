@@ -1,3 +1,4 @@
+import { PROJECT_CANIS_ALIAS } from "../config";
 import { Message } from "../types/message"
 
 export const info = {
@@ -42,7 +43,7 @@ export default async function (msg: Message): Promise<void> {
 
   await msg.reply(media, undefined, {
     sendMediaAsSticker: true,
-    stickerAuthor: process.env.PROJECT_CANIS_ALIAS || "Canis",
+    stickerAuthor: PROJECT_CANIS_ALIAS,
     stickerName: "Sticker",
   });
 }

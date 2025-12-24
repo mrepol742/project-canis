@@ -41,9 +41,9 @@ export default async function (msg: Message): Promise<void> {
   const text = `
     \`Pong ${total.toFixed(2)}ms\`
 
-    Network: ${networkLatency?.ping.latency || "Unknown"}ms
-    Redis: ${redisLatency || "Unknown"}ms
-    Prisma: ${prismaLatency || "Unknown"}ms
+    Network: ${networkLatency?.ping.latency ?? "Unknown"}ms
+    Redis: ${redisLatency ?? "Unknown"}ms
+    Prisma: ${prismaLatency ?? "Unknown"}ms
   `;
   msg.reply(text);
 }

@@ -55,50 +55,50 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
   const points = parseFloat(rand.toFixed(1));
 
   try {
-    const result = await prisma.$transaction(async (tx) => {
-      const user = await tx.user.findUnique({ where: { lid } });
-
-      if (user) {
-        await tx.user.update({
-          where: { lid },
-          data: {
-            commandCount: { increment: 1 },
-            points: { increment: points },
-          },
-        });
-
-        return false;
-      }
-
-      const contact = await msg.getContact();
-      const name = contact?.pushname || contact?.name || "null";
-      const number = contact?.number || "0";
-      const countryCode = contact
-        ? await contact.getCountryCode().catch(() => "null")
-        : "null";
-      const about = contact ? await contact.getAbout().catch(() => null) : null;
-
-      await Promise.allSettled([
-        msg.react("✅"),
-        tx.user.create({
-          data: {
-            lid,
-            name,
-            number,
-            countryCode,
-            type: contact?.isBusiness ? "business" : "private",
-            mode: msg.author ? "group" : "private",
-            about: about ? filterContent(about) : null,
-            commandCount: 1,
-            points,
-          },
-        }),
-      ]);
-
-      return true;
+    const existingUser = await prisma.user.findUnique({
+      where: { lid },
+      select: { id: true }
     });
 
-    return result;
+    if (existingUser) {
+      await prisma.user.update({
+        where: { lid },
+        data: {
+          commandCount: { increment: 1 },
+          points: { increment: points },
+        },
+      });
+
+      return false;
+    }
+
+    const contact = await msg.getContact();
+
+    const name = contact?.pushname || contact?.name || "null";
+    const number = contact?.number ?? "0";
+    const countryCode = contact
+      ? await contact.getCountryCode().catch(() => "null")
+      : "null";
+    const about = contact
+      ? await contact.getAbout().catch(() => null)
+      : null;
+
+    await prisma.user.create({
+      data: {
+        lid,
+        name,
+        number,
+        countryCode,
+        type: contact?.isBusiness ? "business" : "private",
+        mode: msg.author ? "group" : "private",
+        about: about ? filterContent(about) : null,
+        commandCount: 1,
+        points,
+      },
+    });
+
+    msg.react("✅").catch(() => {});
+    return true;
   } catch (error) {
     Sentry.captureException(error);
     log.error("Database", `Failed to find or create user.`, error);
@@ -290,11 +290,13 @@ export async function deductUserPoints(
   points: number,
 ): Promise<void> {
   try {
-    await prisma.$transaction(async (tx) => {
-      await tx.user.update({
-        where: { lid },
-        data: { points: { decrement: points } },
-      });
+    await prisma.user.update({
+      where: { lid },
+      data: {
+        points: {
+          decrement: points,
+        },
+      },
     });
   } catch (error) {
     Sentry.captureException(error);
@@ -307,11 +309,9 @@ export async function addUserPoints(
   points: number,
 ): Promise<void> {
   try {
-    await prisma.$transaction(async (tx) => {
-      await tx.user.update({
-        where: { lid },
-        data: { points: { increment: points } },
-      });
+    await prisma.user.update({
+      where: { lid },
+      data: { points: { increment: points } },
     });
   } catch (error) {
     Sentry.captureException(error);

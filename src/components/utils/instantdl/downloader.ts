@@ -18,9 +18,9 @@ function md5FromUrl(url: string): string {
 }
 
 const facebookUrlRegex =
-  /^(https?:\/\/)?(www\.)?(facebook\.com|fb\.watch)\/[^\s]+$/i;
+  /^(https?:\/\/)?([a-z0-9-]+\.)?(facebook\.com|fb\.watch)\/[^\s]+$/i;
 const youtubeShortsUrlRegex =
-  /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{11})(\?[^\s#]*)?(#[^\s]*)?$/i;
+  /^(https?:\/\/)?([a-z0-9-]+\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{11})(\?[^\s#]*)?(#[^\s]*)?$/i;
 
 export async function InstantDownloader(msg: Message): Promise<void> {
   const extractUrls = msg.body.match(/(https?:\/\/[^\s]+)/g);

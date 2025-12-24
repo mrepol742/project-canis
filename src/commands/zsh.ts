@@ -3,6 +3,7 @@ import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";
 import logService from "../components/services/log";
+import { EXEC_SHELL } from "../config";
 
 export const info = {
   command: "zsh",
@@ -26,7 +27,7 @@ export default async function (msg: Message): Promise<void> {
     const { stdout, stderr } = await execPromise(query, {
       timeout: 30000,
       maxBuffer: 1024 * 1024,
-      shell: process.env.SHELL || "/bin/zsh",
+      shell: EXEC_SHELL,
     });
 
     let response = `${stdout}\n\n${stderr}`;
@@ -36,8 +37,8 @@ export default async function (msg: Message): Promise<void> {
     await Promise.all([msg.reply(response), logService(msg, query, response)]);
     log.warn("zsh", `Executed command: ${query}`);
   } catch (err: any) {
-    const stderr = err.stderr || "";
-    const stdout = err.stdout || "";
+    const stderr = err.stderr ?? "";
+    const stdout = err.stdout ?? "";
     let response = stderr || err.message;
 
     if (stdout) response = `${stdout}\n\n${response}`;

@@ -37,7 +37,7 @@ export default async function (
 
     const caption = `${title}${revoked_msg.body ? `\n\n${revoked_msg.body}` : ""}`;
 
-    const mediaFile = JSON.parse(mediaMessage?.content || "[]");
+    const mediaFile = JSON.parse(mediaMessage?.content ?? "[]");
     const downloadFilePath = mediaMessage
       ? path.join("./.downloads", mediaFile.download_filename)
       : "";

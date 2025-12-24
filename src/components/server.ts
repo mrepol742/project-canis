@@ -1,6 +1,7 @@
 import http from "http";
 import log from "./utils/log";
 import * as Sentry from "@sentry/node";
+import { PORT } from "../config";
 
 const MAX_PORT_TRIES = 10;
 
@@ -28,7 +29,6 @@ function startServer(port: number, tries = 0) {
   return server;
 }
 
-const PORT: number = parseInt(process.env.PORT || "3000");
 const server = startServer(PORT);
 
 export default server;

@@ -5,29 +5,16 @@ import { gemini } from "./gemini";
 import { openai } from "./openAi";
 import ollama from "ollama";
 import redis from "../redis";
-
-const aiProvider: string = process.env.AI_PROVIDER || "groq";
-const isQueryCachingEnabled: boolean =
-  process.env.ALLOW_QUERY_CACHING === "true";
-const queryCachingCount: number = parseInt(
-  process.env.QUERY_CACHING_COUNT || "1000",
-  10,
-);
-const queryCachingTTL: number = parseInt(
-  process.env.QUERY_CACHING_TTL || "3600",
-  10,
-);
-/*
- * As time goes by and new models are released,
- * these defaults may need to be updated.
- */
-const openRouterModel: string =
-  process.env.OPEN_ROUTER_MODEL || "moonshotai/kimi-k2:free";
-const groqModel: string =
-  process.env.GROQ_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
-const geminiModel: string = process.env.GEMINI_MODEL || "gemini-2.0-flash-001";
-const openAiModel: string = process.env.OPENAI_MODEL || "gpt-4o";
-const ollamaModel: string = process.env.OLLAMA_MODEL || "llama3.1";
+import {
+  AI_PROVIDER,
+  ALLOW_QUERY_CACHING,
+  GEMINI_MODEL,
+  GROQ_MODEL,
+  OLLAMA_MODEL,
+  OPEN_ROUTER_MODEL,
+  OPENAI_MODEL,
+  QUERY_CACHING_TTL,
+} from "../../config";
 
 function getCacheKey(prompt: string): string {
   const hash = crypto.createHash("sha256").update(prompt).digest("hex");
@@ -42,7 +29,7 @@ export default async function (
   const today = new Date().toUTCString();
   prompt = prompt.replace("%_TODAY_%", today);
 
-  if (isQueryCachingEnabled) {
+  if (ALLOW_QUERY_CACHING) {
     const cached = await redis.get(cacheKey);
     if (cached) {
       return cached;
@@ -54,9 +41,9 @@ export default async function (
    * OpenRouter
    * https://openrouter.ai/docs/api-reference
    */
-  if (aiProvider === "openrouter") {
+  if (AI_PROVIDER === "openrouter") {
     const { text } = await generateText({
-      model: openrouter(model || openRouterModel),
+      model: openrouter(model || OPEN_ROUTER_MODEL),
       prompt: prompt,
     });
     result = text;
@@ -65,10 +52,10 @@ export default async function (
      * Groq
      * https://console.groq.com/docs/api-reference
      */
-  } else if (aiProvider === "groq") {
+  } else if (AI_PROVIDER === "groq") {
     const chatCompletion = await groq.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
-      model: model || groqModel,
+      model: model || GROQ_MODEL,
     });
     result = chatCompletion.choices[0].message.content;
 
@@ -76,9 +63,9 @@ export default async function (
      * Gemini
      * https://github.com/googleapis/js-genai
      */
-  } else if (aiProvider === "gemini") {
+  } else if (AI_PROVIDER === "gemini") {
     const generateContent = await gemini.models.generateContent({
-      model: model || geminiModel,
+      model: model || GEMINI_MODEL,
       contents: prompt,
     });
     result = generateContent.text || null;
@@ -87,9 +74,9 @@ export default async function (
      * OpenAI
      * https://platform.openai.com/docs/api-reference
      */
-  } else if (aiProvider === "openai") {
+  } else if (AI_PROVIDER === "openai") {
     const chatCompletion = await openai.chat.completions.create({
-      model: model || openAiModel,
+      model: model || OPENAI_MODEL,
       messages: [{ role: "user", content: prompt }],
     });
     result = chatCompletion.choices[0].message.content;
@@ -98,9 +85,9 @@ export default async function (
      * Ollama
      * https://github.com/ollama/ollama/tree/main/docs
      */
-  } else if (aiProvider === "ollama") {
+  } else if (AI_PROVIDER === "ollama") {
     const response = await ollama.chat({
-      model: model || ollamaModel,
+      model: model || OLLAMA_MODEL,
       messages: [{ role: "user", content: prompt }],
     });
     result = response.message.content || null;
@@ -109,14 +96,14 @@ export default async function (
      * Error handling for unsupported AI providers
      */
   } else {
-    throw new Error(`Unsupported AI provider: ${aiProvider}`);
+    throw new Error(`Unsupported AI provider: ${AI_PROVIDER}`);
   }
 
-  if (isQueryCachingEnabled && result) {
+  if (ALLOW_QUERY_CACHING && result) {
     await redis.set(cacheKey, result, {
       expiration: {
         type: "EX",
-        value: queryCachingTTL,
+        value: QUERY_CACHING_TTL,
       },
     });
   }

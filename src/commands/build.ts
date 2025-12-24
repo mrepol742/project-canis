@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import { exec } from "child_process";
 import util from "util";

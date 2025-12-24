@@ -1,6 +1,7 @@
 import { Message } from "../types/message"
 import log from "../components/utils/log";
 import axios from "../components/axios";
+import { WAKATIME_API_KEY } from "../config";
 
 export const info = {
   command: "wakatime",
@@ -12,20 +13,13 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  const apiKey = process.env.WAKATIME_API_KEY;
-  if (!apiKey) {
-    await msg.reply("WakaTime API key is not configured.");
-    return;
-  }
-
   const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-
   const response = await axios.get(
     `https://wakatime.com/api/v1/users/current/heartbeats`,
     {
       params: { date: today },
       headers: {
-        Authorization: `Basic ${Buffer.from(apiKey + ":").toString("base64")}`,
+        Authorization: `Basic ${Buffer.from(WAKATIME_API_KEY + ":").toString("base64")}`,
       },
     },
   );

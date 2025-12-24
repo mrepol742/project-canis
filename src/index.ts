@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ quiet: true, debug: process.env.DEBUG === "true" });
+dotenv.config({ quiet: true, debug: process.env.NODE_ENV === "production" });
 
 import "./instrument";
 import { registerCronJobs } from "./cron";
@@ -12,26 +12,29 @@ import "./components/process";
 import "./components/server";
 import MemoryMonitor from "./components/utils/memMonitor";
 import PhishTankClient from "./components/phishtank";
+import {
+  AUTO_RELOAD,
+  PHISHTANK_AUTO_UPDATE,
+  PROJECT_THRESHOLD_MEMORY,
+} from "./config";
 
-const autoReload = process.env.AUTO_RELOAD === "true";
 const monitor = new MemoryMonitor({
   interval: 60000,
-  thresholdMB: parseInt(process.env.PROJECT_THRESHOLD_MEMORY || "1024", 10),
+  thresholdMB: PROJECT_THRESHOLD_MEMORY,
 });
 const autoUpdateTimer: NodeJS.Timeout | null = null;
-const autoUpdateDaily = process.env.PHISHTANK_AUTO_UPDATE === "true";
 
 const phishtank = new PhishTankClient();
 let phishingSet: Set<string>;
 
 async function main() {
-  checkRequirements();
+  await checkRequirements();
   await Promise.all([
     monitor.start(),
     phishtank.startAutoUpdateLoop(),
     registerCronJobs(),
     (async () => {
-      if (autoUpdateDaily || autoUpdateTimer) return;
+      if (PHISHTANK_AUTO_UPDATE || autoUpdateTimer) return;
       await phishtank.init();
     })(),
   ]);
@@ -41,7 +44,7 @@ async function main() {
 
   await mapCommands();
   // Watch for changes
-  if (autoReload) await watcher();
+  if (AUTO_RELOAD) await watcher();
 }
 
 main();

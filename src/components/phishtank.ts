@@ -5,6 +5,11 @@ import { pipeline } from "stream/promises";
 import bz2 from "unbzip2-stream";
 import log from "./utils/log";
 import axios from "./axios";
+import {
+  PHISHTANK_AUTO_UPDATE,
+  PHISHTANK_ENABLE,
+  PHISHTANK_UPDATE_HOUR,
+} from "../config";
 
 interface PhishEntry {
   phish_id?: string;
@@ -20,9 +25,6 @@ export default class PhishTankClient {
   private dataDir = path.join(__dirname, "../../.phishtank");
   private rawFilePath = path.join(this.dataDir, "verified_online.json");
   private etagPath = path.join(this.dataDir, "verified_online.etag");
-  private updateHourUTC = parseInt(process.env.PHISHTANK_UPDATE_HOUR ?? "3");
-  private autoUpdateDaily = process.env.PHISHTANK_AUTO_UPDATE === "true";
-  private isPhishtankEnable = process.env.PHISHTANK_ENABLE === "true";
   private dataUrl = "http://data.phishtank.com/data/online-valid.json.bz2";
 
   private phishingSet: Set<string> = new Set();
@@ -31,7 +33,7 @@ export default class PhishTankClient {
   constructor() {}
 
   async init(): Promise<void> {
-    if (!this.isPhishtankEnable) return;
+    if (!PHISHTANK_ENABLE) return;
     await fsp.mkdir(this.dataDir, { recursive: true });
     await this.loadLocalFile();
   }
@@ -164,7 +166,7 @@ export default class PhishTankClient {
   }
 
   startAutoUpdateLoop() {
-    if (!this.autoUpdateDaily && !this.autoUpdateTimer) return;
+    if (!PHISHTANK_AUTO_UPDATE && !this.autoUpdateTimer) return;
 
     const scheduleNext = async () => {
       try {
@@ -174,7 +176,7 @@ export default class PhishTankClient {
             now.getUTCFullYear(),
             now.getUTCMonth(),
             now.getUTCDate(),
-            this.updateHourUTC,
+            PHISHTANK_UPDATE_HOUR,
             0,
             0,
             0,

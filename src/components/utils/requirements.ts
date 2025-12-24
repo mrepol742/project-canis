@@ -2,10 +2,12 @@ import { execSync } from "child_process";
 import * as process from "process";
 import semver from "semver";
 import log from "./log";
+import prisma from "../../components/prisma";
+import redis from "../redis";
 
-function checkNodeVersion() {
+function checkNodeVersion(): void {
   const current = process.versions.node;
-  const required = ">=24.0.0";
+  const required = ">=18.0.0";
   if (!semver.satisfies(current, required)) {
     log.warn("Node", `Node.js ${required} required, found ${current}`);
   } else {
@@ -13,25 +15,27 @@ function checkNodeVersion() {
   }
 }
 
-function checkMySQL() {
-  const dbUrl = process.env.DATABASE_URL || "mysql://root@127.0.0.1:3306";
+async function checkDatabase(): Promise<void> {
   try {
-    const version = execSync("mariadb --version").toString().trim();
-    log.info("MySQL", version);
+    const start = Date.now();
+    await prisma.$queryRaw`SELECT 1`;
+    const end = Date.now() - start;
+    log.info("Database", `${end}ms Ping`);
   } catch {
     log.error(
-      "MySQL",
-      "MySQL is required but not found (install mysql-client or ensure server is accessible).",
+      "Database",
+      "Database is required but not found (install mariadb or ensure server is running",
     );
     process.exit(1);
   }
 }
 
-function checkRedis() {
-  const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+async function checkRedis(): Promise<void> {
   try {
-    const version = execSync("redis-cli --version").toString().trim();
-    log.info("Redis", version);
+    const start = Date.now();
+    await redis.ping();
+    const end = Date.now() - start;
+    log.info("Redis", `${end}ms Ping`);
   } catch {
     log.error(
       "Redis",
@@ -41,7 +45,7 @@ function checkRedis() {
   }
 }
 
-function checkChrome() {
+function checkChrome(): void {
   try {
     const version = execSync("google-chrome-stable --version")
       .toString()
@@ -55,7 +59,7 @@ function checkChrome() {
   }
 }
 
-function checkFFMPEG() {
+function checkFFMPEG(): void {
   try {
     const version = execSync("ffmpeg -version")
       .toString()
@@ -67,12 +71,11 @@ function checkFFMPEG() {
   }
 }
 
-export function checkRequirements() {
+export async function checkRequirements() {
   log.info("Requirements", "Checking bot requirements...");
   checkNodeVersion();
-  checkMySQL();
-  checkRedis();
   checkChrome();
   checkFFMPEG();
+  await Promise.all([checkDatabase(), checkRedis()]);
   log.info("Requirements", "Bot requirements check complete.");
 }

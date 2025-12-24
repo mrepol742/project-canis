@@ -3,13 +3,10 @@ import path from "path";
 import fs from "fs";
 import log from "../log";
 import { addMessage } from "../../services/message";
-
-const PROJECT_AUTO_DOWNLOAD_MEDIA: boolean =
-  process.env.PROJECT_AUTO_DOWNLOAD_MEDIA === "true";
-const PROJECT_MAX_DOWNLOAD_MEDIA: number = parseInt(
-  process.env.PROJECT_MAX_DOWNLOAD_MEDIA || "25",
-);
-const MAX_FILE_SIZE: number = PROJECT_MAX_DOWNLOAD_MEDIA * 1024 * 1024;
+import {
+  PROJECT_AUTO_DOWNLOAD_MEDIA,
+  PROJECT_MAX_DOWNLOAD_MEDIA,
+} from "../../../config";
 
 export default async function (msg: Message): Promise<void> {
   // msg type unknown to ignore group mention statuses
@@ -30,7 +27,10 @@ export default async function (msg: Message): Promise<void> {
   const media = await msg.downloadMedia();
   if (!media) return;
 
-  if (media.filesize && media.filesize > MAX_FILE_SIZE) {
+  if (
+    media.filesize &&
+    media.filesize > PROJECT_MAX_DOWNLOAD_MEDIA * 1024 * 1024
+  ) {
     log.warn(
       "MediaDownload",
       `The file is too large to be saved: ${media.filename}`,
@@ -40,8 +40,8 @@ export default async function (msg: Message): Promise<void> {
 
       \`System\`
       This messages includes the media that was not saved.
-      Filename: ${media.filename || "unknown"}
-      Filesize: ${media.filesize / 1024 || "unknown"}
+      Filename: ${media.filename ?? "unknown"}
+      Filesize: ${media.filesize ? media.filesize / 1024 : "unknown"}
       Mimetype: ${media.mimetype}
     `;
   }
@@ -74,8 +74,8 @@ export default async function (msg: Message): Promise<void> {
     JSON.stringify({
       file: true,
       download_filename,
-      filename: media.filename || "",
-      filesize: media.filesize || null,
+      filename: media.filename ?? "",
+      filesize: media.filesize ?? null,
       body: msg.body,
     }),
     "media",

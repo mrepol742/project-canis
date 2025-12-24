@@ -54,10 +54,10 @@ export default async function (msg: Message): Promise<void> {
     const cmd = commands[possibleCommand] as CommandType;
     const response = `
       \`${cmd.command}\`
-      ${cmd.description || "No description"}
+      ${cmd.description ?? "No description"}
 
-      *Usage:* ${cmd.usage || "N/A"}
-      *Example:* ${cmd.example || "N/A"}
+      *Usage:* ${cmd.usage ?? "N/A"}
+      *Example:* ${cmd.example ?? "N/A"}
       *Role:* ${cmd.role}
       *Cooldown:* ${cmd.cooldown || 5000}ms
     `;

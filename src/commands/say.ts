@@ -3,8 +3,7 @@ import { Message } from "../types/message";
 import * as GoogleTTS from "google-tts-api";
 import fs from "fs";
 import axios from "../components/axios";
-
-const PROJECT_CANIS_ALIS: string = process.env.PROJECT_CANIS_ALIAS || "Canis";
+import { PROJECT_CANIS_ALIAS } from "../config";
 
 export const info = {
   command: "say",
@@ -43,7 +42,7 @@ export default async function (msg: Message): Promise<void> {
     const media = new MessageMedia(
       "audio/mpeg",
       buffer.toString("base64"),
-      `${PROJECT_CANIS_ALIS}.mp3`,
+      `${PROJECT_CANIS_ALIAS}.mp3`,
     );
     await msg.reply(media, undefined, {
       sendAudioAsVoice: true,

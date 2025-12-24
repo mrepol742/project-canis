@@ -14,7 +14,7 @@ export async function saveSetting(name: string, value: string): Promise<void> {
 export async function getSetting(name: string): Promise<string> {
   try {
     const value = await redis.get(`settings:${name}`);
-    return value || "off";
+    return value ?? "off";
   } catch (error) {
     Sentry.captureException(error);
     log.error("Redis", `Failed to get setting: ${name}`, error);

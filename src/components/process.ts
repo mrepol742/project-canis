@@ -5,6 +5,7 @@ import redis from "./redis";
 import downloadQueue from "./queue/download";
 import reactQueue from "./queue/react";
 import prisma from "./prisma";
+import { COMMAND_PREFIX, PROJECT_CANIS_ALIAS } from "../config";
 
 async function gracefulShutdown(signal: string): Promise<void> {
   log.info("Process", `Received ${signal}, shutting down...`);
@@ -44,6 +45,6 @@ process.on("unhandledRejection", (reason, promise) => {
   log.error("UnhandledRejection", `Reason: ${reason}\nPromise: ${promise}`);
 });
 
-log.info("Bot", `Initiating ${process.env.PROJECT_CANIS_ALIAS || "Canis"}...`);
-log.info("Bot", `prefix: ${process.env.COMMAND_PREFIX || "!"}`);
+log.info("Bot", `Initiating ${PROJECT_CANIS_ALIAS}...`);
+log.info("Bot", `prefix: ${COMMAND_PREFIX}`);
 log.info("Process", "Event listeners for process signals have been set up.");

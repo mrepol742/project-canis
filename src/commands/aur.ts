@@ -31,7 +31,7 @@ export default async function (msg: Message): Promise<void> {
 
   const info = `
     \`${pkg.Name}\` - ${pkg.Version}
-    ${pkg.Description || "No description available."}
+    ${pkg.Description ?? "No description available."}
 
     Votes: ${pkg.NumVotes}
     Popularity: ${pkg.Popularity.toFixed(2)}

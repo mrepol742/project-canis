@@ -3,8 +3,7 @@ import log from "../components/utils/log";
 import agentHandler from "../components/ai/agentHandler";
 import { greetings } from "../components/utils/data";
 import { Command, commands } from "../components/utils/cmd/loader";
-
-const PROJECT_CANIS_ALIS: string = process.env.PROJECT_CANIS_ALIAS || "Canis";
+import { PROJECT_CANIS_ALIAS } from "../config";
 
 export const info: Command = {
   command: "ai",
@@ -29,7 +28,7 @@ export default async function (msg: Message): Promise<void> {
   }
 
   const mentioned = msg.mentionedIds.length > 0;
-  let prompt = `You are ${PROJECT_CANIS_ALIS}. Today's date is %_TODAY_%.
+  let prompt = `You are ${PROJECT_CANIS_ALIAS}. Today's date is %_TODAY_%.
   Respond to the user naturally and briefly. Avoid asking follow-up questions unless necessary.
   If the user's message clearly matches the intent of a command listed below, respond strictly using the corresponding usage format.
   If there is no clear match, reply normally in your own words.
