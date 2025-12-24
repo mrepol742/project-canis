@@ -28,7 +28,7 @@ Canis supports multiple AI providers out of the box:
 - Dynamic Commands Loading
 - Instant Download of Videos from supported platform
 - Commands built here are compatible to used in canis telegram version
-- Lots of lots of commands to keep the group interesting
+- Lots of commands to keep the group interesting
 - Integrated with Phishtank & Virustotal to keep the group safe and sound
 - A state of the Art Rate Limiting for end users
 - Preconfigured to be deployed on PM2, if you don't have PM2. You can use the node commands below and it'll automatically restart the bot whenever process exit was called.
