@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Project Canis — WhatsApp Bot</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            canis: "#22c55e",
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+
+    <body
+        class="min-h-screen bg-gradient-to-br from-zinc-900 via-black to-zinc-900 text-white flex flex-col"
+    >
+        <main class="flex-1 flex items-center justify-center px-6">
+            <div class="max-w-4xl w-full text-center space-y-8">
+                <div
+                    class="inline-flex items-center gap-2 px-4 mt-5 py-1.5 rounded-full bg-white/10 border border-white/10 text-sm backdrop-blur"
+                >
+                    <span
+                        class="w-2 h-2 rounded-full bg-canis animate-pulse"
+                    ></span>
+                    Project Canis is alive
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight">
+                    A Smarter
+                    <span class="text-canis">WhatsApp Bot</span><br />
+                    Built for Automation
+                </h1>
+
+                <p class="text-zinc-300 max-w-2xl mx-auto text-lg">
+                    Project Canis is a fast, customizable WhatsApp bot designed
+                    for developers who want full control, clean logic, and zero
+                    fluff.
+                </p>
+
+                <div
+                    class="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+                >
+                    <a
+                        href="https://github.com/mrepol742/project-canis"
+                        target="_blank"
+                        class="px-8 py-3 rounded-xl bg-canis text-black font-semibold hover:bg-green-400 transition"
+                    >
+                        View on GitHub
+                    </a>
+                    <a
+                        href="https://www.melvinjonesrepol.com/canis-chatbot"
+                        class="px-8 py-3 rounded-xl border border-white/20 hover:bg-white/10 transition"
+                    >
+                        Setup
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <section id="features" class="px-6 pb-24 mt-5">
+            <div
+                class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+                <div
+                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
+                >
+                    <h3 class="text-xl font-semibold mb-2">
+                        ⚡ Fast & Lightweight
+                    </h3>
+                    <p class="text-zinc-400">
+                        Minimal overhead. No unnecessary dependencies. Built to
+                        run efficiently.
+                    </p>
+                </div>
+
+                <div
+                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
+                >
+                    <h3 class="text-xl font-semibold mb-2">
+                        🧠 Fully Customizable
+                    </h3>
+                    <p class="text-zinc-400">
+                        Modify commands, logic, and flows exactly how you want.
+                    </p>
+                </div>
+
+                <div
+                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
+                >
+                    <h3 class="text-xl font-semibold mb-2">
+                        🔌 Easy Integration
+                    </h3>
+                    <p class="text-zinc-400">
+                        Designed to fit into existing systems and APIs with
+                        ease.
+                    </p>
+                </div>
+
+                <div
+                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
+                >
+                    <h3 class="text-xl font-semibold mb-2">
+                        🛠 Developer Friendly
+                    </h3>
+                    <p class="text-zinc-400">
+                        Clean structure, readable code, and zero magic.
+                    </p>
+                </div>
+
+                <div
+                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
+                >
+                    <h3 class="text-xl font-semibold mb-2">
+                        🔒 Secure by Design
+                    </h3>
+                    <p class="text-zinc-400">
+                        Built with best practices in mind for bot safety and
+                        stability.
+                    </p>
+                </div>
+
+                <div
+                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
+                >
+                    <h3 class="text-xl font-semibold mb-2">🚀 Open Source</h3>
+                    <p class="text-zinc-400">
+                        Community-driven and open for contributions.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <footer
+            class="border-t border-white/10 py-6 text-center text-zinc-500 text-sm"
+        >
+            © <span id="year"></span> Project Canis · Built for developers
+        </footer>
+
+        <script>
+            document.getElementById("year").textContent =
+                new Date().getFullYear();
+        </script>
+    </body>
+</html>
