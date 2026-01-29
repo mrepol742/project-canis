@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "typeRoots": ["./node_modules/@types", "./src/typeses"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },

@@ -4,8 +4,6 @@ dotenv.config({ quiet: true, debug: process.env.NODE_ENV === "production" });
 import "./instrument";
 import { registerCronJobs } from "./cron";
 import { client } from "./components/client";
-import { checkRequirements } from "./components/utils/requirements";
-import log from "./components/utils/log";
 import { mapCommands } from "./components/utils/cmd/loader";
 import watcher from "./components/utils/cmd/watcher";
 import "./components/process";
@@ -28,7 +26,6 @@ const phishtank = new PhishTankClient();
 let phishingSet: Set<string>;
 
 async function main() {
-  await checkRequirements();
   await Promise.all([
     monitor.start(),
     phishtank.startAutoUpdateLoop(),

@@ -21,10 +21,10 @@ async function checkDatabase(): Promise<void> {
     await prisma.$queryRaw`SELECT 1`;
     const end = Date.now() - start;
     log.info("Database", `${end}ms Ping`);
-  } catch {
+  } catch (err) {
     log.error(
-      "Database",
-      "Database is required but not found (install mariadb or ensure server is running",
+      "Failed to connect to Database make sure your database is running",
+      err,
     );
     process.exit(1);
   }
@@ -36,10 +36,10 @@ async function checkRedis(): Promise<void> {
     await redis.ping();
     const end = Date.now() - start;
     log.info("Redis", `${end}ms Ping`);
-  } catch {
+  } catch (err) {
     log.error(
-      "Redis",
-      "Redis is required but not found (install redis-cli or ensure server is running).",
+      "Failed to connect to Redis make sure redis-server is running",
+      err,
     );
     process.exit(1);
   }
@@ -51,11 +51,8 @@ function checkChrome(): void {
       .toString()
       .trim();
     log.info("GoogleChrome", version);
-  } catch {
-    log.error(
-      "GoogleChrome",
-      "Google Chrome not found. Some features may not work.",
-    );
+  } catch (err) {
+    log.error("Failed to find Google Chrome executable", err);
   }
 }
 
@@ -66,8 +63,8 @@ function checkFFMPEG(): void {
       .split("\n")[0]
       .trim();
     log.info("FFMPEG", version);
-  } catch {
-    log.warn("FFMPEG", "FFmpeg not found. Some features may not work.");
+  } catch (err) {
+    log.warn("Failed to find FFMPEG, some commands might fail to work", err);
   }
 }
 

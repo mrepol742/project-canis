@@ -7,8 +7,8 @@
   "scripts": {
     "build": "prisma generate && ts-node scripts/build.ts",
     "build:clean": "ts-node scripts/build.ts --clean",
-    "start": "clear && while [ true ]; do node dist/index.js ; done",
-    "dev": "clear && while [ true ]; do ts-node src/index.ts ; done",
+    "start": "node dist/runner.js dist/index.js",
+    "dev": "ts-node src/runner.ts src/index.ts",
     "test:sentry": "ts-node tests/sentry.ts"
   },
   "author": {

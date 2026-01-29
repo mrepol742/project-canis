@@ -21,6 +21,7 @@ Canis supports multiple AI providers out of the box:
 - [Ollama](https://ollama.com/)
 
 ## Features
+
 - Auto react on messages
 - Repeat react on messages
 - Resent unsend andor edit messages
@@ -70,13 +71,19 @@ Canis supports multiple AI providers out of the box:
    cp .env.example .env
    ```
 
-4. **Run Migration**
+4. **Generate Prisma Client**
+
+   ```sh
+   npx prisma generate
+   ```
+
+5. **Run Migration**
 
    ```sh
    npx prisma migrate dev
    ```
 
-5. **Start bot**
+6. **Start bot**
 
    ```sh
    npm run dev
@@ -116,16 +123,16 @@ A Telegram version of Project Canis is available at [project-canis-tg](https://g
 
 ## License
 
-   Copyright 2025 Melvin Jones Repol
+Copyright 2025 Melvin Jones Repol
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
