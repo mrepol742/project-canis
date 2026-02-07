@@ -17,6 +17,9 @@ export default async function (client: Client, react: Reaction): Promise<void> {
   // ignore @Meta AI and others
   if (react.senderId.split("@")[1] === "bot") return;
 
+  const isPaused = await getSetting("paused");
+  if (isPaused && isPaused === "on") return;
+
   const key = `react:${react.id.id}`;
   const alreadyReacted = await redis.get(key);
   if (alreadyReacted) return;

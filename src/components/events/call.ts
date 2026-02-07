@@ -12,6 +12,10 @@ function getRandomResponse(arr: string[]) {
 export default async function (call: Call): Promise<void> {
   try {
     if (call.fromMe || call.isGroup) return;
+
+    const isPaused = await getSetting("paused");
+    if (isPaused && isPaused === "on") return;
+
     const isCallMustReject = await getSetting("call_reject");
     if (!isCallMustReject || isCallMustReject == "off") return;
 

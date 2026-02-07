@@ -15,6 +15,9 @@ export default async function (
 
     const lid = (msg.author ?? msg.from).split("@")[0];
 
+    const isPaused = await getSetting("paused");
+    if (isPaused && isPaused === "on") return;
+
     const [isBlocked, isMustResent] = await Promise.all([
       getBlockUser(lid),
       getSetting("resent_unsent"),
