@@ -57,7 +57,7 @@
     "systeminformation": "^5.27.11",
     "unbzip2-stream": "^1.4.3",
     "undici": "^7.16.0",
-    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js",
+    "whatsapp-web.js": "^1.34.6",
     "youtubei.js": "^16.0.1"
   },
   "devDependencies": {
