@@ -1,4 +1,4 @@
-import { Message, MessageContent, MessageSendOptions } from "whatsapp-web.js";
+import { MessageContent, MessageSendOptions } from "whatsapp-web.js";
 import log from "../utils/log";
 import { commands } from "../utils/cmd/loader";
 import { penalizeUser, rateLimiter } from "../utils/rateLimiter";
@@ -9,7 +9,7 @@ import {
   getBlockUser,
   isAdmin,
 } from "../services/user";
-import { client } from "../client";
+import { getClient } from "../client";
 import Font from "../utils/font";
 import quiz from "../utils/quiz";
 import riddle from "../utils/riddle";
@@ -23,6 +23,7 @@ import downloadQueue from "../queue/download";
 import reactQueue from "../queue/react";
 import ai from "../../commands/ai";
 import * as Sentry from "@sentry/node";
+import { Message } from "../../types/message";
 import {
   COMMAND_PREFIX,
   COMMAND_PREFIX_LESS,
@@ -146,8 +147,8 @@ export default async function (msg: Message, type: string): Promise<void> {
           reactQueue.add(() => autoReaction(msg));
         })(),
         (async () => {
-          const botId = (await client()).info.wid._serialized;
-          if (msg.mentionedIds.length == 0 || !msg.mentionedIds.includes(botId))
+          const botId = getClient(msg.clientId).info.wid._serialized;
+          if (msg.mentionedIds.length == 0 || !botId ||!msg.mentionedIds.includes(botId))
             return;
 
           if (msg.body === `@${botId}`) {
@@ -224,7 +225,7 @@ export default async function (msg: Message, type: string): Promise<void> {
       }
 
       if (Math.random() < 0.5)
-        return (await client()).sendMessage(
+        return await getClient(msg.clientId).sendMessage(
           msg.id.remote,
           messageBody,
           options,

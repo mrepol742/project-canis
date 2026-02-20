@@ -2,7 +2,7 @@ import { Message } from "../types/message";
 import log from "../components/utils/log";
 import * as Sentry from "@sentry/node";
 import { MessageMedia } from "whatsapp-web.js";
-import client from "../components/client";
+import client, { getClient } from "../components/client";
 
 export const info = {
   command: "googleit",
@@ -20,7 +20,7 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  const browser = (await client()).pupBrowser;
+  const browser = getClient(msg.clientId).pupBrowser;
   if (!browser) {
     throw Error("Unable to access browser instance");
   }

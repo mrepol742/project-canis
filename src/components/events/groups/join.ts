@@ -1,7 +1,6 @@
 import { GroupNotification } from "whatsapp-web.js";
 import log from "../../utils/log";
-import sleep from "../../utils/sleep";
-import { client } from "../../client";
+import { getClient } from "../../client";
 import { getMessage } from "../../../data/group";
 import * as Sentry from "@sentry/node";
 import { PROJECT_CANIS_ALIAS } from "../../../config";
@@ -32,7 +31,7 @@ export default async function (notif: GroupNotification): Promise<void> {
     for (const contact of recipients) {
       const name = contact.pushname || contact.name || contact.id.user;
       const isSelf =
-        contact.id._serialized === (await client()).info.wid._serialized;
+        contact.id._serialized === getClient(notif.clientId).info.wid._serialized;
 
       if (isSelf) {
         await notif.reply(text);
@@ -52,7 +51,7 @@ export default async function (notif: GroupNotification): Promise<void> {
           newMembers.map((n) => `@${n}`).join(", "),
         );
 
-        (await client()).sendMessage(notif.chatId, message, {
+        getClient(notif.clientId).sendMessage(notif.chatId, message, {
           mentions: mentionIds,
         });
         // await notif.sendMessage(message, { mentions: mentionIds });

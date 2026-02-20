@@ -3,7 +3,7 @@ import { Message } from "../types/message";
 import log from "../components/utils/log";
 import sleep from "../components/utils/sleep";
 import { helloMessage } from "../components/utils/data";
-import client from "../components/client";
+import client, { getClient } from "../components/client";
 
 export const info = {
   command: "everyone",
@@ -29,7 +29,7 @@ export default async function (msg: Message): Promise<void> {
   const groupChat = chat as GroupChat;
   const participants = groupChat.participants;
 
-  const self = (await client()).info.wid._serialized;
+  const self = getClient(msg.clientId).info.wid._serialized;
   const filteredParticipants = participants.filter((p) => {
     if (p.id._serialized === self) return false;
     if (onlyAdmins && !p.isAdmin && !p.isSuperAdmin) return false;

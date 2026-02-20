@@ -1,11 +1,11 @@
 import { Message } from "../types/message";
 import { getUserbyLid, isAdmin } from "../components/services/user";
 import redis from "../components/redis";
-import { client } from "../components/client";
 import parsePhoneNumber from "libphonenumber-js";
 import { RateEntry } from "../components/utils/rateLimiter";
 import { getCurrentTimeByCountryCode } from "../components/utils/time";
 import downloadProfilePicture from "../components/utils/profile/download";
+import { getClient } from "../components/client";
 
 export const info = {
   command: "stalk",
@@ -42,7 +42,7 @@ export default async function (msg: Message): Promise<void> {
       getUserbyLid(lid),
       redis.get(`block:${lid}`),
       redis.get(`rate:${lid}`),
-      downloadProfilePicture(jid),
+      downloadProfilePicture(msg, jid),
     ]);
 
   if (!user) {
@@ -52,7 +52,7 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  const self = (await client()).info.wid._serialized;
+  const self = getClient(msg.clientId).info.wid._serialized;
 
   if (self.split("@")[0] === user.number) {
     await msg.reply("You cannot do that, please mention someone else.");

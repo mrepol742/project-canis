@@ -1,7 +1,7 @@
 import { Message } from "../types/message"
 import os from "os";
 import timestamp from "../components/utils/timestamp";
-import { client } from "../components/client";
+import { getClient } from "../components/client";
 
 export const info = {
   command: "uptime",
@@ -13,10 +13,9 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  const waClient = await client();
   const [state, version] = await Promise.all([
-    waClient.getState(),
-    waClient.getWWebVersion(),
+    getClient(msg.clientId).getState(),
+    getClient(msg.clientId).getWWebVersion(),
   ]);
 
   const statsMessage = `

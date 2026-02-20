@@ -16,7 +16,7 @@ export default async function (msg: Message): Promise<void> {
   await Promise.allSettled([
     redis.set(
       "restart",
-      JSON.stringify({ id: msg.id.remote, date: Date.now() }),
+      JSON.stringify({ id: msg.id.remote, date: Date.now(), clientId: msg.clientId }),
     ),
     logService(msg, "restart", "Bot is restarting..."),
     msg.react("🔄"),

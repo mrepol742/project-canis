@@ -1,5 +1,4 @@
 import { Message } from "../types/message";
-import { client } from "../components/client";
 
 export const info = {
   command: "delete",

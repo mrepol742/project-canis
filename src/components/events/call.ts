@@ -1,6 +1,6 @@
 import { Call } from "whatsapp-web.js";
 import log from "../utils/log";
-import { client } from "../client";
+import { getClient } from "../client";
 import { getSetting } from "../services/settings";
 import { videoResponses, voiceResponses } from "../utils/data";
 import * as Sentry from "@sentry/node";
@@ -29,7 +29,7 @@ export default async function (call: Call): Promise<void> {
       response = getRandomResponse(voiceResponses);
     }
 
-    (await client()).sendMessage(call.from, response);
+    getClient(call.clientId).sendMessage(call.from, response);
 
     log.info("Call", call.from, call.isVideo ? "video" : "voice");
   } catch (err) {

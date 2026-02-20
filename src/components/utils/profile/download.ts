@@ -2,11 +2,12 @@ import fs from "fs";
 import path from "path";
 import { fileExists } from "../file";
 import { MessageMedia } from "whatsapp-web.js";
-import client from "../../client";
+import { getClient } from "../../client";
 import axios from "../../axios";
 import log from "../log";
+import { Message } from "../../../types/message";
 
-export default async function (jid: string): Promise<MessageMedia | undefined> {
+export default async function (msg: Message, jid: string): Promise<MessageMedia | undefined> {
   try {
     const tempDir = "./.temp";
     await fs.promises.mkdir(tempDir, { recursive: true });
@@ -16,7 +17,7 @@ export default async function (jid: string): Promise<MessageMedia | undefined> {
       return MessageMedia.fromFilePath(savePath);
     }
 
-    const avatarUrl = await (await client()).getProfilePicUrl(jid);
+    const avatarUrl = await getClient(msg.clientId).getProfilePicUrl(jid);
 
     if (!avatarUrl) return undefined;
 

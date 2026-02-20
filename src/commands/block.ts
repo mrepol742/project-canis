@@ -5,7 +5,7 @@ import {
   getBlockUser,
   isAdmin,
 } from "../components/services/user";
-import client from "../components/client";
+import client, { getClient } from "../components/client";
 
 export const info = {
   command: "block",
@@ -25,7 +25,7 @@ export default async function (msg: Message): Promise<void> {
   const jid = msg.mentionedIds[0];
   const lid = jid.split("@")[0];
 
-  const self = (await client()).info.wid._serialized;
+  const self = getClient(msg.clientId).info.wid._serialized;
   const isUserAdmin = await isAdmin(lid);
 
   if (!msg.fromMe && isUserAdmin) {

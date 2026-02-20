@@ -12,11 +12,11 @@ export const info: CronJobInfo = {
 
 export default async function () {
   try {
-    const chats = await (await client()).getChats();
-    log.info(
-      "Ping",
-      `Successfully fetched ${chats.length} chats to keep session alive.`,
-    );
+    // const chats = await (await client()).getChats();
+    // log.info(
+    //   "Ping",
+    //   `Successfully fetched ${chats.length} chats to keep session alive.`,
+    // );
   } catch (err) {
     Sentry.captureException(err);
     log.error("Ping", err);

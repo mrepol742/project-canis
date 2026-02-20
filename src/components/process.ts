@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/node";
 import log from "./utils/log";
-import { client } from "./client";
+import { clients } from "./client";
 import redis from "./redis";
 import downloadQueue from "./queue/download";
 import reactQueue from "./queue/react";
@@ -11,11 +11,11 @@ async function gracefulShutdown(signal: string): Promise<void> {
   log.info("Process", `Received ${signal}, shutting down...`);
 
   try {
-    const popupBrowser = (await client()).pupBrowser;
-    if (popupBrowser) {
-      await popupBrowser.close();
-      log.info("Browser", "Puppeteer browser closed successfully.");
-    }
+    // const popupBrowser = (await client()).pupBrowser;
+    // if (popupBrowser) {
+    //   await popupBrowser.close();
+    //   log.info("Browser", "Puppeteer browser closed successfully.");
+    // }
     // all work must be empty, before it send a SAVE Command to redis
     // avoiding conflicts when exiting the redis and db
     await Promise.allSettled([downloadQueue.onIdle(), reactQueue.onIdle()]);

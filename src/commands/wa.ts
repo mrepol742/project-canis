@@ -1,5 +1,5 @@
 import { Message } from "../types/message"
-import { client } from "../components/client";
+import { getClient } from "../components/client";
 import log from "../components/utils/log";
 import logService from "../components/services/log";
 
@@ -34,7 +34,7 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
   if (query === "status") {
-    (await client()).setStatus(quotedMsg.body);
+    getClient(msg.clientId).setStatus(quotedMsg.body);
     await Promise.all([
       msg.reply("Status updated successfully."),
       logService(msg, "status", quotedMsg.body),
@@ -43,7 +43,7 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  (await client()).setDisplayName(quotedMsg.body);
+  getClient(msg.clientId).setDisplayName(quotedMsg.body);
   await Promise.all([
     msg.reply("Name updated successfully."),
     logService(msg, "name", quotedMsg.body),

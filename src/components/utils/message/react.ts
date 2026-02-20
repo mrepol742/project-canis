@@ -1,7 +1,7 @@
 import { sleep } from "groq-sdk/core";
 import { Message } from "../../../types/message";
 import log from "../log";
-import client from "../../client";
+import client, { getClient } from "../../client";
 import regex from "../../emoji";
 import { containsAny } from "../string";
 import { funD, happyEE, loveEE, sadEE } from "../../../data/reaction";
@@ -20,7 +20,7 @@ async function react(react: Message, reaction: string): Promise<void> {
 
   if (Math.random() < 0.1 && !isEmoji)
     if (Math.random() < 0.2)
-      (await client()).sendMessage(react.id.remote, reaction);
+      getClient(react.clientId).sendMessage(react.id.remote, reaction);
     else await react.reply(reaction);
   else await react.react(reaction);
 }

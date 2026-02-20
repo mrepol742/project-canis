@@ -1,8 +1,5 @@
 import { GroupNotification } from "whatsapp-web.js";
 import log from "../../utils/log";
-import sleep from "../../utils/sleep";
-import { client } from "../../client";
-import { getMessage } from "../../../data/group";
 import * as Sentry from "@sentry/node";
 import { getSetting } from "../../services/settings";
 

@@ -1,14 +1,15 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import os from "os";
 import si from "systeminformation";
 import { getUserCount } from "../components/services/user";
-import { client } from "../components/client";
 import { commands } from "../components/utils/cmd/loader";
 import timestamp from "../components/utils/timestamp";
 import speedTest from "../components/utils/speedtest";
 import redis from "../components/redis";
 import { PROJECT_CANIS_ALIAS } from "../config";
+import { getClient } from "../components/client";
+import { getAccountCount } from "../components/services/account";
 
 export const info = {
   command: "stats",
@@ -20,7 +21,7 @@ export const info = {
 };
 
 export default async function (msg: Message): Promise<void> {
-  const waClient = await client();
+  const waClient = getClient(msg.clientId);
   // Node.js runtime stats
   const mem = process.memoryUsage();
   const cpu = process.cpuUsage();
@@ -59,6 +60,7 @@ export default async function (msg: Message): Promise<void> {
     deviceCount,
     chats,
     speedTestResults,
+    accountCount,
   ] = await Promise.all([
     si.graphics(),
     si.osInfo(),
@@ -72,6 +74,7 @@ export default async function (msg: Message): Promise<void> {
     waClient.getContactDeviceCount(msg.from),
     waClient.getChats(),
     speedTest(),
+    getAccountCount(),
   ]);
 
   const statsMessage = `
@@ -116,6 +119,7 @@ export default async function (msg: Message): Promise<void> {
     Users: ${userCount}
     Blocked Users: ${blockUserCount.length}
     Muted Users: ${mutedUserCount.length}
+    Accounts: ${accountCount}
 `;
 
   await msg.reply(statsMessage);

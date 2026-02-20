@@ -1,11 +1,11 @@
-import { client } from "../client";
+import { getClient } from "../client";
 import redis from "../redis";
 
 export default async function (): Promise<void> {
   const restart = await redis.get("restart");
   if (!restart) return;
 
-  const r: { id: string; date: number } = JSON.parse(restart);
+  const r: { id: string; date: number; clientId: string } = JSON.parse(restart);
 
   const timeTook = Date.now() - r.date;
 
@@ -18,6 +18,9 @@ export default async function (): Promise<void> {
 
   await Promise.all([
     redis.del("restart"),
-    (await client()).sendMessage(r.id, `Restart finished. Took ${formatted}.`),
+    getClient(r.clientId).sendMessage(
+      r.id,
+      `Restart finished. Took ${formatted}.`,
+    ),
   ]);
 }

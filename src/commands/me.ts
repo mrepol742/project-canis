@@ -1,11 +1,11 @@
 import { Message } from "../types/message";
 import { getUserbyLid, isAdmin } from "../components/services/user";
 import redis from "../components/redis";
-import { client } from "../components/client";
 import parsePhoneNumber from "libphonenumber-js";
 import { RateEntry } from "../components/utils/rateLimiter";
 import { getCurrentTimeByCountryCode } from "../components/utils/time";
 import downloadProfilePicture from "../components/utils/profile/download";
+import { getClient } from "../components/client";
 
 export const info = {
   command: "me",
@@ -31,7 +31,7 @@ export default async function (msg: Message): Promise<void> {
     redis.get(`block:${lid}`),
     redis.get(`rate:${lid}`),
     isAdmin(lid),
-    downloadProfilePicture(jid),
+    downloadProfilePicture(msg, jid),
   ]);
 
   if (!user) {
@@ -44,7 +44,7 @@ export default async function (msg: Message): Promise<void> {
   const phoneNumber = parsePhoneNumber(`+${user.number}`);
   const countryCode = phoneNumber?.country ?? "";
   const time = getCurrentTimeByCountryCode(countryCode);
-  const self = (await client()).info.wid._serialized;
+  const self = getClient(msg.clientId).info.wid._serialized;
   const ratelimit: RateEntry = isBlockedTemporarily
     ? JSON.parse(isBlockedTemporarily)
     : { timestamps: [], penaltyCount: 0, penaltyUntil: 0 };
