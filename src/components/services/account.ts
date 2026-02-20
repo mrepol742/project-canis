@@ -74,3 +74,25 @@ export async function getAccountCount(): Promise<number> {
     return 0;
   }
 }
+
+export async function getClientIds(): Promise<Map<string, boolean>> {
+  try {
+    const accounts = await prisma.account.findMany({
+      select: {
+        clientId: true,
+        isRoot: true,
+      },
+    });
+
+    const clientIds = new Map<string, boolean>();
+    accounts.forEach((account) => {
+      clientIds.set(account.clientId, account.isRoot);
+    });
+
+    return clientIds;
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Database", "Failed to get client IDs.", error);
+    return new Map<string, boolean>();
+  }
+}

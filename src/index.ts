@@ -16,7 +16,7 @@ import {
   PHISHTANK_AUTO_UPDATE,
   PROJECT_THRESHOLD_MEMORY,
 } from "./config";
-import { getRootAccount } from "./components/services/account";
+import { getClientIds, getRootAccount } from "./components/services/account";
 
 const monitor = new MemoryMonitor({
   interval: 60000,
@@ -39,8 +39,13 @@ async function main() {
   ]);
 
   phishingSet = phishtank.getPhishingSet();
-  const rootClientId = await getRootAccount();
-  await addAccount(rootClientId, undefined, true);
+
+  const accountsIds = await getClientIds();
+  await Promise.all(
+    Array.from(accountsIds.entries()).map(async ([clientId, isRoot]) => {
+      await addAccount(clientId, undefined, isRoot);
+    }),
+  );
 
   await mapCommands();
   // Watch for changes
