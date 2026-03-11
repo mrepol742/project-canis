@@ -31,6 +31,7 @@
     "@prisma/adapter-mariadb": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@sentry/node": "^10.31.0",
+    "@whiskeysockets/baileys": "^7.0.0-rc.9",
     "ai": "^5.0.106",
     "axios": "^1.13.2",
     "cli-progress": "^3.12.0",

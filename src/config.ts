@@ -159,3 +159,6 @@ export const AXIOS_ORIGIN = process.env.AXIOS_ORIGIN ?? "";
 
 /** Axios request host header */
 export const AXIOS_HOST = process.env.AXIOS_HOST ?? "";
+
+/** WhatsApp driver */
+export const WHATSAPP_DRIVER = process.env.WHATSAPP_DRIVER ?? "whatsappwebjs";
