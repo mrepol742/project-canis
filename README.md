@@ -41,13 +41,37 @@ Canis supports multiple AI providers out of the box:
 
 - Node.js (>=18.x)
 - MySQL
-
-  You can changed the db provider in `prisma/schema.prisma`
-
 - Redis/Valkey
 - WhatsApp Account
 - Chrome browser
 - FFMPEG
+
+
+##  Skip through this long setup and use NPX
+If you want to skip the setup and just want to run the bot, you can use NPX to run the bot without cloning the repo or installing dependencies.
+
+```sh
+npx project-canis
+```
+
+Once you install the bot using NPX, you configure the required environment variables in the `.env.example` using this command
+```sh
+export PROJECT_CANIS_ALIAS=Canis
+# automatically reboot canis, if a potential memory leak has been detected,
+# or the memory usage was just way too high
+export PROJECT_AUTO_RESTART=false
+export PROJECT_THRESHOLD_MEMORY=1024
+export PROJECT_MAX_MEMORY=2048 # 2GB
+export PROJECT_AUTO_DOWNLOAD_MEDIA=true
+export PROJECT_MAX_DOWNLOAD_MEDIA=25 # 25MB
+export PROJECT_ENABLE_BOT_FONT=true
+# for more configuration, please refer to the .env.example file
+```
+
+Alternatively, you can also run the bot using this short command:
+```sh
+npx canis
+```
 
 ## Getting started
 
@@ -123,7 +147,7 @@ A Telegram version of Project Canis is available at [project-canis-tg](https://g
 
 ## License
 
-Copyright 2025 Melvin Jones Repol
+Copyright 2026 Melvin Jones Repol
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

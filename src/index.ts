@@ -17,6 +17,7 @@ import {
   PROJECT_THRESHOLD_MEMORY,
 } from "./config";
 import { getClientIds, getRootAccount } from "./components/services/account";
+import redis from "./components/redis";
 
 const monitor = new MemoryMonitor({
   interval: 60000,
@@ -43,6 +44,11 @@ async function main() {
   const accountsIds = await getClientIds();
   await Promise.all(
     Array.from(accountsIds.entries()).map(async ([clientId, isRoot]) => {
+      if (isRoot)
+        await redis.set(
+          "root_client_id",
+          JSON.stringify({ clientId, lid: null, date: Date.now() }),
+        );
       await addAccount(clientId, undefined, isRoot);
     }),
   );
