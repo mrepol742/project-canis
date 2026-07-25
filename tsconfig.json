@@ -16,5 +16,6 @@
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "files": ["src/types/whatsapp-web-js.d.ts"]
 }

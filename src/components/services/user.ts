@@ -72,7 +72,8 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
       return false;
     }
 
-    const contact = await msg.getContact();
+    // getContact() can throw when the contact id is undefined (LID format mismatch on replies)
+    const contact = await msg.getContact().catch(() => null);
 
     const name = contact?.pushname || contact?.name || "null";
     const number = contact?.number ?? "0";

@@ -21,13 +21,14 @@ import { checkInappropriate } from "../utils/contentChecker";
 import redis from "../redis";
 import downloadQueue from "../queue/download";
 import reactQueue from "../queue/react";
-import ai from "../../commands/ai";
+import { detectActivation } from "../ai/personalities";
+import { runAgent } from "../ai/personalityHandler";
+import { isSessionActive } from "../ai/session";
 import * as Sentry from "@sentry/node";
 import { Message } from "../../types/message";
 import {
   COMMAND_PREFIX,
   COMMAND_PREFIX_LESS,
-  PROJECT_CANIS_ALIAS,
   PROJECT_ENABLE_BOT_FONT,
 } from "../../config";
 
@@ -126,6 +127,14 @@ export default async function (msg: Message, type: string): Promise<void> {
 
       msg.body = normalizedBody;
 
+      const chatId = msg.from.split("@")[0];
+
+      // Active session: continue the conversation without a trigger word
+      if (await isSessionActive(chatId, lid)) {
+        await runAgent(msg);
+        return;
+      }
+
       await Promise.allSettled([
         quiz(msg),
         riddle(msg),
@@ -147,25 +156,29 @@ export default async function (msg: Message, type: string): Promise<void> {
           reactQueue.add(() => autoReaction(msg));
         })(),
         (async () => {
+          // Activation by name: message contains "mj"
+          if (detectActivation(msg.body)) {
+            await runAgent(msg);
+            return;
+          }
+
+          // Activation by @mention
           const botId = getClient(msg.clientId).info.wid._serialized;
-          if (msg.mentionedIds.length == 0 || !botId ||!msg.mentionedIds.includes(botId))
+          if (
+            msg.mentionedIds.length === 0 ||
+            !botId ||
+            !msg.mentionedIds.includes(botId)
+          )
             return;
 
-          if (msg.body === `@${botId}`) {
+          if (msg.body === `@${botId.split("@")[0]}`) {
             await msg.reply(
-              mentionResponses[
-                Math.floor(Math.random() * mentionResponses.length)
-              ],
+              mentionResponses[Math.floor(Math.random() * mentionResponses.length)],
             );
             return;
           }
 
-          msg.body += `Sender name is: @${lid}`;
-          msg.body = msg.body.replaceAll(`@${lid}`, PROJECT_CANIS_ALIAS);
-          msg.mentionedIds = msg.mentionedIds.map((mentionedId: string) =>
-            mentionedId === botId ? lid : mentionedId,
-          );
-          await ai(msg);
+          await runAgent(msg);
         })(),
       ]);
       return;

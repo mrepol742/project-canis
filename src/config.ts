@@ -159,3 +159,26 @@ export const AXIOS_ORIGIN = process.env.AXIOS_ORIGIN ?? "";
 
 /** Axios request host header */
 export const AXIOS_HOST = process.env.AXIOS_HOST ?? "";
+
+/** Agent thread TTL in seconds before an idle thread expires */
+export const AGENT_THREAD_TTL = Number(process.env.AGENT_THREAD_TTL ?? 3600);
+
+/** Max messages kept per thread (oldest dropped first) */
+export const AGENT_MAX_HISTORY = Number(process.env.AGENT_MAX_HISTORY ?? 20);
+
+/** Max tool-call iterations per agent turn before returning early */
+export const AGENT_MAX_TOOL_ITERATIONS = Number(
+  process.env.AGENT_MAX_TOOL_ITERATIONS ?? 5,
+);
+
+/** Enable the shell tool for all agent users (set to false to disable) */
+export const AGENT_SHELL_ENABLED =
+  (process.env.AGENT_SHELL_ENABLED ?? "true") === "true";
+
+/** Run shell commands inside a bwrap sandbox (isolates host filesystem). Requires bwrap on PATH. */
+export const AGENT_SANDBOX =
+  (process.env.AGENT_SANDBOX ?? "true") === "true";
+
+/** Host base directory for per-session workspaces mounted into the sandbox */
+export const AGENT_WORKSPACE_BASE =
+  process.env.AGENT_WORKSPACE_BASE ?? "/tmp/mj-sessions";
