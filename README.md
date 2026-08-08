@@ -1,6 +1,6 @@
-# Project Canis
+# Project Canis: Agentic WhatsApp Bot
 
-A scalable, modular WhatsApp chatbot built in TypeScript. It leverages modern best practices, lean architecture, Prisma ORM, Dockerization, and environment-based configuration to deliver a robust, flexible successor to Project Orion.
+A multi-account WhatsApp bot built in TypeScript that handles everything from group commands and instant media downloads to an agentic AI that can search the web, write and run code, and deliver files. All through a single chat message. It connects multiple WhatsApp accounts simultaneously, backed by MariaDB, Redis, and a sandboxed shell environment, with a hot-reloading command system that makes extending it as easy as dropping a new file.
 
 > ⚠️ **Warning:**
 > This repository is for educational and entertainment purposes only.
