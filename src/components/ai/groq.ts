@@ -1,8 +1,9 @@
 import Groq from "groq-sdk";
 import { GROQ_API_KEY } from "../../config";
 
-const client = new Groq({
-  apiKey: GROQ_API_KEY,
-});
+let _client: Groq | null = null;
 
-export { client as groq };
+export function getGroq(): Groq {
+  if (!_client) _client = new Groq({ apiKey: GROQ_API_KEY });
+  return _client;
+}

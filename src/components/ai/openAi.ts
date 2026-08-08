@@ -1,8 +1,9 @@
 import OpenAI from "openai";
 import { OPENAI_API_KEY } from "../../config";
 
-const client = new OpenAI({
-  apiKey: OPENAI_API_KEY,
-});
+let _client: OpenAI | null = null;
 
-export { client as openai };
+export function getOpenAI(): OpenAI {
+  if (!_client) _client = new OpenAI({ apiKey: OPENAI_API_KEY });
+  return _client;
+}

@@ -2,7 +2,7 @@ import { getTimezonesForCountry, Timezone } from "countries-and-timezones";
 import moment from "moment-timezone";
 
 export function getCurrentTimeByCountryCode(countryCode: string) {
-  const timezones: Timezone[] | undefined = getTimezonesForCountry(
+  const timezones: Timezone[] | null | undefined = getTimezonesForCountry(
     countryCode.toUpperCase(),
   );
 

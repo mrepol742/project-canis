@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import { MessageMedia } from "whatsapp-web.js";
 import { Message } from "../types/message"
 import log from "../components/utils/log";
-import { gemini } from "../components/ai/gemini";
+import { getGemini } from "../components/ai/gemini";
 
 export const info = {
   command: "nano",
@@ -22,14 +22,11 @@ export default async function (msg: Message): Promise<void> {
     return;
   }
 
-  if (!gemini) {
-    return log.error(
-      "nano",
-      "Unable to process `nano` Gemini is not yet setup.",
-    );
+  if (!process.env.GEMINI_API_KEY) {
+    return log.error("nano", "Unable to process `nano` Gemini is not yet setup.");
   }
 
-  const response = await gemini.models.generateContent({
+  const response = await getGemini().models.generateContent({
     model: "gemini-2.5-flash-image-preview",
     contents: [
       {

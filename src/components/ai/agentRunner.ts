@@ -1,7 +1,7 @@
-import OpenAI from "openai";
-import { groq } from "./groq";
-import { gemini } from "./gemini";
-import { openai } from "./openAi";
+import { getGroq } from "./groq";
+import { getGemini } from "./gemini";
+import { getOpenAI } from "./openAi";
+import { getOpenRouterOAI } from "./openRouter";
 import ollama from "ollama";
 import log from "../utils/log";
 import * as Sentry from "@sentry/node";
@@ -11,7 +11,6 @@ import {
   GEMINI_MODEL,
   GROQ_MODEL,
   OLLAMA_MODEL,
-  OPEN_ROUTER_API_KEY,
   OPEN_ROUTER_MODEL,
   OPENAI_MODEL,
 } from "../../config";
@@ -19,27 +18,28 @@ import type { ThreadMessage } from "./thread";
 import { type AgentTool, executeTool } from "./tools/index";
 import type { ToolContext } from "./tools/types";
 
+export interface ToolLogEntry {
+  name: string;
+  args: Record<string, unknown>;
+  result: string;
+}
+
 export interface AgentResult {
   text: string | null;
   commandToExecute: string | null;
+  toolLog: ToolLogEntry[];
+}
+
+export interface ImageData {
+  data: string;   // base64, no prefix
+  mimetype: string;
 }
 
 // Sentinel returned to the LLM when run_command is intercepted
 const RUN_CMD_SENTINEL = "__RUN_COMMAND_DISPATCHED__";
 
-/*
- * OpenAI-compatible client for OpenRouter
- */
-const openrouterApiClient = new OpenAI({
-  apiKey: OPEN_ROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-});
-
 type ExecFn = (name: string, args: Record<string, unknown>) => Promise<string>;
 
-/*
- * Shared agentic loop for OpenAI, Groq, and OpenRouter.
- */
 async function runOpenAILike(
   client: { chat: { completions: { create: (...a: any[]) => Promise<any> } } },
   model: string,
@@ -48,11 +48,19 @@ async function runOpenAILike(
   userQuery: string,
   tools: AgentTool[],
   execFn: ExecFn,
+  imageData?: ImageData,
 ): Promise<string | null> {
+  const userContent: any = imageData
+    ? [
+        { type: "text", text: userQuery },
+        { type: "image_url", image_url: { url: `data:${imageData.mimetype};base64,${imageData.data}` } },
+      ]
+    : userQuery;
+
   const messages: any[] = [
     { role: "system", content: systemPrompt },
     ...history.map((m) => ({ role: m.role, content: m.content })),
-    { role: "user", content: userQuery },
+    { role: "user", content: userContent },
   ];
 
   const oaTools =
@@ -71,7 +79,14 @@ async function runOpenAILike(
       tool_choice: oaTools ? "auto" : undefined,
     });
 
-    const msg = response.choices[0].message;
+    const choice = response.choices?.[0];
+    if (!choice) {
+      // Provider returned no choices — content filter, empty response, or malformed reply
+      log.warn("AgentRunner", `No choices in response (finish_reason: ${(response as any).finish_reason ?? "unknown"})`);
+      break;
+    }
+
+    const msg = choice.message;
     messages.push(msg);
 
     if (!msg.tool_calls || msg.tool_calls.length === 0) {
@@ -87,16 +102,12 @@ async function runOpenAILike(
       const result = await execFn(tc.function.name, args);
       log.info("AgentTool", `${tc.function.name} → ${result.slice(0, 80)}`);
       messages.push({ role: "tool", tool_call_id: tc.id, content: result });
-      if (result === RUN_CMD_SENTINEL) {
-        commandDispatched = true;
-      }
+      if (result === RUN_CMD_SENTINEL) commandDispatched = true;
     }
 
-    // Stop the loop once a bot command has been dispatched — no further LLM reply needed
     if (commandDispatched) return null;
   }
 
-  // Exhausted iterations — return the last assistant text if any
   for (let i = messages.length - 1; i >= 0; i--) {
     const m = messages[i];
     if (m.role === "assistant" && typeof m.content === "string" && m.content) {
@@ -106,15 +117,13 @@ async function runOpenAILike(
   return null;
 }
 
-/*
- * Gemini uses functionDeclarations / functionCall / functionResponse.
- */
 async function runGemini(
   systemPrompt: string,
   history: ThreadMessage[],
   userQuery: string,
   tools: AgentTool[],
   execFn: ExecFn,
+  imageData?: ImageData,
 ): Promise<string | null> {
   const functionDeclarations = tools.map((t) => ({
     name: t.name,
@@ -122,16 +131,21 @@ async function runGemini(
     parameters: t.parameters,
   }));
 
+  const userParts: any[] = [{ text: userQuery }];
+  if (imageData) {
+    userParts.push({ inlineData: { mimeType: imageData.mimetype, data: imageData.data } });
+  }
+
   const contents: any[] = [
     ...history.map((m) => ({
       role: m.role === "assistant" ? "model" : "user",
       parts: [{ text: m.content }],
     })),
-    { role: "user", parts: [{ text: userQuery }] },
+    { role: "user", parts: userParts },
   ];
 
   for (let i = 0; i < AGENT_MAX_TOOL_ITERATIONS; i++) {
-    const response = await gemini.models.generateContent({
+    const response = await getGemini().models.generateContent({
       model: GEMINI_MODEL,
       contents,
       config: {
@@ -173,20 +187,21 @@ async function runGemini(
   return lastText?.text ?? null;
 }
 
-/*
- * Ollama — same tool_calls structure as OpenAI.
- */
 async function runOllama(
   systemPrompt: string,
   history: ThreadMessage[],
   userQuery: string,
   tools: AgentTool[],
   execFn: ExecFn,
+  imageData?: ImageData,
 ): Promise<string | null> {
+  const userMessage: any = { role: "user", content: userQuery };
+  if (imageData) userMessage.images = [imageData.data];
+
   const messages: any[] = [
     { role: "system", content: systemPrompt },
     ...history.map((m) => ({ role: m.role, content: m.content })),
-    { role: "user", content: userQuery },
+    userMessage,
   ];
 
   const ollamaTools =
@@ -232,10 +247,6 @@ async function runOllama(
   return null;
 }
 
-/*
- * Public entry point.
- * Returns { text, commandToExecute } — callers execute the command themselves.
- */
 export default async function runAgent(
   systemPrompt: string,
   history: ThreadMessage[],
@@ -243,69 +254,90 @@ export default async function runAgent(
   tools: AgentTool[],
   context: ToolContext,
   model?: string,
+  imageData?: ImageData,
 ): Promise<AgentResult> {
   let commandToExecute: string | null = null;
+  const toolLog: ToolLogEntry[] = [];
+  let firstTool = true;
 
   const execFn: ExecFn = async (name, args) => {
+    const isFirst = firstTool;
+    firstTool = false;
+
+    try { await context.onToolCall?.(name, isFirst); } catch {}
+
     if (name === "run_command") {
       commandToExecute = String(args.command ?? "").trim();
+      toolLog.push({ name, args, result: "dispatched" });
       return RUN_CMD_SENTINEL;
     }
-    return executeTool(name, args, context);
+
+    const result = await executeTool(name, args, context);
+    toolLog.push({ name, args, result: result.slice(0, 400) });
+    return result;
   };
+
+  const emptyResult = (text: string | null): AgentResult => ({
+    text,
+    commandToExecute,
+    toolLog,
+  });
 
   try {
     let text: string | null = null;
     switch (AI_PROVIDER) {
       case "openrouter":
         text = await runOpenAILike(
-          openrouterApiClient,
+          getOpenRouterOAI(),
           model || OPEN_ROUTER_MODEL,
           systemPrompt,
           history,
           userQuery,
           tools,
           execFn,
+          imageData,
         );
         break;
 
       case "groq":
         text = await runOpenAILike(
-          groq as any,
+          getGroq() as any,
           model || GROQ_MODEL,
           systemPrompt,
           history,
           userQuery,
           tools,
           execFn,
+          imageData,
         );
         break;
 
       case "openai":
         text = await runOpenAILike(
-          openai as any,
+          getOpenAI() as any,
           model || OPENAI_MODEL,
           systemPrompt,
           history,
           userQuery,
           tools,
           execFn,
+          imageData,
         );
         break;
 
       case "gemini":
-        text = await runGemini(systemPrompt, history, userQuery, tools, execFn);
+        text = await runGemini(systemPrompt, history, userQuery, tools, execFn, imageData);
         break;
 
       case "ollama":
-        text = await runOllama(systemPrompt, history, userQuery, tools, execFn);
+        text = await runOllama(systemPrompt, history, userQuery, tools, execFn, imageData);
         break;
 
       default:
         throw new Error(`Unsupported AI provider: ${AI_PROVIDER}`);
     }
 
-    return { text, commandToExecute };
+    return emptyResult(text);
   } catch (err: any) {
     const status: number | undefined = err?.status ?? err?.statusCode;
 
@@ -315,20 +347,16 @@ export default async function runAgent(
         err?.headers?.["x-ratelimit-reset-requests"];
       const hint = reset ? ` Try again in ${reset}.` : " Please try again shortly.";
       log.warn("AgentRunner", `Rate limited by ${AI_PROVIDER}.${hint}`);
-      return { text: `I'm being rate-limited right now.${hint}`, commandToExecute: null };
+      return emptyResult(`I'm being rate-limited right now.${hint}`);
     }
 
-    // Tool validation: model generated a malformed or unregistered tool call
     if (status === 400 && err?.error?.error?.code === "tool_use_failed") {
       log.warn("AgentRunner", `Tool use failed: ${err.error.error.message}`);
-      return {
-        text: "Sorry, I ran into a problem processing that request. Please try again.",
-        commandToExecute: null,
-      };
+      return emptyResult("Sorry, I ran into a problem processing that request. Please try again.");
     }
 
     Sentry.captureException(err);
     log.error("AgentRunner", err);
-    return { text: null, commandToExecute };
+    return emptyResult(null);
   }
 }

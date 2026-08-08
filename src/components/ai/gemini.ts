@@ -1,6 +1,9 @@
 import { GoogleGenAI } from "@google/genai";
 import { GEMINI_API_KEY } from "../../config";
 
-const client = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+let _client: GoogleGenAI | null = null;
 
-export { client as gemini };
+export function getGemini(): GoogleGenAI {
+  if (!_client) _client = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+  return _client;
+}

@@ -182,3 +182,7 @@ export const AGENT_SANDBOX =
 /** Host base directory for per-session workspaces mounted into the sandbox */
 export const AGENT_WORKSPACE_BASE =
   process.env.AGENT_WORKSPACE_BASE ?? "/tmp/mj-sessions";
+
+/** Run the browser tool in headless mode (false = visible Chrome window on the desktop display). */
+export const AGENT_BROWSER_HEADLESS =
+  (process.env.AGENT_BROWSER_HEADLESS ?? "true") === "true";

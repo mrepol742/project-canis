@@ -1,8 +1,8 @@
 import crypto from "crypto";
-import { openrouter, generateText } from "./openRouter";
-import { groq } from "./groq";
-import { gemini } from "./gemini";
-import { openai } from "./openAi";
+import { getOpenRouter, generateText } from "./openRouter";
+import { getGroq } from "./groq";
+import { getGemini } from "./gemini";
+import { getOpenAI } from "./openAi";
 import ollama from "ollama";
 import redis from "../redis";
 import {
@@ -43,7 +43,7 @@ export default async function (
    */
   if (AI_PROVIDER === "openrouter") {
     const { text } = await generateText({
-      model: openrouter(model || OPEN_ROUTER_MODEL),
+      model: getOpenRouter()(model || OPEN_ROUTER_MODEL),
       prompt: prompt,
     });
     result = text;
@@ -53,7 +53,7 @@ export default async function (
      * https://console.groq.com/docs/api-reference
      */
   } else if (AI_PROVIDER === "groq") {
-    const chatCompletion = await groq.chat.completions.create({
+    const chatCompletion = await getGroq().chat.completions.create({
       messages: [{ role: "user", content: prompt }],
       model: model || GROQ_MODEL,
     });
@@ -64,7 +64,7 @@ export default async function (
      * https://github.com/googleapis/js-genai
      */
   } else if (AI_PROVIDER === "gemini") {
-    const generateContent = await gemini.models.generateContent({
+    const generateContent = await getGemini().models.generateContent({
       model: model || GEMINI_MODEL,
       contents: prompt,
     });
@@ -75,7 +75,7 @@ export default async function (
      * https://platform.openai.com/docs/api-reference
      */
   } else if (AI_PROVIDER === "openai") {
-    const chatCompletion = await openai.chat.completions.create({
+    const chatCompletion = await getOpenAI().chat.completions.create({
       model: model || OPENAI_MODEL,
       messages: [{ role: "user", content: prompt }],
     });

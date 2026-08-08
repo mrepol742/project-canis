@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer-core";
-import { PUPPETEER_EXEC_PATH } from "../../../config";
+import { PUPPETEER_EXEC_PATH, AGENT_BROWSER_HEADLESS } from "../../../config";
 import type { AgentTool } from "./types";
 
 const CONTENT_LIMIT = 4000;
@@ -37,15 +37,21 @@ const CHROME_ARGS = [
   "--mute-audio",
   "--no-first-run",
   "--safebrowsing-disable-auto-update",
+  // Anti-detection: mask automation signals
+  "--disable-blink-features=AutomationControlled",
+  "--disable-infobars",
+  "--window-size=1280,800",
+  "--start-maximized",
 ];
 
+// Matches a real Chrome 125 on Linux — keeps fingerprint consistent
 const USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
 
 async function launchBrowser() {
   return puppeteer.launch({
     executablePath: PUPPETEER_EXEC_PATH,
-    headless: true,
+    headless: AGENT_BROWSER_HEADLESS,
     args: CHROME_ARGS,
   });
 }
@@ -53,6 +59,16 @@ async function launchBrowser() {
 async function setupPage(browser: Awaited<ReturnType<typeof launchBrowser>>) {
   const page = await browser.newPage();
   await page.setUserAgent(USER_AGENT);
+
+  // Mask navigator.webdriver and other automation tells
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+    Object.defineProperty(navigator, "plugins", { get: () => [1, 2, 3] });
+    Object.defineProperty(navigator, "languages", { get: () => ["en-US", "en"] });
+    // Remove the Chrome automation flag from window.chrome
+    (window as any).chrome = { runtime: {} };
+  });
+
   // Block heavy resources — we only need text
   await page.setRequestInterception(true);
   page.on("request", (req) => {

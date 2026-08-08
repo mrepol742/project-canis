@@ -17,4 +17,6 @@ export interface ToolContext {
   workspaceDir: string;
   /** Send a file from the local filesystem to the current WhatsApp chat. */
   sendFile: (path: string, caption?: string) => Promise<string>;
+  /** Called before each tool executes. isFirst=true on the first tool call of the turn. */
+  onToolCall?: (toolName: string, isFirst: boolean) => Promise<void>;
 }

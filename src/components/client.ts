@@ -1,4 +1,6 @@
 import log from "./utils/log";
+import fs from "fs";
+import path from "path";
 import {
   Call,
   Client,
@@ -25,7 +27,7 @@ import queue from "./queue/download";
 import groupAdminChanged from "./events/groups/groupAdminChanged";
 import QRCode from "qrcode";
 import { PUPPETEER_EXEC_PATH } from "../config";
-import { createAccount } from "./services/account";
+import { createAccount, deleteAccount } from "./services/account";
 
 const clients = new Map<string, Client>();
 let isLoadingBarStarted = false;
@@ -187,8 +189,22 @@ function registerEvents(client: Client, msg?: Message): void {
     log.error("Auth", "Authentication failed. Please try again.");
   });
 
-  client.on("disconnected", (reason: WAState | "LOGOUT") => {
-    throw Error(`Client has been disconnected reason: ${reason}`);
+  client.on("disconnected", async (reason: WAState | "LOGOUT") => {
+    const clientId = client.clientId;
+    log.warn("Client", `Client ${clientId} disconnected: ${reason}`);
+
+    clients.delete(clientId);
+    try { await client.destroy(); } catch {}
+
+    if (reason === "LOGOUT") {
+      // Remove the LocalAuth session so next restart doesn't reuse a revoked session
+      const sessionPath = path.join(process.cwd(), ".wwebjs_auth", `session-${clientId}`);
+      try { fs.rmSync(sessionPath, { recursive: true, force: true }); } catch {}
+
+      // Remove from DB so it isn't loaded again on restart
+      await deleteAccount(clientId);
+      log.info("Client", `Account ${clientId} removed after LOGOUT.`);
+    }
   });
 }
 
