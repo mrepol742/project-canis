@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Project Canis - Agentic WhatsApp Bot<</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&family=Sora:wght@100..800&display=swap"
+            rel="stylesheet"
+        />
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            canis: "#22c55e",
+                            canisdark: "#16a34a",
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            ::selection {
+                background-color: #22c55e;
+                color: #ededed;
+            }
+
+            ::-moz-selection {
+                background: #22c55e;
+                color: #ededed;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #22c55e;
+                border-radius: 999px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #e5e5e5;
+            }
+
+            ::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+
+            /* Firefox */
+            * {
+                scrollbar-width: thin;
+                scrollbar-color: #22c55e transparent;
+            }
+
+            html {
+                transition:
+                    background-color 0.3s ease,
+                    color 0.3s ease;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: "Maven Pro", sans-serif;
+                transition: all 0.3s ease;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                font-family: "Sora", sans-serif;
+            }
+        </style>
+    </head>
+
+    <body class="antialiased min-h-screen flex flex-col">
+        <main
+            class="flex min-h-screen items-center justify-center bg-white px-6 dark:bg-neutral-950"
+        >
+            <div class="text-center">
+                <div
+                    class="animate-pulse mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/40"
+                >
+                    <svg
+                        class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                    >
+                        <path
+                            d="M20 6L9 17l-5-5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                </div>
+
+                <h1
+                    class="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-white"
+                >
+                    Application Up
+                </h1>
+
+                <p class="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+                    Everything is running normally.
+                </p>
+
+                <div
+                    class="mt-8 rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-left dark:border-neutral-800 dark:bg-neutral-900"
+                >
+                    <dl class="space-y-2 text-sm">
+                        <div class="flex justify-between gap-8">
+                            <dt class="text-neutral-500">Status</dt>
+                            <dd
+                                class="font-medium text-emerald-600 dark:text-emerald-400 animate-pulse"
+                            >
+                                UP
+                            </dd>
+                        </div>
+
+                        <div class="flex justify-between gap-8">
+                            <dt class="text-neutral-500">Environment</dt>
+                            <dd
+                                class="font-medium text-neutral-600 dark:text-neutral-400"
+                            >
+                                production
+                            </dd>
+                        </div>
+
+                        <div class="flex justify-between gap-8">
+                            <dt class="text-neutral-500">Timestamp</dt>
+                            <dd
+                                class="font-mono text-neutral-600 dark:text-neutral-400"
+                                id="timestamp"
+                            ></dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            document.getElementById("timestamp").textContent =
+                new Date().toISOString();
+        </script>
+    </body>
+</html>

@@ -2,9 +2,19 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Project Canis — WhatsApp Bot</title>
+        <title>Project Canis - Agentic WhatsApp Bot</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&family=Sora:wght@100..800&display=swap"
+            rel="stylesheet"
+        />
 
         <script>
             tailwind.config = {
@@ -12,37 +22,104 @@
                     extend: {
                         colors: {
                             canis: "#22c55e",
+                            canisdark: "#16a34a",
                         },
                     },
                 },
             };
         </script>
+
+        <style>
+            ::selection {
+                background-color: #22c55e;
+                color: #ededed;
+            }
+
+            ::-moz-selection {
+                background: #22c55e;
+                color: #ededed;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #22c55e;
+                border-radius: 999px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #e5e5e5;
+            }
+
+            ::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+
+            /* Firefox */
+            * {
+                scrollbar-width: thin;
+                scrollbar-color: #22c55e transparent;
+            }
+
+            html {
+                transition:
+                    background-color 0.3s ease,
+                    color 0.3s ease;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: "Maven Pro", sans-serif;
+                transition: all 0.3s ease;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                font-family: "Sora", sans-serif;
+            }
+        </style>
     </head>
 
-    <body
-        class="min-h-screen bg-gradient-to-br from-zinc-900 via-black to-zinc-900 text-white flex flex-col"
-    >
-        <main class="flex-1 flex items-center justify-center px-6">
-            <div class="max-w-4xl w-full text-center space-y-8">
-                <div
-                    class="inline-flex items-center gap-2 px-4 mt-5 py-1.5 rounded-full bg-white/10 border border-white/10 text-sm backdrop-blur"
-                >
-                    <span
-                        class="w-2 h-2 rounded-full bg-canis animate-pulse"
-                    ></span>
-                    Project Canis is alive
+    <body class="antialiased min-h-screen flex flex-col">
+        <header class="border-b border-zinc-200">
+            <div
+                class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between"
+            >
+                <div class="flex items-center gap-2 font-semibold text-lg">
+                    <i class="fa-solid fa-dog text-canisdark"></i>
+                    Project Canis
                 </div>
+                <a
+                    href="https://github.com/mrepol742/project-canis"
+                    target="_blank"
+                    class="text-sm text-zinc-600 hover:text-zinc-900 transition flex items-center gap-2"
+                >
+                    <i class="fa-brands fa-github"></i>
+                    GitHub
+                </a>
+            </div>
+        </header>
 
+        <main class="flex-1 flex items-center justify-center px-6 py-20">
+            <div class="max-w-4xl w-full text-center space-y-8">
                 <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight">
-                    A Smarter
-                    <span class="text-canis">WhatsApp Bot</span><br />
+                    An Agentic
+                    <span class="text-canisdark">WhatsApp Bot</span><br />
                     Built for Automation
                 </h1>
 
-                <p class="text-zinc-300 max-w-2xl mx-auto text-lg">
-                    Project Canis is a fast, customizable WhatsApp bot designed
-                    for developers who want full control, clean logic, and zero
-                    fluff.
+                <p class="text-zinc-600 max-w-2xl mx-auto text-lg">
+                    A multi-account WhatsApp bot that handles everything from
+                    group commands and instant media downloads to an agentic AI
+                    that can search the web, write and run code, and deliver
+                    files. All through a single chat message.
                 </p>
 
                 <div
@@ -51,97 +128,250 @@
                     <a
                         href="https://github.com/mrepol742/project-canis"
                         target="_blank"
-                        class="px-8 py-3 rounded-xl bg-canis text-black font-semibold hover:bg-green-400 transition"
+                        class="px-8 py-3 rounded-xl bg-canis text-white font-semibold hover:bg-canisdark transition flex items-center justify-center gap-2"
                     >
+                        <i class="fa-brands fa-github"></i>
                         View on GitHub
                     </a>
                     <a
                         href="https://www.melvinjonesrepol.com/canis-chatbot"
-                        class="px-8 py-3 rounded-xl border border-white/20 hover:bg-white/10 transition"
+                        class="px-8 py-3 rounded-xl border border-zinc-300 hover:bg-zinc-50 transition flex items-center justify-center gap-2"
                     >
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         Setup
                     </a>
                 </div>
             </div>
         </main>
 
-        <section id="features" class="px-6 pb-24 mt-5">
+        <section id="features" class="px-6 pb-24">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight">
+                        Everything the bot can do
+                    </h2>
+                    <p class="text-zinc-600 mt-2">
+                        Multi-account, agentic, and built to be extended.
+                    </p>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                    <div
+                        class="p-6 rounded-2xl bg-white border border-zinc-200 hover:border-canis/60 hover:shadow-sm transition"
+                    >
+                        <div
+                            class="w-10 h-10 rounded-lg bg-canis/10 flex items-center justify-center mb-4"
+                        >
+                            <i class="fa-solid fa-robot text-canisdark"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Agentic AI</h3>
+                        <p class="text-zinc-600 text-sm">
+                            Searches the web, writes and runs code, and delivers
+                            files, all triggered from a single chat message.
+                        </p>
+                    </div>
+
+                    <div
+                        class="p-6 rounded-2xl bg-white border border-zinc-200 hover:border-canis/60 hover:shadow-sm transition"
+                    >
+                        <div
+                            class="w-10 h-10 rounded-lg bg-canis/10 flex items-center justify-center mb-4"
+                        >
+                            <i
+                                class="fa-solid fa-layer-group text-canisdark"
+                            ></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">
+                            Multi-Account
+                        </h3>
+                        <p class="text-zinc-600 text-sm">
+                            Connects and runs multiple WhatsApp accounts at the
+                            same time from one deployment.
+                        </p>
+                    </div>
+
+                    <div
+                        class="p-6 rounded-2xl bg-white border border-zinc-200 hover:border-canis/60 hover:shadow-sm transition"
+                    >
+                        <div
+                            class="w-10 h-10 rounded-lg bg-canis/10 flex items-center justify-center mb-4"
+                        >
+                            <i class="fa-solid fa-download text-canisdark"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">
+                            Instant Media Downloads
+                        </h3>
+                        <p class="text-zinc-600 text-sm">
+                            Pulls videos straight from supported platforms like
+                            TikTok, Instagram, Facebook, and YouTube.
+                        </p>
+                    </div>
+
+                    <div
+                        class="p-6 rounded-2xl bg-white border border-zinc-200 hover:border-canis/60 hover:shadow-sm transition"
+                    >
+                        <div
+                            class="w-10 h-10 rounded-lg bg-canis/10 flex items-center justify-center mb-4"
+                        >
+                            <i class="fa-solid fa-database text-canisdark"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">
+                            MariaDB & Redis Backed
+                        </h3>
+                        <p class="text-zinc-600 text-sm">
+                            Reliable storage and caching under the hood, with a
+                            sandboxed shell environment for safe execution.
+                        </p>
+                    </div>
+
+                    <div
+                        class="p-6 rounded-2xl bg-white border border-zinc-200 hover:border-canis/60 hover:shadow-sm transition"
+                    >
+                        <div
+                            class="w-10 h-10 rounded-lg bg-canis/10 flex items-center justify-center mb-4"
+                        >
+                            <i
+                                class="fa-solid fa-arrows-rotate text-canisdark"
+                            ></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">
+                            Hot-Reloading Commands
+                        </h3>
+                        <p class="text-zinc-600 text-sm">
+                            Extend the bot by dropping in a new file. No restart
+                            required.
+                        </p>
+                    </div>
+
+                    <div
+                        class="p-6 rounded-2xl bg-white border border-zinc-200 hover:border-canis/60 hover:shadow-sm transition"
+                    >
+                        <div
+                            class="w-10 h-10 rounded-lg bg-canis/10 flex items-center justify-center mb-4"
+                        >
+                            <i
+                                class="fa-solid fa-shield-halved text-canisdark"
+                            ></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">
+                            Secure by Design
+                        </h3>
+                        <p class="text-zinc-600 text-sm">
+                            Integrated with Phishtank and VirusTotal to keep
+                            groups safe, plus rate limiting for end users.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-6 pb-24">
             <div
-                class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                class="max-w-6xl mx-auto rounded-2xl border border-zinc-200 bg-zinc-50 p-8 sm:p-10"
             >
-                <div
-                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
-                >
-                    <h3 class="text-xl font-semibold mb-2">
-                        ⚡ Fast & Lightweight
-                    </h3>
-                    <p class="text-zinc-400">
-                        Minimal overhead. No unnecessary dependencies. Built to
-                        run efficiently.
-                    </p>
-                </div>
+                <div class="flex flex-col sm:flex-row gap-8 sm:gap-12">
+                    <div class="flex-1">
+                        <h3
+                            class="text-sm font-semibold text-canisdark uppercase tracking-wide mb-3"
+                        >
+                            Supported AI Providers
+                        </h3>
+                        <ul class="space-y-2 text-zinc-700 text-sm">
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-canis"></i>
+                                OpenRouter
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-canis"></i>
+                                OpenAI
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-canis"></i>
+                                Groq
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-canis"></i>
+                                Gemini (Google)
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-canis"></i>
+                                Ollama
+                            </li>
+                        </ul>
+                    </div>
 
-                <div
-                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
-                >
-                    <h3 class="text-xl font-semibold mb-2">
-                        🧠 Fully Customizable
-                    </h3>
-                    <p class="text-zinc-400">
-                        Modify commands, logic, and flows exactly how you want.
-                    </p>
-                </div>
+                    <div class="flex-1">
+                        <h3
+                            class="text-sm font-semibold text-canisdark uppercase tracking-wide mb-3"
+                        >
+                            Prerequisites
+                        </h3>
+                        <ul class="space-y-2 text-zinc-700 text-sm">
+                            <li class="flex items-center gap-2">
+                                <i
+                                    class="fa-solid fa-circle-dot text-zinc-400 text-xs"
+                                ></i>
+                                Node.js (>=18.x)
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i
+                                    class="fa-solid fa-circle-dot text-zinc-400 text-xs"
+                                ></i>
+                                MySQL
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i
+                                    class="fa-solid fa-circle-dot text-zinc-400 text-xs"
+                                ></i>
+                                Redis / Valkey
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i
+                                    class="fa-solid fa-circle-dot text-zinc-400 text-xs"
+                                ></i>
+                                WhatsApp Account
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i
+                                    class="fa-solid fa-circle-dot text-zinc-400 text-xs"
+                                ></i>
+                                Chrome browser
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i
+                                    class="fa-solid fa-circle-dot text-zinc-400 text-xs"
+                                ></i>
+                                FFMPEG
+                            </li>
+                        </ul>
+                    </div>
 
-                <div
-                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
-                >
-                    <h3 class="text-xl font-semibold mb-2">
-                        🔌 Easy Integration
-                    </h3>
-                    <p class="text-zinc-400">
-                        Designed to fit into existing systems and APIs with
-                        ease.
-                    </p>
-                </div>
-
-                <div
-                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
-                >
-                    <h3 class="text-xl font-semibold mb-2">
-                        🛠 Developer Friendly
-                    </h3>
-                    <p class="text-zinc-400">
-                        Clean structure, readable code, and zero magic.
-                    </p>
-                </div>
-
-                <div
-                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
-                >
-                    <h3 class="text-xl font-semibold mb-2">
-                        🔒 Secure by Design
-                    </h3>
-                    <p class="text-zinc-400">
-                        Built with best practices in mind for bot safety and
-                        stability.
-                    </p>
-                </div>
-
-                <div
-                    class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-canis/50 transition"
-                >
-                    <h3 class="text-xl font-semibold mb-2">🚀 Open Source</h3>
-                    <p class="text-zinc-400">
-                        Community-driven and open for contributions.
-                    </p>
+                    <div class="flex-1">
+                        <h3
+                            class="text-sm font-semibold text-canisdark uppercase tracking-wide mb-3"
+                        >
+                            Quick Start
+                        </h3>
+                        <div
+                            class="bg-zinc-900 text-zinc-100 rounded-lg p-4 text-sm font-mono overflow-x-auto"
+                        >
+                            npx project-canis
+                        </div>
+                        <p class="text-zinc-600 text-sm mt-3">
+                            Run it instantly with NPX, no cloning or manual
+                            setup required.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <footer
-            class="border-t border-white/10 py-6 text-center text-zinc-500 text-sm"
+            class="border-t border-zinc-200 py-6 text-center text-zinc-500 text-sm"
         >
-            © <span id="year"></span> Project Canis · Built for developers
+            © <span id="year"></span> Project Canis · Melvin Jones Repol
         </footer>
 
         <script>
