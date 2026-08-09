@@ -104,8 +104,12 @@ export async function runAgent(msg: Message): Promise<void> {
         query = query
           ? `${query}\n[Quoted: ${quoted.body}]`
           : `[Quoted: ${quoted.body}]`;
+      } else {
+        log.warn("Agent", "hasQuotedMsg=true but getQuotedMessage() returned no body");
       }
-    } catch {}
+    } catch (err) {
+      log.warn("Agent", "Failed to fetch quoted message", err);
+    }
   }
 
   // Download image if present — passed to LLM as vision input

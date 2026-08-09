@@ -40,6 +40,26 @@ const RUN_CMD_SENTINEL = "__RUN_COMMAND_DISPATCHED__";
 
 type ExecFn = (name: string, args: Record<string, unknown>) => Promise<string>;
 
+function stripRawToolCalls(text: string): string | null {
+  const cleaned = text
+    .replace(/<tool_call>[\s\S]*?<\/tool_call>/gi, "")
+    .replace(/<function_calls?>[\s\S]*?<\/function_calls?>/gi, "")
+    .replace(/```(?:json)?\s*\{[\s\S]*?"(?:name|function)"[\s\S]*?\}\s*```/gi, "")
+    .trim();
+
+  if (!cleaned) return null;
+
+  // Whole response is a bare JSON tool call object
+  try {
+    const parsed = JSON.parse(cleaned);
+    if (parsed && typeof parsed === "object" && parsed.name && (parsed.arguments !== undefined || parsed.parameters !== undefined)) {
+      return null;
+    }
+  } catch {}
+
+  return cleaned;
+}
+
 async function runOpenAILike(
   client: { chat: { completions: { create: (...a: any[]) => Promise<any> } } },
   model: string,
@@ -71,6 +91,8 @@ async function runOpenAILike(
         }))
       : undefined;
 
+  const startIdx = messages.length; // first index that will be added this turn
+
   for (let i = 0; i < AGENT_MAX_TOOL_ITERATIONS; i++) {
     const response = await client.chat.completions.create({
       model,
@@ -90,7 +112,8 @@ async function runOpenAILike(
     messages.push(msg);
 
     if (!msg.tool_calls || msg.tool_calls.length === 0) {
-      return typeof msg.content === "string" ? msg.content : null;
+      const text = typeof msg.content === "string" ? msg.content : null;
+      return text ? stripRawToolCalls(text) : null;
     }
 
     let commandDispatched = false;
@@ -108,10 +131,11 @@ async function runOpenAILike(
     if (commandDispatched) return null;
   }
 
-  for (let i = messages.length - 1; i >= 0; i--) {
+  // Only scan messages added in this turn — never return stale history
+  for (let i = messages.length - 1; i >= startIdx; i--) {
     const m = messages[i];
     if (m.role === "assistant" && typeof m.content === "string" && m.content) {
-      return m.content;
+      return stripRawToolCalls(m.content);
     }
   }
   return null;
@@ -212,6 +236,8 @@ async function runOllama(
         }))
       : undefined;
 
+  const startIdx = messages.length;
+
   for (let i = 0; i < AGENT_MAX_TOOL_ITERATIONS; i++) {
     const response = await ollama.chat({
       model: OLLAMA_MODEL,
@@ -223,7 +249,8 @@ async function runOllama(
 
     const toolCalls = response.message.tool_calls;
     if (!toolCalls || toolCalls.length === 0) {
-      return response.message.content || null;
+      const text = response.message.content || null;
+      return text ? stripRawToolCalls(text) : null;
     }
 
     let commandDispatched = false;
@@ -240,9 +267,10 @@ async function runOllama(
     if (commandDispatched) return null;
   }
 
-  for (let i = messages.length - 1; i >= 0; i--) {
+  // Only scan messages added in this turn — never return stale history
+  for (let i = messages.length - 1; i >= startIdx; i--) {
     const m = messages[i];
-    if (m.role === "assistant" && m.content) return m.content;
+    if (m.role === "assistant" && m.content) return stripRawToolCalls(m.content);
   }
   return null;
 }
