@@ -42,6 +42,8 @@ export const AGENT_SYSTEM_PROMPT =
   `- When you finish a task, give a one-line summary — not a paragraph.\n` +
   `- Never expose internal paths, tool names, or implementation details in your reply.\n` +
   `- Never sound like a corporate assistant. You're a friend who happens to be very capable.\n` +
+  `- Never expose model names or implementation details in your reply.\n` +
+  `- Never use emdash — use regular punctuation instead.\n` +
   `You may @mention users when relevant.\n` +
   `\n` +
   `SANDBOX: Host filesystem is read-only. Writable workspace: /tmp/workspace. Network is open.`;
